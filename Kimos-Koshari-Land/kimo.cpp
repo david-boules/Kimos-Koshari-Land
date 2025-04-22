@@ -1,6 +1,7 @@
 #include "kimo.h"
 #include <QKeyEvent>
 #include <QGraphicsScene>
+#include <QTimer>
 
 Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // make sure Kimo.png has a transparent background:
@@ -18,10 +19,10 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
     {
         setPos(x()+3, y());
     }
-    /* JUMP and CROUCH
+
     else if (event->key() == Qt::Key_Up)
     {
-        //jump
+        jump();
     }
     else if (event->key() == Qt::Key_Down)
     {
@@ -30,5 +31,12 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
 
     // 'space_bar' for inhale/spit
 
-    */
+}
+
+void Kimo::jump() {
+    QTimer * timer = new QTimer();
+    connect(timer, SIGNAL(timeout()),this,SLOT (move()));
+    timer->start(20);
+
+    setPos(x(), y()-10);
 }

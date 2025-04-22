@@ -10,6 +10,10 @@ public:
     Kimo(QGraphicsItem *parent = nullptr);
 public:
     void keyPressEvent(QKeyEvent * event);
+    void jump();
+private:
+    double velocity;
+    bool isGrounded; //doubles as checking if character jumping to prevent double jumps
 };
 
 #endif // KIMO_H
