@@ -1,4 +1,4 @@
-# 🍝 Kimo’s Koshari World
+# 🍝 Kimo’s Koshari Land
 *An Egypt‑themed platformer inspired by **Kirby’s Dream Land***  
 
 ---
@@ -28,3 +28,11 @@ Abou Tarek unleashes koshari minions to reclaim the debt: fiery **Chili Pepp
 
 ## UML Class Diagram
 > *(A UML Class Diagram will be included in this section once **at least Level 1 is finalized**)*
+
+---
+
+## Team Members
+- David Boules
+- Adham Ahmed Said
+- Lorina Khela
+- Zeiad Mohamed
