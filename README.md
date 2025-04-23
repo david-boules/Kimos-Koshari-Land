@@ -17,12 +17,12 @@ Abou Tarek unleashes koshari minions to reclaim the debt: fiery **Chili Pepp
 ---
 
 ## Controls
-| Action | Keyboard (default) |
+| Action | Keyboard |
 |--------|-------------------|
 | Move   | `←` / `→`         |
-| Jump / Hover | `Space`|
-| Inhale / Spit | TBD |
-| Pause / Menu  | `Esc`  |
+| Jump | `↑`|
+| Inhale / Spit | Space |
+| Pause | `Esc`  |
 
 ---
 
