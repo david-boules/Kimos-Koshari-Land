@@ -15,21 +15,17 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
 }
 
 void Kimo::keyPressEvent(QKeyEvent * event) {
-    if (event->key() == Qt::Key_Left)
-    {
+    if (event->key() == Qt::Key_Left) {
         setPos(x()-3, y());
     }
-    else if (event->key() == Qt::Key_Right)
-    {
+    else if (event->key() == Qt::Key_Right) {
         setPos(x()+3, y());
     }
 
-    else if (event->key() == Qt::Key_Up)
-    {
+    else if (event->key() == Qt::Key_Up) {
         jump();
     }
-    else if (event->key() == Qt::Key_Down)
-    {
+    else if (event->key() == Qt::Key_Down) {
         //crouch
     }
 

@@ -11,9 +11,11 @@ CONFIG += c++17
 SOURCES += \
     kimo.cpp \
     main.cpp \
+    platform.cpp
 
 HEADERS += \
     kimo.h \
+    platform.h
 
 FORMS += \
 
