@@ -8,6 +8,10 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     QPixmap KimoLarge(":/images/Kimo.png");
     QPixmap Kimo = KimoLarge.scaled(64, 64);
     setPixmap(Kimo);
+
+    jumpTimer = new QTimer(this);
+    connect(jumpTimer, SIGNAL(timeout()), this, SLOT(jumpChange()));
+    //timer is created and connected to a...
 }
 
 void Kimo::keyPressEvent(QKeyEvent * event) {
@@ -33,10 +37,26 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
 
 }
 
+//'jump' function
 void Kimo::jump() {
-    QTimer * timer = new QTimer();
-    connect(timer, SIGNAL(timeout()),this,SLOT (move()));
-    timer->start(20);
+    isJumping = true;
+    int jumpChanges = 0;
+    jumpTimer->start(30);
+}
 
-    setPos(x(), y()-10);
+//'jumpChange' function that is connected to the timer
+void Kimo::jumpChange() {
+    if(jumpChanges < 8){
+        setPos(x(), y()-5);
+    } else {
+        if(jumpChanges > 7 && jumpChanges < 16){
+            setPos(x(), y()+5);
+        } else {
+            jumpTimer->stop();
+            isJumping = false;
+            jumpChanges = 0;
+            return;
+        }
+    }
+    jumpChanges++;
 }
