@@ -5,7 +5,7 @@
 class Platform : public QGraphicsRectItem
 {
 public:
-    Platform();
+    Platform(int width, int height, int x, int y);
 };
 
 #endif // PLATFORM_H
