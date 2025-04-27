@@ -3,6 +3,7 @@
 #include <QGraphicsView>
 #include <QTimer>
 #include <kimo.h>
+#include <enemy.h>
 #include <platform.h>
 
 int main(int argc, char *argv[])
@@ -25,6 +26,12 @@ int main(int argc, char *argv[])
     kimo->setFocus();
     kimo->setPos(100, 400); // Starting position
     scene.addItem(kimo);
+
+    //create enemy
+    Enemy* enemy = new Enemy();
+    scene.addItem(enemy);
+    enemy->setPos(500, 336);
+    enemy->setTargetKimo(kimo);
 
     // Create Platforms
     // Ground platform
