@@ -1,6 +1,9 @@
 <RCC>
     <qresource prefix="/images">
         <file>Kimo.png</file>
-        <file>small_enemy1.png</file>
+        <file>example_enemy.png</file>
+        <file>chili.png</file>
+        <file>macaroni.png</file>
+        <file>onion.png</file>
     </qresource>
 </RCC>
