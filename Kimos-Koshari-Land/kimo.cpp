@@ -1,4 +1,5 @@
 #include "kimo.h"
+#include "enemy.h"
 #include <QKeyEvent>
 #include <QString>
 #include <QGraphicsScene>
@@ -8,14 +9,26 @@
 
 Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // Load and scale the character sprite
-    QPixmap KimoLarge(":/images/Kimo.png");
-    QPixmap Kimo = KimoLarge.scaled(64, 64);
-    setPixmap(Kimo);
+    normalKimo = QPixmap(":/images/Kimo.png").scaled(64,64);
+    inhalingKimo = QPixmap(":/images/Kimo_inhale").scaled(64,64);
+    fullKimo = QPixmap(":/images/Kimo_full.png").scaled(64,64);
+    spittingKimo = QPixmap(":/images/Kimo_spit.png").scaled(64,64);
 
     // Set up physics timer for smooth movement
     physicsTimer = new QTimer(this);
     connect(physicsTimer, SIGNAL(timeout()), this, SLOT(updatePhysics()));
     physicsTimer->start(16); // ~60 FPS for smooth physics
+}
+
+void Kimo::updateSprite() {
+    if(currentState == Normal)
+        setPixmap(normalKimo);
+    else if(currentState == Inhaling)
+        setPixmap(inhalingKimo);
+    else if(currentState == Full)
+        setPixmap(fullKimo);
+    else if(currentState == Spitting)
+        setPixmap(spittingKimo);
 }
 
 /* Movement & Physics functions
@@ -32,10 +45,20 @@ setAirControl
 void Kimo::keyPressEvent(QKeyEvent * event) {
     // Handle horizontal movement
     if (event->key() == Qt::Key_Left) {
-        horizontalVelocity = -5.0; // Move left
+        if(currentState == Normal) {
+            horizontalVelocity = -5.0; // Move left
+        }
+        else if(currentState == Full) {
+            horizontalVelocity = -2.0; // Moves slower when full
+        }
     }
     else if (event->key() == Qt::Key_Right) {
-        horizontalVelocity = 5.0; // Move right
+        if(currentState == Normal) {
+            horizontalVelocity = 5.0; // Move right
+        }
+        else if(currentState == Full) {
+            horizontalVelocity = 2.0; // Moves slower when full
+        }
     }
     // Handle jumping (only when grounded)
     else if (event->key() == Qt::Key_Up && isGrounded) {
@@ -45,12 +68,29 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
     else if (event->key() == Qt::Key_Down) {
         //crouch
     }
+    else if (event->key() == Qt::Key_Space) {
+        if(currentState == Normal){
+            currentState = Inhaling;
+            inhale();
+            updateSprite();
+        }
+        else if (currentState == Full) {
+            spit();
+        }
+
+    }
 }
 
 void Kimo::keyReleaseEvent(QKeyEvent * event) {
     // Stop horizontal movement when keys are released
     if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
         horizontalVelocity = 0;
+    }
+    if (event->key() == Qt::Key_Space) {
+        if(currentState == Inhaling){
+            currentState = Normal;
+            updateSprite();
+        }
     }
 }
 
@@ -64,7 +104,6 @@ void Kimo::jump() {
 
 void Kimo::updatePhysics() {
     // Fix edge bug: Check for platform under both left and right edges of the character
-    bool wasGrounded = isGrounded;
     isGrounded = false;
     int footY = y() + pixmap().height() + 1;
 
@@ -197,9 +236,21 @@ void Kimo::respawn() {
 }
 
 void Kimo::inhale() {
-    // To-do
+    for(int i = 0; i< scene()->items().size(); i++) {
+        if(Enemy* enemy = dynamic_cast <Enemy*>(scene()->items()[i])) {
+            if(x() < enemy->x() && abs(x() - enemy->x()) < 50 && abs(y() - enemy->y()) < 30) {
+                scene()->removeItem(enemy);
+                enemy->deleteLater(); // A Qt-safe way to delelte an object after events and singals are finished
+                currentState = Full;
+                updateSprite();
+                break;
+            }
+        }
+    }
 }
 
 void Kimo::spit() {
     // To-do
+    currentState = Normal;
+    updateSprite();
 }

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QList>
+#include <QVector>
 
 class Kimo : public QObject, public QGraphicsPixmapItem
 {
@@ -11,6 +12,7 @@ class Kimo : public QObject, public QGraphicsPixmapItem
 public:
     // Constructor
     Kimo(QGraphicsItem *parent = nullptr);
+    void updateSprite();
     
     // Gameplay Mechanics member functions
     void setHealthText(QGraphicsTextItem* text); // Updates Health on-screen
@@ -28,14 +30,19 @@ public:
     void setGravity(bool enabled);          // Enables/disables gravity effect
     void setJumpVelocity(double velocity);  // Sets the initial jump velocity
     void setAirControl(bool enabled);       // Enables/disables air control
-    
-signals:
-    void kimoDied();
 
 private slots:
     void updatePhysics();                   // Updates physics calculations every frame
     
 private:
+
+    // Kimo Sprites
+    QPixmap normalKimo;
+    QPixmap inhalingKimo;
+    QPixmap fullKimo;
+    QPixmap spittingKimo;
+    enum KimoState {Normal=0, Inhaling=1, Full=2, Spitting=3};
+    KimoState currentState = Normal;
 
     // Gameplay Mechanics member variables
     int health = 3;                          // Kimo starts with 3 health strokes
@@ -45,6 +52,8 @@ private:
     QTimer * physicsTimer;                  // Timer for physics updates
     bool isJumping = false;                 // Tracks if character is currently jumping
     bool isGrounded = true;                 // Tracks if character is on a platform
+    bool isInhaling = false;
+    bool isFull = false;
     
     // Physics variables
     double verticalVelocity = 0;            // Current vertical speed
