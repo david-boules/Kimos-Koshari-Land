@@ -35,25 +35,34 @@ int main(int argc, char *argv[])
 
     // Create Platforms
     // Ground platform
-    Platform *ground = new Platform(800, 50, 0, 550);
+    StaticPlatform *ground = new StaticPlatform(800, 50, 0, 550);
     scene.addItem(ground);
 
-    // Floating platforms
-    Platform *platform1 = new Platform(150, 20, 100, 400);
+    // floating static plaforms
+    StaticPlatform *platform1 = new StaticPlatform(160, 20, 100, 400);
     scene.addItem(platform1);
 
-    Platform *platform2 = new Platform(150, 20, 300, 300);
+    StaticPlatform *platform2 = new StaticPlatform(160, 20, 300, 300);
     scene.addItem(platform2);
 
-    Platform *platform3 = new Platform(150, 20, 500, 200);
+    // Moving platform (moves horizontally with range 200 and speed 2)
+    MovingPlatform *platform3 = new MovingPlatform(160, 20, 400, 200, 200, 2);
     scene.addItem(platform3);
 
-    Platform *platform4 = new Platform(150, 20, 200, 100);
+    // spikey platform
+    SpikyPlatform *platform4 = new SpikyPlatform(160, 20, 200, 100);
     scene.addItem(platform4);
 
     view.setScene(&scene);
     view.setBackgroundBrush(Qt::blue);
     view.show();
+
+    // Add a timer to update the moving platform so it moves
+    QTimer *platformTimer = new QTimer();
+    QObject::connect(platformTimer, &QTimer::timeout, [platform3]() {
+        platform3->update();
+    });
+    platformTimer->start(16); // ~60 FPS
 
     return a.exec();
 }

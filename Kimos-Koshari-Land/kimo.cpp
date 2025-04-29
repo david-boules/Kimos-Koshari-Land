@@ -51,18 +51,32 @@ void Kimo::jump() {
 }
 
 void Kimo::updatePhysics() {
-    // Check if we're still on a platform
+    // Fix edge bug: Check for platform under both left and right edges of the character
     bool wasGrounded = isGrounded;
     isGrounded = false;
-    
-    // Check for platform directly below us
-    QList<QGraphicsItem*> itemsBelow = scene()->items(QPointF(x() + pixmap().width()/2, y() + pixmap().height() + 1));
-    for (QGraphicsItem* item : itemsBelow) {
-        if (typeid(*item) == typeid(Platform)) {
-            isGrounded = true;
+    int footY = y() + pixmap().height() + 1;
+
+    // Check left foot
+    bool leftFootOnPlatform = false;
+    QList<QGraphicsItem*> itemsBelowLeft = scene()->items(QPointF(x() + 2, footY));
+    for (QGraphicsItem* item : itemsBelowLeft) {
+        if (dynamic_cast<Platform*>(item)) {
+            leftFootOnPlatform = true;
             break;
         }
     }
+
+    // Check right foot
+    bool rightFootOnPlatform = false;
+    QList<QGraphicsItem*> itemsBelowRight = scene()->items(QPointF(x() + pixmap().width() - 2, footY));
+    for (QGraphicsItem* item : itemsBelowRight) {
+        if (dynamic_cast<Platform*>(item)) {
+            rightFootOnPlatform = true;
+            break;
+        }
+    }
+
+    isGrounded = leftFootOnPlatform || rightFootOnPlatform;
 
     // Apply gravity when not grounded
     if (!isGrounded) {
@@ -83,26 +97,36 @@ void Kimo::updatePhysics() {
 void Kimo::checkCollision() {
     QList<QGraphicsItem*> colliding_items = collidingItems();
     for (int i = 0; i < colliding_items.size(); ++i) {
-        if (typeid(*(colliding_items[i])) == typeid(Platform)) {
+        // Check for any platform type using dynamic_cast
+        if (Platform* platform = dynamic_cast<Platform*>(colliding_items[i])) {
             // Check if collision is from above (landing on platform)
-            if (verticalVelocity > 0 && y() < colliding_items[i]->y()) {
-                setPos(x(), colliding_items[i]->y() - pixmap().height());
+            if (verticalVelocity > 0 && y() < platform->y()) {
+                setPos(x(), platform->y() - pixmap().height());
                 verticalVelocity = 0;
                 isGrounded = true;
                 isJumping = false;
+
+                // Check for specific platform types
+                if (dynamic_cast<StaticPlatform*>(platform)) {
+                    // Standing on a static platform: do nothing special
+                } else if (dynamic_cast<MovingPlatform*>(platform)) {
+                    // Standing on a moving platform: do nothing special (could add logic to move with platform)
+                } else if (dynamic_cast<SpikyPlatform*>(platform)) {
+                    // Standing on a spiky platform: TODO - take damage (to be implemented by your colleague)
+                }
             }
             // Check if collision is from below (hitting head)
             else if (verticalVelocity < 0) {
-                setPos(x(), colliding_items[i]->y() + colliding_items[i]->boundingRect().height());
+                setPos(x(), platform->y() + platform->boundingRect().height());
                 verticalVelocity = 0;
             }
             // Check if collision is from the sides
             else {
                 if (horizontalVelocity > 0) { // Moving right
-                    setPos(colliding_items[i]->x() - pixmap().width(), y());
+                    setPos(platform->x() - pixmap().width(), y());
                 }
                 else if (horizontalVelocity < 0) { // Moving left
-                    setPos(colliding_items[i]->x() + colliding_items[i]->boundingRect().width(), y());
+                    setPos(platform->x() + platform->boundingRect().width(), y());
                 }
             }
         }
