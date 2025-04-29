@@ -12,6 +12,14 @@ public:
     // Constructor
     Kimo(QGraphicsItem *parent = nullptr);
     
+    // Gameplay Mechanics member functions
+    void setHealthText(QGraphicsTextItem* text); // Updates Health on-screen
+    void takeDamage();                           // Reduces Kimo's health
+    bool isDead() const;                         // Checks whether Kimo's health is 0
+    void respawn();                              // Relocates Kimo to starting position
+    void inhale();
+    void spit();
+
     // Movement and physics functions
     void keyPressEvent(QKeyEvent * event);  // Handles keyboard input for movement
     void keyReleaseEvent(QKeyEvent * event); // Handles stopping movement when keys are released
@@ -21,11 +29,19 @@ public:
     void setJumpVelocity(double velocity);  // Sets the initial jump velocity
     void setAirControl(bool enabled);       // Enables/disables air control
     
+signals:
+    void kimoDied();
+
 private slots:
     void updatePhysics();                   // Updates physics calculations every frame
     
 private:
-    // Timers and state variables
+
+    // Gameplay Mechanics member variables
+    int health = 3;                          // Kimo starts with 3 health strokes
+    QGraphicsTextItem* healthText = nullptr; //
+
+    // Timers and State variables
     QTimer * physicsTimer;                  // Timer for physics updates
     bool isJumping = false;                 // Tracks if character is currently jumping
     bool isGrounded = true;                 // Tracks if character is on a platform

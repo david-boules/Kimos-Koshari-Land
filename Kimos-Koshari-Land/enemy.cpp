@@ -8,7 +8,7 @@
 Enemy::Enemy(QGraphicsItem* parent) : QGraphicsPixmapItem(parent)
 {
     // Load and scale enemy sprite
-    QPixmap enemyLarge(":/images/small_enemy1.png");
+    QPixmap enemyLarge(":/images/chili.png");
     QPixmap enemyScaled = enemyLarge.scaled(60, 60);  // Adjust size as needed
     setPixmap(enemyScaled);
     setPos(600, 300);  // Starting position

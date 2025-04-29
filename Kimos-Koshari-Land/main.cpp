@@ -27,7 +27,15 @@ int main(int argc, char *argv[])
     kimo->setPos(100, 400); // Starting position
     scene.addItem(kimo);
 
-    //create enemy
+    // Create Health Text
+    QGraphicsTextItem* healthText = new QGraphicsTextItem("Health: 3");
+    healthText->setDefaultTextColor(Qt::white);
+    healthText->setFont(QFont("Arial", 16));
+    healthText->setPos(700, 10);
+    scene.addItem(healthText);
+    kimo->setHealthText(healthText); // Links the Kimo instance with the health text so it can be updated
+
+    //Create enemy
     Enemy* enemy = new Enemy();
     scene.addItem(enemy);
     enemy->setPos(500, 336);

@@ -1,5 +1,6 @@
 #include "kimo.h"
 #include <QKeyEvent>
+#include <QString>
 #include <QGraphicsScene>
 #include <QTimer>
 #include <QList>
@@ -17,6 +18,17 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     physicsTimer->start(16); // ~60 FPS for smooth physics
 }
 
+/* Movement & Physics functions
+keyPressEvent
+keyReleaseEvent
+jump
+crouch (not yet implemented)
+updatePhysics
+checkCollision
+setGravity
+setJumpVelocity
+setAirControl
+ */
 void Kimo::keyPressEvent(QKeyEvent * event) {
     // Handle horizontal movement
     if (event->key() == Qt::Key_Left) {
@@ -86,6 +98,10 @@ void Kimo::updatePhysics() {
         }
     }
 
+    if (y() > 650) {
+        respawn(); // Kimo respawns if he falls of the screen
+    }
+
     // Apply horizontal movement with air control
     double controlFactor = isGrounded ? groundControlFactor : airControlFactor;
     setPos(x() + horizontalVelocity * controlFactor, y() + verticalVelocity);
@@ -145,4 +161,45 @@ void Kimo::setJumpVelocity(double velocity) {
 
 void Kimo::setAirControl(bool enabled) {
     airControlEnabled = enabled;
+}
+
+/* Gameplay Mechanics functions
+ * setHealthText
+ * takeDamage
+ * isDead
+ * respawn
+ * inhale (to-do)
+ * spit (to-do)
+ */
+
+void Kimo::setHealthText(QGraphicsTextItem* text) {
+    healthText = text;
+}
+
+void Kimo::takeDamage() {
+    health -= 1;
+    if(isDead()) {
+        respawn();
+    }
+    healthText->setPlainText("Health: " + QString::number(health)); // Updating health on screen
+}
+
+bool Kimo::isDead() const {
+    return health == 0;
+}
+
+void Kimo::respawn() {
+    //Instead of deleting the object which could cause some issues with other functions, we relocate Kimo and reset the key physics
+    this->setPos(100, 400);
+    verticalVelocity = 0;
+    horizontalVelocity = 0;
+    health=3;
+}
+
+void Kimo::inhale() {
+    // To-do
+}
+
+void Kimo::spit() {
+    // To-do
 }
