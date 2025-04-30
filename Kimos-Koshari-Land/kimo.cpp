@@ -7,8 +7,8 @@
 #include <QList>
 #include <platform.h>
 
-Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent),health(3){
-    // Load and scale the character sprite
+Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
+    // Load and scale the character sprites (for different states)
     normalKimo = QPixmap(":/images/Kimo.png").scaled(64,64);
     inhalingKimo = QPixmap(":/images/Kimo_inhale").scaled(64,64);
     fullKimo = QPixmap(":/images/Kimo_full.png").scaled(64,64);
@@ -238,7 +238,7 @@ void Kimo::respawn() {
 void Kimo::inhale() {
     for(int i = 0; i< scene()->items().size(); i++) {
         if(Enemy* enemy = dynamic_cast <Enemy*>(scene()->items()[i])) {
-            if(x() < enemy->x() && abs(x() - enemy->x()) < 50 && abs(y() - enemy->y()) < 30) {
+            if(x() < enemy->x() && abs(x() - enemy->x()) < 70 && abs(y() - enemy->y()) < 30) {
                 scene()->removeItem(enemy);
                 enemy->deleteLater(); // A Qt-safe way to delelte an object after events and singals are finished
                 currentState = Full;
@@ -250,7 +250,14 @@ void Kimo::inhale() {
 }
 
 void Kimo::spit() {
-    // To-do
+    currentState = Spitting;
+    updateSprite();
+    QTimer::singleShot(400, this, SLOT(finishSpit()));
+    // Projectile is created then spat
+
+}
+
+void Kimo::finishSpit() {
     currentState = Normal;
     updateSprite();
 }

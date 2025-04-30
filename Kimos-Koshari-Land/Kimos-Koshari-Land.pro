@@ -15,7 +15,8 @@ SOURCES += \
     main.cpp \
     move1.cpp \
     move2.cpp \
-    platform.cpp
+    platform.cpp \
+    projectile.cpp
 
 HEADERS += \
     enemy.h \
@@ -23,7 +24,8 @@ HEADERS += \
     kimo.h \
     move1.h \
     move2.h \
-    platform.h
+    platform.h \
+    projectile.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

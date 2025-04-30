@@ -19,20 +19,22 @@ public:
     void takeDamage(int amount);                           // Reduces Kimo's health
     bool isDead() const;                         // Checks whether Kimo's health is 0
     void respawn();                              // Relocates Kimo to starting position
-    void inhale();
-    void spit();
+    void inhale();                               // Kimo's 'inhale' function
+    void spit();                                 // Kimo's 'spit' function
 
     // Movement and physics functions
-    void keyPressEvent(QKeyEvent * event);  // Handles keyboard input for movement
-    void keyReleaseEvent(QKeyEvent * event); // Handles stopping movement when keys are released
-    void jump();                            // Initiates jump when grounded
-    void checkCollision();                  // Checks and handles collisions with platforms
-    void setGravity(bool enabled);          // Enables/disables gravity effect
-    void setJumpVelocity(double velocity);  // Sets the initial jump velocity
-    void setAirControl(bool enabled);       // Enables/disables air control
+    void keyPressEvent(QKeyEvent * event);       // Handles keyboard input for movement
+    void keyReleaseEvent(QKeyEvent * event);     // Handles stopping movement when keys are released
+    void jump();                                 // Initiates jump when grounded
+    void checkCollision();                       // Checks and handles collisions with platforms
+    void setGravity(bool enabled);               // Enables/disables gravity effect
+    void setJumpVelocity(double velocity);       // Sets the initial jump velocity
+    void setAirControl(bool enabled);            // Enables/disables air control
 
 private slots:
-    void updatePhysics();                   // Updates physics calculations every frame
+    // Slots only called from inside 'Kimo' objects
+    void updatePhysics();                        // Updates physics calculations every frame
+    void finishSpit();
     
 private:
 
@@ -41,12 +43,12 @@ private:
     QPixmap inhalingKimo;
     QPixmap fullKimo;
     QPixmap spittingKimo;
-    enum KimoState {Normal=0, Inhaling=1, Full=2, Spitting=3};
+    enum KimoState {Normal, Inhaling, Full, Spitting};
     KimoState currentState = Normal;
 
     // Gameplay Mechanics member variables
     int health = 3;                          // Kimo starts with 3 health strokes
-    QGraphicsTextItem* healthText = nullptr; //
+    QGraphicsTextItem* healthText = nullptr; // Pointer to display health on screen
 
     // Timers and State variables
     QTimer * physicsTimer;                  // Timer for physics updates
