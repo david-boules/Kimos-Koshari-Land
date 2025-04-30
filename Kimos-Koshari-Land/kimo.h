@@ -14,7 +14,7 @@ public:
     
     // Gameplay Mechanics member functions
     void setHealthText(QGraphicsTextItem* text); // Updates Health on-screen
-    void takeDamage();                           // Reduces Kimo's health
+    void takeDamage(int amount);                           // Reduces Kimo's health
     bool isDead() const;                         // Checks whether Kimo's health is 0
     void respawn();                              // Relocates Kimo to starting position
     void inhale();

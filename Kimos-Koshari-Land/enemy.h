@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include <QGraphicsPixmapItem>
+#include <QGraphicsRectItem>
 #include <QObject>
 #include <QTimer>
 #include "kimo.h"
@@ -10,20 +11,30 @@ class Enemy : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:
-    Enemy(QGraphicsItem* parent = nullptr);
+
+    Enemy(QString path, QPointF startingPos, QGraphicsItem* parent = nullptr);
     void setTargetKimo(Kimo* kimo) { kimoo = kimo; }
+    void SetHealth(int health);
+    void damage(int damage);
 
 signals:
     void enemyDefeated(Enemy* enemy);
 
 private slots:
-    void move();
-
+    virtual void move();
+protected:
+    qreal speed;
+     Kimo* kimoo;
+    qreal damage1;
 
 private:
     QTimer* moveTimer;
-    qreal speed;
-    Kimo* kimoo;
+
+
+    int health;
+    QGraphicsRectItem* healthBar;
+    QGraphicsRectItem* healthBarBackground;
+
 
 };
 

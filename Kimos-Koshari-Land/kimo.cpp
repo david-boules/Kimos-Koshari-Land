@@ -6,7 +6,7 @@
 #include <QList>
 #include <platform.h>
 
-Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
+Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent),health(3){
     // Load and scale the character sprite
     QPixmap KimoLarge(":/images/Kimo.png");
     QPixmap Kimo = KimoLarge.scaled(64, 64);
@@ -176,8 +176,8 @@ void Kimo::setHealthText(QGraphicsTextItem* text) {
     healthText = text;
 }
 
-void Kimo::takeDamage() {
-    health -= 1;
+void Kimo::takeDamage(int amount) {
+    health -= amount;
     if(isDead()) {
         respawn();
     }

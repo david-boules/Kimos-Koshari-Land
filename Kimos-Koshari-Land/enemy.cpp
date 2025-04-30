@@ -2,24 +2,46 @@
 #include <QGraphicsPixmapItem>
 #include <QObject>
 #include <QTimer>
+#include <QBrush>
+#include <QGraphicsScene>
 
 
 #include <QDebug>
-Enemy::Enemy(QGraphicsItem* parent) : QGraphicsPixmapItem(parent)
+Enemy::Enemy(QString path, QPointF startingPos, QGraphicsItem* parent) : QGraphicsPixmapItem(parent)
 {
     // Load and scale enemy sprite
-    QPixmap enemyLarge(":/images/chili.png");
-    QPixmap enemyScaled = enemyLarge.scaled(60, 60);  // Adjust size as needed
-    setPixmap(enemyScaled);
-    setPos(600, 300);  // Starting position
+    QPixmap enemyLarge(path);
+    QPixmap enemyScaled = enemyLarge.scaled(60, 60);    // Adjust size as needed
+     setPixmap(enemyScaled);
+    setPos(startingPos);  // Starting position
     speed=2.0;
+    damage1=1;
+    health=2;
+    healthBarBackground = new QGraphicsRectItem(0, 0, 60, 6, this);
+    healthBarBackground->setBrush(Qt::black);
+    healthBarBackground->setPos(0, -10);
+
+    healthBar= new QGraphicsRectItem(0,0,60,6,healthBarBackground);
+    healthBar->setBrush(Qt::green);
+
 
     // Set up movement timer for smooth update
     moveTimer = new QTimer(this);
     connect(moveTimer, SIGNAL(timeout()), this, SLOT(move()));
     moveTimer->start(16); // ~60 FPS
 }
+
 void Enemy::move(){
+    if (kimoo && collidesWithItem(kimoo)) {
+        kimoo->takeDamage(damage1);
+        health-=1;
+         healthBar->setRect(0, 0, 60 * (health / 2.0), 6);
+        if(health<=0){
+        scene()->removeItem(this);
+        delete this;
+        return;
+        }
+    }
 
     if (!kimoo) return; // If no Kimo linked, skip
 
@@ -27,13 +49,15 @@ void Enemy::move(){
     qreal distancex = qAbs(x() - kimoo->x());
     qreal distancey=qAbs(y()-kimoo->y());
 
+
+
     // If Kimo is close (for example, within 50 pixels)
-    if (distancex <200&&distancey<30) {
+    if (distancex <200&&distancey<10) {
         // Move towards Kimo
-        if (x() > kimoo->x()) {
+        if (x() > kimoo->x() && x() > 300) {
             setPos(x() - qAbs(speed), y()); // Move left towards Kimo
-        } else if (x() < kimoo->x()) {
-            setPos(x() + speed, y()); // Move right towards Kimo
+        } else if (x() < kimoo->x()&&x()+pixmap().width()<460) {
+            setPos(x() + qAbs(speed), y()); // Move right towards Kimo
         }
     }
     else {
@@ -41,7 +65,7 @@ void Enemy::move(){
         setPos(x() - speed, y());
 
         // Bounce back when hitting screen edges
-        if (x() <= 0 || x() >= 800 - pixmap().width()) {
+        if (x() <= 300 || x() >= 460 - pixmap().width()) {
             speed = -speed; // Change direction
         }
     }

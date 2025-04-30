@@ -12,11 +12,15 @@ SOURCES += \
     enemy.cpp \
     kimo.cpp \
     main.cpp \
+    move1.cpp \
+    move2.cpp \
     platform.cpp
 
 HEADERS += \
     enemy.h \
     kimo.h \
+    move1.h \
+    move2.h \
     platform.h
 
 # Default rules for deployment.
@@ -26,3 +30,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+FORMS +=

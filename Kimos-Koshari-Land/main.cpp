@@ -5,7 +5,8 @@
 #include <kimo.h>
 #include <enemy.h>
 #include <platform.h>
-
+#include <move1.h>
+#include <move2.h>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -36,10 +37,17 @@ int main(int argc, char *argv[])
     kimo->setHealthText(healthText); // Links the Kimo instance with the health text so it can be updated
 
     //Create enemy
-    Enemy* enemy = new Enemy();
-    scene.addItem(enemy);
-    enemy->setPos(500, 336);
-    enemy->setTargetKimo(kimo);
+    move2* Chili = new move2(":/images/chili.png",QPointF(500,336));
+    scene.addItem(Chili);
+    Chili->setTargetKimo(kimo);
+
+    Enemy* macaroni = new Enemy(":/images/macaroni.png",QPointF(364,236));
+    scene.addItem(macaroni);
+    macaroni->setTargetKimo(kimo);
+
+    move1* onion = new move1(":/images/onion.png",QPointF(500,100));
+    scene.addItem(onion);
+    onion->setTargetKimo(kimo);
 
     // Create Platforms
     // Ground platform
