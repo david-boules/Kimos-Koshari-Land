@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     kimo->setFlag(QGraphicsItem::ItemIsFocusable);
     kimo->setFocus();
     kimo->setPos(100, 400); // Starting position
+    kimo->setPixmap(QPixmap (":/images/Kimo.png").scaled(64,64));
     scene.addItem(kimo);
 
     // Create Health Text
