@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     enemy.cpp \
+    fireball.cpp \
     kimo.cpp \
     main.cpp \
     move1.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     enemy.h \
+    fireball.h \
     kimo.h \
     move1.h \
     move2.h \

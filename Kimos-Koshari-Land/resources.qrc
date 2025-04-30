@@ -9,5 +9,6 @@
         <file>Kimo_full.png</file>
         <file>Kimo_spit.png</file>
         <file>Kimo_inhale.png</file>
+        <file>fireball.png</file>
     </qresource>
 </RCC>

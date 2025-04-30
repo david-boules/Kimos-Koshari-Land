@@ -15,7 +15,7 @@ public:
     Enemy(QString path, QPointF startingPos, QGraphicsItem* parent = nullptr);
     void setTargetKimo(Kimo* kimo) { kimoo = kimo; }
     void SetHealth(int health);
-    void damage(int damage);
+   // void damage(int damage1);
 
 signals:
     void enemyDefeated(Enemy* enemy);
@@ -25,7 +25,7 @@ private slots:
 protected:
     qreal speed;
      Kimo* kimoo;
-    qreal damage1;
+    qreal damage;
 
 private:
     QTimer* moveTimer;

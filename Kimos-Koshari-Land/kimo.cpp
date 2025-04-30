@@ -224,7 +224,7 @@ void Kimo::takeDamage(int amount) {
 }
 
 bool Kimo::isDead() const {
-    return health == 0;
+    return health <= 0;
 }
 
 void Kimo::respawn() {

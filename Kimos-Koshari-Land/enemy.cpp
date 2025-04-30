@@ -15,7 +15,7 @@ Enemy::Enemy(QString path, QPointF startingPos, QGraphicsItem* parent) : QGraphi
      setPixmap(enemyScaled);
     setPos(startingPos);  // Starting position
     speed=2.0;
-    damage1=1;
+    damage=1;
     health=2;
     healthBarBackground = new QGraphicsRectItem(0, 0, 60, 6, this);
     healthBarBackground->setBrush(Qt::black);
@@ -33,7 +33,7 @@ Enemy::Enemy(QString path, QPointF startingPos, QGraphicsItem* parent) : QGraphi
 
 void Enemy::move(){
     if (kimoo && collidesWithItem(kimoo)) {
-        kimoo->takeDamage(damage1);
+        kimoo->takeDamage(damage);
         health-=1;
          healthBar->setRect(0, 0, 60 * (health / 2.0), 6);
         if(health<=0){
