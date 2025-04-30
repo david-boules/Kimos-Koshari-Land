@@ -12,6 +12,7 @@ SOURCES += \
     enemy.cpp \
     fireball.cpp \
     kimo.cpp \
+    macaronimissile.cpp \
     main.cpp \
     move1.cpp \
     move2.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
     enemy.h \
     fireball.h \
     kimo.h \
+    macaronimissile.h \
     move1.h \
     move2.h \
     platform.h \

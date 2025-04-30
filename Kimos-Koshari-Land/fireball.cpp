@@ -1,37 +1,19 @@
 #include "fireball.h"
+#include "projectile.h"
 #include <QPixmap>
 #include <QGraphicsScene>
 
-Fireball::Fireball(qreal direction, QGraphicsItem* parent)
-    : QGraphicsPixmapItem(parent)
-{  damage=2;
+Fireball::Fireball(qreal direction, QGraphicsItem* parent) : Projectile(parent)
+{   damage=1;
     speed=direction*3;  // Speed: 3, direction: -1 or 1
-    QPixmap fireball(":/images/fireball.png");
-    QPixmap fireballScaled = fireball.scaled(20, 20); // Adjust fireball size
-    setPixmap(fireballScaled);
-    moveTimer = new QTimer(this);
-    connect(moveTimer, &QTimer::timeout, this, &Fireball::move);
-    moveTimer->start(16); // ~60 FPS
+    QPixmap fireball = QPixmap(":/images/fireball.png").scaled(20,20);
+    setPixmap(fireball);
 }
 
-void Fireball::setTargetKimo(Kimo* kimo){
-    kimoo=kimo;
-}
-
-void Fireball::move() {
-    setPos(x() + speed, y());
-
-    if (kimoo && collidesWithItem(kimoo)) {
-        kimoo->takeDamage(damage);           // Deal damage
-        scene()->removeItem(this);           // Remove from scene
-        delete this;                         // Delete object
-        return;
-    }
-    // Remove fireball if it goes off screen
-    if (x() < 0 || x() > 800) {
+void Fireball::hit(QGraphicsItem* target) {
+    if(Kimo*k = dynamic_cast<Kimo*>(target)) {
+        k->takeDamage(damage);
         scene()->removeItem(this);
-        deleteLater();
+        deleteLater(); // Safe deletion since object may be deleted while move() is still running
     }
-
-    // You can also add collision detection with Kimo here
 }

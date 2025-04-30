@@ -17,7 +17,6 @@ void move2::shootFire(){
 
     qreal direction = (kimoo->x() < x()) ? -1 : 1; // Left or right
     Fireball* fb = new Fireball(direction);
-    fb->setTargetKimo(kimoo);
     fb->setPos(x(), y() + 20); // Starting position slightly below the enemy
     scene()->addItem(fb);
     }

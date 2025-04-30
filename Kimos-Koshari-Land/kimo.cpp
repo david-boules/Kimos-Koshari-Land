@@ -1,5 +1,6 @@
 #include "kimo.h"
 #include "enemy.h"
+#include "macaronimissile.h"
 #include <QKeyEvent>
 #include <QString>
 #include <QGraphicsScene>
@@ -254,7 +255,9 @@ void Kimo::spit() {
     updateSprite();
     QTimer::singleShot(400, this, SLOT(finishSpit()));
     // Projectile is created then spat
-
+    MacaroniMissile* missile = new MacaroniMissile();
+    missile->setPos(x()+32, y()+20);
+    scene()->addItem(missile);
 }
 
 void Kimo::finishSpit() {

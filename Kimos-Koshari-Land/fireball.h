@@ -5,23 +5,16 @@
 #include <QObject>
 #include <QTimer>
 #include "kimo.h"
+#include "projectile.h"
 
-class Fireball : public QObject, public QGraphicsPixmapItem {
+class Fireball : public Projectile {
     Q_OBJECT
 
 public:
     Fireball(qreal direction, QGraphicsItem* parent = nullptr);
-    void setTargetKimo(Kimo* kimo) ;
-    Kimo* kimoo;
-
-
-
-private slots:
-    void move();
+    void hit(QGraphicsItem* target) override; // Overrides pure virtual function 'hit' in 'Projectile'
 
 private:
-    QTimer* moveTimer;
-    qreal speed;
     qreal damage;
 };
 
