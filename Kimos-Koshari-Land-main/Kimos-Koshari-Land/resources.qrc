@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>Kimo.png</file>
+        <file>example_enemy.png</file>
+        <file>chili.png</file>
+        <file>macaroni.png</file>
+        <file>onion.png</file>
+        <file>spikes.png</file>
+        <file>Kimo_full.png</file>
+        <file>Kimo_spit.png</file>
+        <file>Kimo_inhale.png</file>
+        <file>fireball.png</file>
+        <file>macaroni_missile.png</file>
+    </qresource>
+</RCC>
