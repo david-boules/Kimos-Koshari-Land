@@ -22,12 +22,11 @@ Abou Tarek unleashes koshari minions to reclaim the debt: fiery **Chili Pepp
 | Move   | `←` / `→`         |
 | Jump | `↑`|
 | Inhale / Spit | Space |
-| Pause | `Esc`  |
 
 ---
 
 ## UML Class Diagram
-> *(A UML Class Diagram will be included in this section once **at least Level 1 is finalized**)*
+![UML Diagram](UML_Diagram_Milestone_1.pdf)
 
 ---
 
