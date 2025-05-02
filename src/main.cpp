@@ -9,7 +9,9 @@
 #include "environment/platform.h"
 #include "movement/move1.h"
 #include "movement/move2.h"
-
+#include "move1.h"
+#include "move2.h"
+#include "enemy.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -67,7 +69,7 @@ int main(int argc, char *argv[])
     scene.addItem(macaroni);
     macaroni->setTargetKimo(kimo);
 
-    move1* onion = new move1(":/images/enemies/onion.png",QPointF(500,100));
+    move1* onion = new move1(":/images/enemies/onion.png",QPointF(500,400));
     scene.addItem(onion);
     onion->setTargetKimo(kimo);
 

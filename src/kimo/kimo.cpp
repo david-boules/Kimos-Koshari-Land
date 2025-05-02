@@ -268,6 +268,9 @@ void Kimo::setHealthText(QGraphicsTextItem* text) {
 }
 
 void Kimo::takeDamage(int amount) {
+if (damageTimer.elapsed() < 1000) return; // Only take damage once per second
+    damageTimer.restart();
+
     health -= amount;
     if (healthText) { // Check if healthText is valid
          healthText->setPlainText("Health: " + QString::number(health)); // Updating health on screen

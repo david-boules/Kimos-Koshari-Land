@@ -15,6 +15,9 @@ public:
     Enemy(QString path, QPointF startingPos, QGraphicsItem* parent = nullptr);
     void setTargetKimo(Kimo* kimo) { kimoo = kimo; }
     void SetHealth(int health);
+    virtual int get_enemy_health() const {
+        return health;
+    }
    // void damage(int damage1);
 
 signals:

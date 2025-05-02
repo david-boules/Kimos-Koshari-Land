@@ -9,11 +9,17 @@ class move1 : public Enemy {
 public:
     move1(QString path, QPointF startingPos, QGraphicsItem* parent = nullptr);
     void move() override;
+    int get_enemy_health() const override{
+        return enemy_health;
+    }
 
 private:
     qreal angle = 0.0;
     qreal speed;
+    qreal damage;
+    int enemy_health=1;
+    //qreal healthOfEnemy;
+
+
 };
-
-
 #endif // MOVE1_H

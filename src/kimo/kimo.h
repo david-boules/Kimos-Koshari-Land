@@ -36,6 +36,7 @@ public:
 
     // View setter
     void setView(QGraphicsView* v); // Added setter for the view
+    QElapsedTimer damageTimer;
 
 private slots:
     // Slots only called from inside 'Kimo' objects

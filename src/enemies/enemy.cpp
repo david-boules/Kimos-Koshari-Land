@@ -8,7 +8,7 @@
 
 #include <QDebug>
 Enemy::Enemy(QString path, QPointF startingPos, QGraphicsItem* parent) : QGraphicsPixmapItem(parent)
-{
+{//onion enemy
     // Load and scale enemy sprite
     QPixmap enemyLarge(path);
     QPixmap enemyScaled = enemyLarge.scaled(60, 60);    // Adjust size as needed
@@ -37,9 +37,9 @@ void Enemy::move(){
         health-=1;
          healthBar->setRect(0, 0, 60 * (health / 2.0), 6);
         if(health<=0){
-        scene()->removeItem(this);
-        delete this;
-        return;
+             scene()->removeItem(this);
+             delete this;
+             return;
         }
     }
 

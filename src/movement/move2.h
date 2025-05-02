@@ -8,15 +8,21 @@ class move2: public Enemy{
 public:
     move2(QString path, QPointF startingPos, QGraphicsItem* parent = nullptr);
     void move() override;
-     void shootFire();
+    void shootFire();
 
+    int get_enemy_health() const override{
+        return enemy_health;
+    }
 
 private:
     qreal speed;
     qreal damage;
     QTimer* shootTimer;
-   // void shootFire();
+    int enemy_health=2;
+    // void shootFire();
 };
+
+
 
 
 #endif // MOVE2_H
