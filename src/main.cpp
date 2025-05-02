@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     // Create Scene
     QGraphicsScene scene;
     // Increased scene size to allow for scrolling
-    scene.setSceneRect(0, 0, 1600, 600); // Example: doubled width
+    scene.setSceneRect(0, 0, 2000, 600); // Example: doubled width
 
     // Create View
     QGraphicsView view;
@@ -40,25 +40,24 @@ int main(int argc, char *argv[])
     // Pass the view to Kimo for camera control
     kimo->setView(&view);
 
-    // --- HUD Implementation START ---
-    // Create Health Text (HUD Element)
+    // HUD Implementation
+    // Create Health Text
     QGraphicsTextItem* healthText = new QGraphicsTextItem();
     healthText->setDefaultTextColor(Qt::white);
     healthText->setFont(QFont("Arial", 16));
     healthText->setPlainText("Health: 3"); // Initial text
     // Set Z-value to ensure HUD is drawn on top
-    healthText->setZValue(1); 
+    healthText->setZValue(1);
     scene.addItem(healthText); // Add to scene, position updated in timer
     kimo->setHealthText(healthText); // Link Kimo to update the text content
 
-    // Create Level Name Text (HUD Element)
+    // Create Level Name Text
     QGraphicsTextItem* levelNameText = new QGraphicsTextItem();
     levelNameText->setDefaultTextColor(Qt::white);
     levelNameText->setFont(QFont("Arial", 16));
     levelNameText->setPlainText("Level: Koshari Kitchen"); // Level name
     levelNameText->setZValue(1); // Ensure HUD is drawn on top
     scene.addItem(levelNameText); // Add to scene, position updated in timer
-    // --- HUD Implementation END ---
 
     //Create enemy
     move2* Chili = new move2(":/images/enemies/chili.png",QPointF(500,336));
@@ -88,39 +87,39 @@ int main(int argc, char *argv[])
     enemySpawnTimer->start(16); // Check ~60 times per second
     // Create Platforms
     // Ground platform (extended for larger scene)
-    StaticPlatform *ground = new StaticPlatform(1600, 50, 0, 550);
+    StaticPlatform *ground = new StaticPlatform(2000, 50, 0, 550);
     scene.addItem(ground);
 
-    // floating static plaforms
+    // Floating static plaforms
     StaticPlatform *platform1 = new StaticPlatform(160, 20, 100, 400);
-    platform1->setPixmap(QPixmap(":/images/tiles/brick.png").scaled(160, 20));
+    //platform1->setPixmap(QPixmap(":/images/tiles/brick.png").scaled(160, 20));
     scene.addItem(platform1);
 
     StaticPlatform *platform2 = new StaticPlatform(160, 20, 300, 300);
     scene.addItem(platform2);
 
     // Moving platform (moves horizontally with range 200 and speed 2)
-    MovingPlatform *platform3 = new MovingPlatform(160, 20, 400, 200, 200, 2);
-    scene.addItem(platform3);
+    MovingPlatform *moving1 = new MovingPlatform(160, 20, 400, 200, 200, 2);
+    scene.addItem(moving1);
 
-    // spikey platform
-    SpikyPlatform *platform4 = new SpikyPlatform(160, 20, 200, 100);
-    scene.addItem(platform4);
+    // Spiky platform
+    SpikyPlatform *spiky1 = new SpikyPlatform(160, 20, 200, 100);
+    scene.addItem(spiky1);
     
     // Add more platforms for the larger scene
-    StaticPlatform *platform5 = new StaticPlatform(160, 20, 700, 450);
+    StaticPlatform *platform3 = new StaticPlatform(160, 20, 700, 450);
+    scene.addItem(platform3);
+    StaticPlatform *platform4 = new StaticPlatform(160, 20, 900, 350);
+    scene.addItem(platform4);
+    StaticPlatform *platform5 = new StaticPlatform(160, 20, 1100, 250);
     scene.addItem(platform5);
-    StaticPlatform *platform6 = new StaticPlatform(160, 20, 900, 350);
-    scene.addItem(platform6);
-    StaticPlatform *platform7 = new StaticPlatform(160, 20, 1100, 250);
-    scene.addItem(platform7);
-    MovingPlatform *platform8 = new MovingPlatform(160, 20, 1300, 400, 150, 3);
-    scene.addItem(platform8);
+    MovingPlatform *moving2 = new MovingPlatform(160, 20, 1300, 400, 150, 3);
+    scene.addItem(moving2);
 
     // Adding temporary 'Clear Condition' object
     QGraphicsRectItem* goal = new QGraphicsRectItem(0,0,64,64);
     goal->setBrush(Qt::red);
-    goal->setPos(1500, 460);
+    goal->setPos(1950, 460);
     scene.addItem(goal);
     kimo->setGoal(goal);
 
@@ -130,8 +129,8 @@ int main(int argc, char *argv[])
     QTimer *gameUpdateTimer = new QTimer();
     QObject::connect(gameUpdateTimer, &QTimer::timeout, [&]() {
         // Update moving platforms
-        platform3->update();
-        platform8->update();
+        moving1->update();
+        moving2->update();
 
         // --- HUD Position Update START ---
         // Map the view's top-left corner (0,0) to scene coordinates

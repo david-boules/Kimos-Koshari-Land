@@ -15,11 +15,12 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // Load and scale the character sprites (for different states)
     normalRightKimo = QPixmap(":/images/kimo/Kimo_right.png").scaled(64,64);
     normalLeftKimo = QPixmap(":/images/kimo/Kimo_left.png").scaled(64,64);
-    inhalingKimo = QPixmap(":/images/kimo/Kimo_inhale").scaled(64,64);
-    fullKimo = QPixmap(":/images/kimo/Kimo_full.png").scaled(64,64);
-    spittingKimo = QPixmap(":/images/kimo/Kimo_spit.png").scaled(64,64);
-    damageTimer.start();
-
+    inhalingRightKimo = QPixmap(":/images/kimo/Kimo_inhaleRight.png").scaled(64,64);
+    inhalingLeftKimo = QPixmap(":/images/kimo/Kimo_inhaleLeft.png").scaled(64,64);
+    fullRightKimo = QPixmap(":/images/kimo/Kimo_fullRight.png").scaled(64,64);
+    fullLeftKimo = QPixmap(":/images/kimo/Kimo_fullLeft.png").scaled(64,64);
+    spittingRightKimo = QPixmap(":/images/kimo/Kimo_spitRight.png").scaled(64,64);
+    spittingLeftKimo = QPixmap(":/images/kimo/Kimo_spitLeft.png").scaled(64,64);
 
     // Initialize the damage timer
     damageTimer.start();
@@ -41,12 +42,26 @@ void Kimo::updateSprite() {
         setPixmap(normalRightKimo);
     else if(currentState == NormalLeft)
         setPixmap(normalLeftKimo);
-    else if(currentState == Inhaling)
-        setPixmap(inhalingKimo);
-    else if(currentState == Full)
-        setPixmap(fullKimo);
-    else if(currentState == Spitting)
-        setPixmap(spittingKimo);
+    else if(currentState == Inhaling) {
+        if(lastDirection == Left)
+            setPixmap(inhalingLeftKimo);
+        else
+            setPixmap(inhalingRightKimo);
+    }
+    else if(currentState == Full) {
+        if(lastDirection == Left){
+            setPixmap(fullLeftKimo);
+        } else {
+            setPixmap(fullRightKimo);
+        }
+    }
+    else if(currentState == Spitting) {
+        if(lastDirection == Left){
+            setPixmap(spittingLeftKimo);
+        } else {
+            setPixmap(spittingRightKimo);
+        }
+    }
 }
 
 void Kimo::setGoal(QGraphicsRectItem* g) {
@@ -75,6 +90,7 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
         }
         else if(currentState == Full) {
             horizontalVelocity = -2.0; // Moves slower when full
+            updateSprite();
         }
     }
     else if (event->key() == Qt::Key_Right) {
@@ -86,6 +102,7 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
         }
         else if(currentState == Full) {
             horizontalVelocity = 2.0; // Moves slower when full
+            updateSprite();
         }
     }
     // Handle jumping (only when grounded)
@@ -271,7 +288,7 @@ void Kimo::checkCollision() {
                     kimoRect.right() > platformRect.left() &&
                     kimoRect.left() < platformRect.right())
                 {
-                    setY(platformRect.top() - pixmap().height());
+                    setY(platformRect.top() - pixmap().height()+4); // Slight offset added so Kimo appears to stand on platforms
                     verticalVelocity = 0;
                     isGrounded = true;
                     isJumping = false;
@@ -398,9 +415,9 @@ void Kimo::spit() {
     // Projectile is created then spat
     MacaroniMissile* missile = new MacaroniMissile();
     // Adjust spawn position based on Kimo's facing direction (simple check)
-    bool facingRight = horizontalVelocity >= 0;
-    qreal missileX = facingRight ? x() + pixmap().width() : x() - missile->pixmap().width();
-    missile->setPos(missileX, y() + 5);
+    bool facingRight = (lastDirection == Right);
+    qreal missileTemp = facingRight ? x() + pixmap().width() : x() - missile->pixmap().width();
+    missile->setPos(missileTemp, y() + 5);
     // Set missile direction
     missile->setDirection(facingRight ? 1 : -1);
     scene()->addItem(missile);

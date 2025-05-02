@@ -1,14 +1,14 @@
 #include "enemy.h"
 #include "macaronimissile.h"
 #include "projectile.h"
+#include "platform.h"
 #include <QGraphicsScene>
 
 MacaroniMissile::MacaroniMissile(QGraphicsItem* parent) : Projectile(parent) {
     // Speed is now magnitude, direction is handled separately
-    speed = 5;
+    speed = 7;
     QPixmap missilePixmap = QPixmap(":/images/projectiles/macaroni_missile.png").scaled(50,50);
     setPixmap(missilePixmap);
-    // Direction defaults to 1 (right), can be changed by setDirection
 }
 
 // Implementation for setDirection
@@ -28,16 +28,17 @@ void MacaroniMissile::setDirection(int dir) {
 void MacaroniMissile::hit(QGraphicsItem* target) {
     // Check if the target is an Enemy
     if(Enemy* e = dynamic_cast<Enemy*>(target)) {
-        // Check if the target is NOT another projectile (to avoid self-destruction or hitting other missiles)
-        if (!dynamic_cast<Projectile*>(target)) {
-            scene()->removeItem(target);
-            delete e; // Consider using deleteLater() if issues arise
-            scene()->removeItem(this);
-            deleteLater(); // Safe deletion
-            return; // Stop processing after hitting an enemy
-        }
+        scene()->removeItem(target);
+        delete e; // Consider using deleteLater() if issues arise
+        scene()->removeItem(this);
+        deleteLater(); // Safe deletion
+        return; // Stop processing after hitting an enemy
     }
-    // Handle collisions with other types of items (e.g., platforms)
-    // else if (dynamic_cast<Platform*>(target))...
+    if(Platform* p = dynamic_cast<Platform*>(target)) {
+        scene()->removeItem(this);
+        deleteLater();
+        return;
+    }
+    // Handle collisions with other types of items if needed
 }
 

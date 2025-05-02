@@ -49,9 +49,12 @@ private:
     // Kimo's Sprites
     QPixmap normalRightKimo;
     QPixmap normalLeftKimo;
-    QPixmap inhalingKimo;
-    QPixmap fullKimo;
-    QPixmap spittingKimo;
+    QPixmap inhalingRightKimo;
+    QPixmap inhalingLeftKimo;
+    QPixmap fullRightKimo;
+    QPixmap fullLeftKimo;
+    QPixmap spittingRightKimo;
+    QPixmap spittingLeftKimo;
     enum KimoState {NormalRight, NormalLeft, Inhaling, Full, Spitting};
     KimoState currentState = NormalRight;
 
@@ -66,10 +69,10 @@ private:
 
     // Timers and State variables
     QTimer * physicsTimer;                  // Timer for physics updates
-    bool isJumping = false;                 // Tracks if character is currently jumping
-    bool isGrounded = true;                 // Tracks if character is on a platform
-    bool isInhaling = false;
-    bool isFull = false;
+    bool isJumping = false;                 // Tracks if Kimo is currently jumping
+    bool isGrounded = true;                 // Tracks if Kimo is on a platform
+    bool isInhaling = false;                // Tracks if Kimo is inhaling
+    bool isFull = false;                    // Tracks if Kimo is 'full'
     
     // Physics variables
     double verticalVelocity = 0;            // Current vertical speed

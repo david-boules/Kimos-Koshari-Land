@@ -12,10 +12,6 @@ public:
     // Added method to set the direction
     void setDirection(int dir); 
 
-private:
-    // Added member to store direction (1 for right, -1 for left)
-    int direction = 1; 
-
 private slots:
     // Override or connect to the move slot if necessary, check projectile.h/cpp
     // Assuming Projectile has a move slot that uses speed, we might need to adjust speed based on direction

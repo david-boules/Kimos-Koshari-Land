@@ -1,8 +1,10 @@
 <RCC>
     <qresource prefix="/">
-        <file>../images/kimo/Kimo_full.png</file>
-        <file>../images/kimo/Kimo_inhale.png</file>
-        <file>../images/kimo/Kimo_spit.png</file>
+        <file>../images/kimo/Kimo_right.png</file>
+        <file>../images/kimo/Kimo_fullRight.png</file>
+        <file>../images/kimo/Kimo_inhaleRight.png</file>
+        <file>../images/kimo/Kimo_spitRight.png</file>
+        <file>../images/kimo/Kimo_left.png</file>
         <file>../images/enemies/chili.png</file>
         <file>../images/enemies/example_enemy.png</file>
         <file>../images/enemies/macaroni.png</file>
@@ -10,9 +12,10 @@
         <file>../images/projectiles/fireball.png</file>
         <file>../images/projectiles/macaroni_missile.png</file>
         <file>../images/tiles/spikes.png</file>
-        <file>../images/kimo/Kimo_left.png</file>
-        <file>../images/kimo/Kimo_right.png</file>
         <file>../images/background.png</file>
         <file>../images/tiles/brick.png</file>
+        <file>../images/kimo/Kimo_fullLeft.png</file>
+        <file>../images/kimo/Kimo_inhaleLeft.png</file>
+        <file>../images/kimo/Kimo_spitLeft.png</file>
     </qresource>
 </RCC>
