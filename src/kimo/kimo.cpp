@@ -13,12 +13,16 @@
 
 Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // Load and scale the character sprites (for different states)
-    normalKimo = QPixmap(":/images/kimo/Kimo.png").scaled(64,64);
+    normalRightKimo = QPixmap(":/images/kimo/Kimo_right.png").scaled(64,64);
+    normalLeftKimo = QPixmap(":/images/kimo/Kimo_left.png").scaled(64,64);
     inhalingKimo = QPixmap(":/images/kimo/Kimo_inhale").scaled(64,64);
     fullKimo = QPixmap(":/images/kimo/Kimo_full.png").scaled(64,64);
     spittingKimo = QPixmap(":/images/kimo/Kimo_spit.png").scaled(64,64);
     damageTimer.start();
 
+
+    // Initialize the damage timer
+    damageTimer.start();
 
     // Set up physics timer for smooth movement
     physicsTimer = new QTimer(this);
@@ -31,15 +35,22 @@ void Kimo::setView(QGraphicsView* v) {
     view = v;
 }
 
+// Updating Kimo's sprite based on his current state
 void Kimo::updateSprite() {
-    if(currentState == Normal)
-        setPixmap(normalKimo);
+    if(currentState == NormalRight)
+        setPixmap(normalRightKimo);
+    else if(currentState == NormalLeft)
+        setPixmap(normalLeftKimo);
     else if(currentState == Inhaling)
         setPixmap(inhalingKimo);
     else if(currentState == Full)
         setPixmap(fullKimo);
     else if(currentState == Spitting)
         setPixmap(spittingKimo);
+}
+
+void Kimo::setGoal(QGraphicsRectItem* g) {
+    goal = g;
 }
 
 /* Movement & Physics functions
@@ -56,7 +67,10 @@ setAirControl
 void Kimo::keyPressEvent(QKeyEvent * event) {
     // Handle horizontal movement
     if (event->key() == Qt::Key_Left) {
-        if(currentState == Normal) {
+        lastDirection = Left;
+        if(currentState == NormalRight || currentState == NormalLeft) {
+            currentState = NormalLeft;
+            updateSprite();
             horizontalVelocity = -5.0; // Move left
         }
         else if(currentState == Full) {
@@ -64,7 +78,10 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
         }
     }
     else if (event->key() == Qt::Key_Right) {
-        if(currentState == Normal) {
+        lastDirection = Right;
+        if(currentState == NormalRight || currentState == NormalLeft) {
+            currentState = NormalRight;
+            updateSprite();
             horizontalVelocity = 5.0; // Move right
         }
         else if(currentState == Full) {
@@ -80,7 +97,7 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
         //crouch
     }
     else if (event->key() == Qt::Key_Space) {
-        if(currentState == Normal){
+        if(currentState != Full){
             currentState = Inhaling;
             inhale();
             updateSprite();
@@ -99,7 +116,10 @@ void Kimo::keyReleaseEvent(QKeyEvent * event) {
     }
     if (event->key() == Qt::Key_Space) {
         if(currentState == Inhaling){
-            currentState = Normal;
+            if (lastDirection == Left)
+                currentState = NormalLeft;
+            else if (lastDirection == Right)
+                currentState = NormalRight;
             updateSprite();
         }
     }
@@ -122,9 +142,16 @@ void Kimo::updatePhysics() {
     bool leftFootOnPlatform = false;
     QList<QGraphicsItem*> itemsBelowLeft = scene()->items(QPointF(x() + 2, footY));
     for (QGraphicsItem* item : itemsBelowLeft) {
+        // Check if item is either a Platform or a hitbox of a Platform
         if (dynamic_cast<Platform*>(item)) {
             leftFootOnPlatform = true;
             break;
+        } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
+            // If it's a rect, check if its parent is a Platform
+            if (rect->parentItem() && dynamic_cast<Platform*>(rect->parentItem())) {
+                leftFootOnPlatform = true;
+                break;
+            }
         }
     }
 
@@ -132,9 +159,16 @@ void Kimo::updatePhysics() {
     bool rightFootOnPlatform = false;
     QList<QGraphicsItem*> itemsBelowRight = scene()->items(QPointF(x() + pixmap().width() - 2, footY));
     for (QGraphicsItem* item : itemsBelowRight) {
+        // Check if item is either a Platform or a hitbox of a Platform
         if (dynamic_cast<Platform*>(item)) {
             rightFootOnPlatform = true;
             break;
+        } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
+            // If it's a rect, check if its parent is a Platform
+            if (rect->parentItem() && dynamic_cast<Platform*>(rect->parentItem())) {
+                rightFootOnPlatform = true;
+                break;
+            }
         }
     }
 
@@ -197,10 +231,33 @@ void Kimo::updatePhysics() {
 void Kimo::checkCollision() {
     QList<QGraphicsItem*> colliding_items = collidingItems();
     for (int i = 0; i < colliding_items.size(); ++i) {
-        // Check for any platform type using dynamic_cast
+        // Check for platform hitboxes or platform objects
+        QGraphicsRectItem* hitbox = nullptr;
+        
+        // First, check if item is a Platform directly
         if (Platform* platform = dynamic_cast<Platform*>(colliding_items[i])) {
+            hitbox = platform->getHitbox();
+        } 
+        // Alternatively, check if it's a hitbox belonging to a platform
+        else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(colliding_items[i])) {
+            // See if this rect belongs to a Platform
+            QGraphicsItem* parent = rect->parentItem();
+            if (dynamic_cast<Platform*>(parent)) {
+                hitbox = rect;
+            }
+        }
+        
+        if (hitbox) {
             QRectF kimoRect = this->sceneBoundingRect();
-            QRectF platformRect = platform->sceneBoundingRect();
+            QRectF platformRect = hitbox->sceneBoundingRect();
+
+            if (goal && collidingItems().contains(goal)) {
+                QGraphicsTextItem* cleared = new QGraphicsTextItem("Level Complete!");
+                cleared->setFont(QFont("Arial", 24));
+                cleared->setDefaultTextColor(Qt::red);
+                cleared->setPos(x(), y()-40);
+                scene()->addItem(cleared);
+            }
 
             // Calculate intersection
             QRectF intersection = kimoRect.intersected(platformRect);
@@ -208,40 +265,52 @@ void Kimo::checkCollision() {
             // Check if collision is primarily vertical (landing or hitting head)
             if (intersection.width() > intersection.height()) {
                 // Collision from above (landing on platform)
-                if (verticalVelocity > 0 && kimoRect.bottom() > platformRect.top() && kimoRect.top() < platformRect.top()) {
-                    setPos(x(), platformRect.top() - pixmap().height());
+                if (verticalVelocity > 0 &&
+                    kimoRect.bottom() > platformRect.top() &&
+                    kimoRect.top() < platformRect.top() &&
+                    kimoRect.right() > platformRect.left() &&
+                    kimoRect.left() < platformRect.right())
+                {
+                    setY(platformRect.top() - pixmap().height());
                     verticalVelocity = 0;
                     isGrounded = true;
                     isJumping = false;
 
-                    // Check for specific platform types
-                    if (dynamic_cast<SpikyPlatform*>(platform)) {
+                    // Check for specific platform types by looking at parent
+                    if (hitbox->parentItem() && dynamic_cast<SpikyPlatform*>(hitbox->parentItem())) {
                         // Standing on a spiky platform: take damage
                         takeDamage(1); // Damage amount can be adjusted
                     }
                 }
                 // Collision from below (hitting head)
-                else if (verticalVelocity < 0 && kimoRect.top() < platformRect.bottom() && kimoRect.bottom() > platformRect.bottom()) {
-                    setPos(x(), platformRect.bottom());
+                else if (verticalVelocity < 0 &&
+                         kimoRect.top() < platformRect.bottom() &&
+                         kimoRect.bottom() > platformRect.bottom()) {
+                    setY(platformRect.bottom());
                     verticalVelocity = 0;
                 }
             }
             // Check if collision is primarily horizontal
             else if (intersection.height() > intersection.width()) {
-                 // Collision from the right side (hitting platform's left edge)
-                if (horizontalVelocity > 0 && kimoRect.right() > platformRect.left() && kimoRect.left() < platformRect.left()) {
-                    setPos(platformRect.left() - pixmap().width(), y());
+                // Collision from the right side (hitting platform's left edge)
+                if (horizontalVelocity > 0 &&
+                    kimoRect.right() > platformRect.left() &&
+                    kimoRect.left() < platformRect.left()) {
+                    setX(platformRect.left() - pixmap().width());
                     horizontalVelocity = 0;
                 }
                 // Collision from the left side (hitting platform's right edge)
-                else if (horizontalVelocity < 0 && kimoRect.left() < platformRect.right() && kimoRect.right() > platformRect.right()) {
-                    setPos(platformRect.right(), y());
+                else if (horizontalVelocity < 0 &&
+                         kimoRect.left() < platformRect.right() &&
+                         kimoRect.right() > platformRect.right()) {
+                    setX(platformRect.right());
                     horizontalVelocity = 0;
                 }
             }
         }
     }
 }
+
 
 void Kimo::setGravity(bool enabled) {
     if (!enabled) {
@@ -296,7 +365,7 @@ void Kimo::respawn() {
     if (healthText) { // Update health display on respawn
          healthText->setPlainText("Health: " + QString::number(health));
     }
-    currentState = Normal; // Reset state
+    currentState = NormalRight; // Reset state
     updateSprite();
 }
 
@@ -331,14 +400,16 @@ void Kimo::spit() {
     // Adjust spawn position based on Kimo's facing direction (simple check)
     bool facingRight = horizontalVelocity >= 0;
     qreal missileX = facingRight ? x() + pixmap().width() : x() - missile->pixmap().width();
-    missile->setPos(missileX, y() + 20);
+    missile->setPos(missileX, y() + 5);
     // Set missile direction
     missile->setDirection(facingRight ? 1 : -1);
     scene()->addItem(missile);
 }
 
 void Kimo::finishSpit() {
-    currentState = Normal;
+    if (horizontalVelocity < 0)
+        currentState = NormalLeft;
+    else
+        currentState = NormalRight;
     updateSprite();
 }
-

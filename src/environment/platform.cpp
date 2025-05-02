@@ -1,17 +1,27 @@
 #include "platform.h"
 #include <QGraphicsScene>
-#include <QPen>
-#include <QBrush>
 #include <QPixmap>
+#include <QPainter> // Needed to resize Pixmap items
 
 // Platform base constructor: sets size and position
 Platform::Platform(int width, int height, int x, int y) {
-    setRect(0, 0, width, height);
-    QPen pen(Qt::lightGray);
-    QBrush brush(Qt::lightGray);
-    setPen(pen);
-    setBrush(brush);
+    QPixmap original_brick(":/images/tiles/brick.png");
+    // Ensuring platform is exactly the intended size ('IgnoreAspectRatio') & Making scaling visually clean ('SmoothTransformation')
+    QPixmap scaled = original_brick.scaled(width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    setPixmap(scaled);
     setPos(x, y);
+
+    // Create hitbox exactly matching the pixmap's dimensions and position
+    hitbox = new QGraphicsRectItem(0, 0, width, height, this); 
+    // Make hitbox invisible but still functional for collision detection
+    hitbox->setBrush(Qt::NoBrush);
+    hitbox->setPen(Qt::NoPen);
+    // Ensure hitbox stays with the platform when it moves
+    hitbox->setPos(0, 0);
+}
+
+QGraphicsRectItem* Platform::getHitbox() const {
+    return hitbox;
 }
 
 // StaticPlatform constructor: calls base Platform constructor
@@ -28,7 +38,10 @@ MovingPlatform::MovingPlatform(int width, int height, int x, int y, int range, i
 
 // MovingPlatform update: moves the platform back and forth horizontally
 void MovingPlatform::update() {
+    // Move the platform using QGraphicsItem coordinates
     setPos(x() + direction * moveSpeed, y());
+    
+    // Check if platform has reached movement boundaries
     if (x() >= startX + moveRange || x() <= startX) {
         direction *= -1;
     }
