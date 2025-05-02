@@ -51,12 +51,12 @@ void MovingPlatform::update() {
 SpikyPlatform::SpikyPlatform(int width, int height, int x, int y)
     : Platform(width, height, x, y), spikeOverlay(nullptr)
 {
-    // Load the spike PNG from the Qt resource system (make sure the path matches your .qrc file)
-    QPixmap spikePixmap(":/images/tiles/spikes.png"); // <-- update this path if your .qrc uses a different prefix
+    QPixmap spikePixmap(":/images/tiles/spikes.png");
     if (!spikePixmap.isNull()) {
-        spikePixmap = spikePixmap.scaled(width, spikePixmap.height(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        // Making the spikes appear in between the ground tiles
+        spikePixmap = spikePixmap.scaled(width, 20, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
         spikeOverlay = new QGraphicsPixmapItem(spikePixmap, this);
-        spikeOverlay->setPos(0, -spikePixmap.height() + 5);
+        spikeOverlay->setPos(0, - 20);
     }
 }
 void SpikyPlatform::update() {

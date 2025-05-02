@@ -35,7 +35,7 @@ void move2::move() {
     qreal distancey=qAbs(y()-kimoo->y());
 
     // If Kimo is close (for example, within 50 pixels)
-    if (distancex <300&&distancey<30) {
+    if (distancex <300&&distancey<120) {
         // Move towards Kimo
         if (x() > kimoo->x()) {
             setPos(x() - qAbs(speed), y()); // Move left towards Kimo
@@ -52,8 +52,6 @@ void move2::move() {
             speed = -speed; // Change direction
         }
     }
-
-
 }
 ;
 

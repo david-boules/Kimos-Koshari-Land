@@ -1,6 +1,7 @@
 #include "kimo.h"
 #include "enemy.h"
 #include "macaronimissile.h"
+#include <QApplication>
 #include <QKeyEvent>
 #include <QString>
 #include <QGraphicsScene>
@@ -270,10 +271,11 @@ void Kimo::checkCollision() {
 
             if (goal && collidingItems().contains(goal)) {
                 QGraphicsTextItem* cleared = new QGraphicsTextItem("Level Complete!");
-                cleared->setFont(QFont("Arial", 24));
-                cleared->setDefaultTextColor(Qt::red);
-                cleared->setPos(x(), y()-40);
+                cleared->setFont(QFont("Arial", 30));
+                cleared->setDefaultTextColor(Qt::green);
+                cleared->setPos(x()-80, y()-150);
                 scene()->addItem(cleared);
+                qApp->exit();
             }
 
             // Calculate intersection
@@ -296,7 +298,7 @@ void Kimo::checkCollision() {
                     // Check for specific platform types by looking at parent
                     if (hitbox->parentItem() && dynamic_cast<SpikyPlatform*>(hitbox->parentItem())) {
                         // Standing on a spiky platform: take damage
-                        takeDamage(1); // Damage amount can be adjusted
+                        takeDamage(3); // Damage amount can be adjusted
                     }
                 }
                 // Collision from below (hitting head)

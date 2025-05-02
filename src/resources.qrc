@@ -5,7 +5,8 @@
         <file>../images/kimo/Kimo_inhaleRight.png</file>
         <file>../images/kimo/Kimo_spitRight.png</file>
         <file>../images/kimo/Kimo_left.png</file>
-        <file>../images/enemies/chili.png</file>
+        <file>../images/enemies/chiliLeft.png</file>
+	<file>../images/enemies/chiliRight.png</file>
         <file>../images/enemies/example_enemy.png</file>
         <file>../images/enemies/macaroni.png</file>
         <file>../images/enemies/onion.png</file>

@@ -11,10 +11,10 @@ class Enemy : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:
-
-    Enemy(QString path, QPointF startingPos, QGraphicsItem* parent = nullptr);
+    Enemy(QPixmap path, QPointF startingPos, QGraphicsItem* parent = nullptr);
     void setTargetKimo(Kimo* kimo) { kimoo = kimo; }
     void SetHealth(int health);
+    void setSpeed(qreal s);
     virtual int get_enemy_health() const {
         return health;
     }

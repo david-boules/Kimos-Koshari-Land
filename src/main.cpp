@@ -60,17 +60,24 @@ int main(int argc, char *argv[])
     scene.addItem(levelNameText); // Add to scene, position updated in timer
 
     //Create enemy
-    move2* Chili = new move2(":/images/enemies/chili.png",QPointF(500,336));
+    move2* Chili = new move2(":/images/enemies/chiliLeft.png",QPointF(500,336));
     scene.addItem(Chili);
     Chili->setTargetKimo(kimo);
 
-    Enemy* macaroni = new Enemy(":/images/enemies/macaroni.png",QPointF(364,236));
+    Enemy* macaroni = new Enemy(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
     scene.addItem(macaroni);
     macaroni->setTargetKimo(kimo);
 
     move1* onion = new move1(":/images/enemies/onion.png",QPointF(500,400));
     scene.addItem(onion);
     onion->setTargetKimo(kimo);
+
+    Enemy* macaroniBig = new Enemy(QPixmap(":/images/enemies/macaroni.png"), QPointF(1300,250));
+    macaroniBig->setScale(5.0);
+    macaroniBig->setTargetKimo(kimo);
+    macaroniBig->setSpeed(0);
+    macaroniBig->setTargetKimo(kimo);
+    scene.addItem(macaroniBig);
 
     static bool enemySpawned = false;
 
@@ -87,8 +94,33 @@ int main(int argc, char *argv[])
     enemySpawnTimer->start(16); // Check ~60 times per second
     // Create Platforms
     // Ground platform (extended for larger scene)
-    StaticPlatform *ground = new StaticPlatform(2000, 50, 0, 550);
-    scene.addItem(ground);
+    StaticPlatform *ground1 = new StaticPlatform(200, 50, 0, 550);
+    scene.addItem(ground1);
+
+    StaticPlatform *ground2 = new StaticPlatform(200, 50, 300, 550);
+    scene.addItem(ground2);
+
+    StaticPlatform *ground3 = new StaticPlatform(200, 50, 600, 550);
+    scene.addItem(ground3);
+
+    StaticPlatform *ground4 = new StaticPlatform(200, 50, 900, 550);
+    scene.addItem(ground4);
+
+    StaticPlatform *ground5 = new StaticPlatform(800, 50, 1200, 550);
+    scene.addItem(ground5);
+
+
+    SpikyPlatform *spiky1 = new SpikyPlatform(100, 20, 200, 580);
+    scene.addItem(spiky1);
+
+    SpikyPlatform *spiky2 = new SpikyPlatform(100, 20, 500, 580);
+    scene.addItem(spiky2);
+
+    SpikyPlatform *spiky3 = new SpikyPlatform(100, 20, 800, 580);
+    scene.addItem(spiky3);
+
+    SpikyPlatform *spiky4 = new SpikyPlatform(100, 20, 1100, 580);
+    scene.addItem(spiky4);
 
     // Floating static plaforms
     StaticPlatform *platform1 = new StaticPlatform(160, 20, 100, 400);
@@ -103,23 +135,20 @@ int main(int argc, char *argv[])
     scene.addItem(moving1);
 
     // Spiky platform
-    SpikyPlatform *spiky1 = new SpikyPlatform(160, 20, 200, 100);
-    scene.addItem(spiky1);
+
     
     // Add more platforms for the larger scene
     StaticPlatform *platform3 = new StaticPlatform(160, 20, 700, 450);
     scene.addItem(platform3);
-    StaticPlatform *platform4 = new StaticPlatform(160, 20, 900, 350);
+    StaticPlatform *platform4 = new StaticPlatform(160, 20, 900, 300);
     scene.addItem(platform4);
-    StaticPlatform *platform5 = new StaticPlatform(160, 20, 1100, 250);
-    scene.addItem(platform5);
-    MovingPlatform *moving2 = new MovingPlatform(160, 20, 1300, 400, 150, 3);
+    MovingPlatform *moving2 = new MovingPlatform(160, 20, 1100, 150, 250, 3);
     scene.addItem(moving2);
 
     // Adding temporary 'Clear Condition' object
     QGraphicsRectItem* goal = new QGraphicsRectItem(0,0,64,64);
     goal->setBrush(Qt::red);
-    goal->setPos(1950, 460);
+    goal->setPos(1800, 450);
     scene.addItem(goal);
     kimo->setGoal(goal);
 
@@ -142,6 +171,6 @@ int main(int argc, char *argv[])
     });
     gameUpdateTimer->start(16); // ~60 FPS
 
+
     return a.exec();
 }
-
