@@ -5,13 +5,18 @@
 
 // Abstract base class for all platform types
 // Inherits from QGraphicsRectItem for rendering in the scene
-class Platform : public QGraphicsRectItem
+class Platform : public QGraphicsPixmapItem
 {
 public:
     // Constructor for setting size and position
     Platform(int width, int height, int x, int y);
     // Pure virtual update function to be implemented by derived classes
     virtual void update() = 0;
+
+    QGraphicsRectItem* getHitbox() const;
+
+protected:
+    QGraphicsRectItem* hitbox = nullptr; // 'Hitbox' to handle rectangular platform collisions (now that QGraphicsPixmapItems are being used)
 };
 
 // StaticPlatform: A platform that does not move

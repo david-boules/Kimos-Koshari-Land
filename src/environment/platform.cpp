@@ -1,17 +1,24 @@
 #include "platform.h"
 #include <QGraphicsScene>
-#include <QPen>
-#include <QBrush>
 #include <QPixmap>
+#include <QPainter> // Needed to resize Pixmap items
 
 // Platform base constructor: sets size and position
 Platform::Platform(int width, int height, int x, int y) {
-    setRect(0, 0, width, height);
-    QPen pen(Qt::lightGray);
-    QBrush brush(Qt::lightGray);
-    setPen(pen);
-    setBrush(brush);
+    QPixmap original_brick(":/images/tiles/brick.png");
+    // Ensuring platform is exactly the intended size ('IgnoreAspectRatio') & Making scaling visually clean ('SmoothTransformation')
+    QPixmap scaled = original_brick.scaled(width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    setPixmap(scaled);
     setPos(x, y);
+
+    hitbox = new QGraphicsRectItem(0, 0, width, height, this); // Creating the hitbox for the platform
+    // Ensuring the hitbox is still visible (since 'QGraphicsRectItem' defaults to a 'black border' and 'no fill' if no brush/pen are set)
+    hitbox->setBrush(Qt::NoBrush);
+    hitbox->setPen(Qt::NoPen);
+}
+
+QGraphicsRectItem* Platform::getHitbox() const {
+    return hitbox;
 }
 
 // StaticPlatform constructor: calls base Platform constructor

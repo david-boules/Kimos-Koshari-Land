@@ -24,6 +24,7 @@ public:
     void respawn();                              // Relocates Kimo to starting position
     void inhale();                               // Kimo's 'inhale' function
     void spit();                                 // Kimo's 'spit' function
+    void setGoal(QGraphicsRectItem* g);          // 'Setter' to update Kimo's pointer to the goal
 
     // Movement and physics functions
     void keyPressEvent(QKeyEvent * event);       // Handles keyboard input for movement
@@ -45,17 +46,23 @@ private slots:
     
 private:
 
-    // Kimo Sprites
-    QPixmap normalKimo;
+    // Kimo's Sprites
+    QPixmap normalRightKimo;
+    QPixmap normalLeftKimo;
     QPixmap inhalingKimo;
     QPixmap fullKimo;
     QPixmap spittingKimo;
-    enum KimoState {Normal, Inhaling, Full, Spitting};
-    KimoState currentState = Normal;
+    enum KimoState {NormalRight, NormalLeft, Inhaling, Full, Spitting};
+    KimoState currentState = NormalRight;
+
+    // Kimo's Direction (for updating sprites after inhale/spit)
+    enum Direction {Left, Right};
+    Direction lastDirection = Right;
 
     // Gameplay Mechanics member variables
     int health = 3;                          // Kimo starts with 3 health strokes
     QGraphicsTextItem* healthText = nullptr; // Pointer to display health on screen
+    QGraphicsRectItem* goal = nullptr;       // Pointer to the goal ('Clear Condition')
 
     // Timers and State variables
     QTimer * physicsTimer;                  // Timer for physics updates

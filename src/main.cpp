@@ -27,14 +27,14 @@ int main(int argc, char *argv[])
     view.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view.setScene(&scene); // Set scene before creating items that need it
-    view.setBackgroundBrush(Qt::blue);
+    view.setBackgroundBrush(QPixmap(":/images/background.png"));
 
     // Create Kimo Instance
     Kimo *kimo = new Kimo();
     kimo->setFlag(QGraphicsItem::ItemIsFocusable);
     kimo->setFocus();
-    kimo->setPos(100, 400); // Starting position
-    kimo->setPixmap(QPixmap (":/images/kimo/Kimo.png").scaled(64,64));
+    kimo->setPos(25, 450); // Starting position
+    kimo->setPixmap(QPixmap (":/images/kimo/Kimo_right.png").scaled(64,64));
     scene.addItem(kimo);
 
     // Pass the view to Kimo for camera control
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     QGraphicsTextItem* levelNameText = new QGraphicsTextItem();
     levelNameText->setDefaultTextColor(Qt::white);
     levelNameText->setFont(QFont("Arial", 16));
-    levelNameText->setPlainText("Level: Kimo's Kitchen"); // Example level name
+    levelNameText->setPlainText("Level: Koshari Kitchen"); // Level name
     levelNameText->setZValue(1); // Ensure HUD is drawn on top
     scene.addItem(levelNameText); // Add to scene, position updated in timer
     // --- HUD Implementation END ---
@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
 
     // floating static plaforms
     StaticPlatform *platform1 = new StaticPlatform(160, 20, 100, 400);
+    platform1->setPixmap(QPixmap(":/images/tiles/brick.png").scaled(160, 20));
     scene.addItem(platform1);
 
     StaticPlatform *platform2 = new StaticPlatform(160, 20, 300, 300);
@@ -102,6 +103,13 @@ int main(int argc, char *argv[])
     scene.addItem(platform7);
     MovingPlatform *platform8 = new MovingPlatform(160, 20, 1300, 400, 150, 3);
     scene.addItem(platform8);
+
+    // Adding temporary 'Clear Condition' object
+    QGraphicsRectItem* goal = new QGraphicsRectItem(0,0,64,64);
+    goal->setBrush(Qt::red);
+    goal->setPos(1500, 460);
+    scene.addItem(goal);
+    kimo->setGoal(goal);
 
     view.show(); // Show the view
 

@@ -1,15 +1,18 @@
 <RCC>
-  <qresource prefix="/">
-    <file>../images/kimo/Kimo.png</file>
-    <file>../images/kimo/Kimo_full.png</file>
-    <file>../images/kimo/Kimo_inhale.png</file>
-    <file>../images/kimo/Kimo_spit.png</file>
-    <file>../images/enemies/chili.png</file>
-    <file>../images/enemies/example_enemy.png</file>
-    <file>../images/enemies/macaroni.png</file>
-    <file>../images/enemies/onion.png</file>
-    <file>../images/projectiles/fireball.png</file>
-    <file>../images/projectiles/macaroni_missile.png</file>
-    <file>../images/tiles/spikes.png</file>
-  </qresource>
+    <qresource prefix="/">
+        <file>../images/kimo/Kimo_full.png</file>
+        <file>../images/kimo/Kimo_inhale.png</file>
+        <file>../images/kimo/Kimo_spit.png</file>
+        <file>../images/enemies/chili.png</file>
+        <file>../images/enemies/example_enemy.png</file>
+        <file>../images/enemies/macaroni.png</file>
+        <file>../images/enemies/onion.png</file>
+        <file>../images/projectiles/fireball.png</file>
+        <file>../images/projectiles/macaroni_missile.png</file>
+        <file>../images/tiles/spikes.png</file>
+        <file>../images/kimo/Kimo_left.png</file>
+        <file>../images/kimo/Kimo_right.png</file>
+        <file>../images/background.png</file>
+        <file>../images/tiles/brick.png</file>
+    </qresource>
 </RCC>
