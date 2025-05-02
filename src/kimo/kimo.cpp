@@ -18,6 +18,9 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     fullKimo = QPixmap(":/images/kimo/Kimo_full.png").scaled(64,64);
     spittingKimo = QPixmap(":/images/kimo/Kimo_spit.png").scaled(64,64);
 
+    // Initialize the damage timer
+    damageTimer.start();
+
     // Set up physics timer for smooth movement
     physicsTimer = new QTimer(this);
     connect(physicsTimer, SIGNAL(timeout()), this, SLOT(updatePhysics()));
@@ -136,9 +139,16 @@ void Kimo::updatePhysics() {
     bool leftFootOnPlatform = false;
     QList<QGraphicsItem*> itemsBelowLeft = scene()->items(QPointF(x() + 2, footY));
     for (QGraphicsItem* item : itemsBelowLeft) {
+        // Check if item is either a Platform or a hitbox of a Platform
         if (dynamic_cast<Platform*>(item)) {
             leftFootOnPlatform = true;
             break;
+        } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
+            // If it's a rect, check if its parent is a Platform
+            if (rect->parentItem() && dynamic_cast<Platform*>(rect->parentItem())) {
+                leftFootOnPlatform = true;
+                break;
+            }
         }
     }
 
@@ -146,9 +156,16 @@ void Kimo::updatePhysics() {
     bool rightFootOnPlatform = false;
     QList<QGraphicsItem*> itemsBelowRight = scene()->items(QPointF(x() + pixmap().width() - 2, footY));
     for (QGraphicsItem* item : itemsBelowRight) {
+        // Check if item is either a Platform or a hitbox of a Platform
         if (dynamic_cast<Platform*>(item)) {
             rightFootOnPlatform = true;
             break;
+        } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
+            // If it's a rect, check if its parent is a Platform
+            if (rect->parentItem() && dynamic_cast<Platform*>(rect->parentItem())) {
+                rightFootOnPlatform = true;
+                break;
+            }
         }
     }
 
@@ -211,10 +228,25 @@ void Kimo::updatePhysics() {
 void Kimo::checkCollision() {
     QList<QGraphicsItem*> colliding_items = collidingItems();
     for (int i = 0; i < colliding_items.size(); ++i) {
-        // Check for any platform type using dynamic_cast
+        // Check for platform hitboxes or platform objects
+        QGraphicsRectItem* hitbox = nullptr;
+        
+        // First, check if item is a Platform directly
         if (Platform* platform = dynamic_cast<Platform*>(colliding_items[i])) {
+            hitbox = platform->getHitbox();
+        } 
+        // Alternatively, check if it's a hitbox belonging to a platform
+        else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(colliding_items[i])) {
+            // See if this rect belongs to a Platform
+            QGraphicsItem* parent = rect->parentItem();
+            if (dynamic_cast<Platform*>(parent)) {
+                hitbox = rect;
+            }
+        }
+        
+        if (hitbox) {
             QRectF kimoRect = this->sceneBoundingRect();
-            QRectF platformRect = platform->sceneBoundingRect();
+            QRectF platformRect = hitbox->sceneBoundingRect();
 
             if (goal && collidingItems().contains(goal)) {
                 QGraphicsTextItem* cleared = new QGraphicsTextItem("Level Complete!");
@@ -241,8 +273,8 @@ void Kimo::checkCollision() {
                     isGrounded = true;
                     isJumping = false;
 
-                    // Check for specific platform types
-                    if (dynamic_cast<SpikyPlatform*>(platform)) {
+                    // Check for specific platform types by looking at parent
+                    if (hitbox->parentItem() && dynamic_cast<SpikyPlatform*>(hitbox->parentItem())) {
                         // Standing on a spiky platform: take damage
                         takeDamage(1); // Damage amount can be adjusted
                     }
