@@ -15,8 +15,8 @@ Enemy::Enemy(QString path, QPointF startingPos, QGraphicsItem* parent) : QGraphi
      setPixmap(enemyScaled);
     setPos(startingPos);  // Starting position
     speed=2.0;
-    damage=1;
-    health=2;
+    damage=3;
+    health=1;
     healthBarBackground = new QGraphicsRectItem(0, 0, 60, 6, this);
     healthBarBackground->setBrush(Qt::black);
     healthBarBackground->setPos(0, -10);

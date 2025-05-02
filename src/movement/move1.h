@@ -12,12 +12,18 @@ public:
     int get_enemy_health() const override{
         return enemy_health;
     }
+    void setBounds(qreal min, qreal max){
+        minX=min;
+        maxX=max;
+    }
 
 private:
     qreal angle = 0.0;
     qreal speed;
     qreal damage;
     int enemy_health=1;
+    qreal minX = 0;
+    qreal maxX = 800;
     //qreal healthOfEnemy;
 
 

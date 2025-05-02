@@ -4,6 +4,7 @@
 #include <QKeyEvent>
 #include <QString>
 #include <QGraphicsScene>
+#include "QElapsedTimer"
 #include <QTimer>
 #include <QList>
 #include <platform.h>
@@ -16,6 +17,8 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     inhalingKimo = QPixmap(":/images/kimo/Kimo_inhale").scaled(64,64);
     fullKimo = QPixmap(":/images/kimo/Kimo_full.png").scaled(64,64);
     spittingKimo = QPixmap(":/images/kimo/Kimo_spit.png").scaled(64,64);
+    damageTimer.start();
+
 
     // Set up physics timer for smooth movement
     physicsTimer = new QTimer(this);
@@ -268,7 +271,7 @@ void Kimo::setHealthText(QGraphicsTextItem* text) {
 }
 
 void Kimo::takeDamage(int amount) {
-if (damageTimer.elapsed() < 1000) return; // Only take damage once per second
+if (damageTimer.elapsed() < 800) return; // Only take damage once per second
     damageTimer.restart();
 
     health -= amount;
@@ -300,6 +303,9 @@ void Kimo::respawn() {
 void Kimo::inhale() {
     for(int i = 0; i< scene()->items().size(); i++) {
         if(Enemy* enemy = dynamic_cast <Enemy*>(scene()->items()[i])) {
+            int enemy_health= enemy->get_enemy_health();
+            if(enemy_health<2)
+
             // Check distance and relative position for inhale
             if(abs(x() - enemy->x()) < 100 && abs(y() - enemy->y()) < 50) { // Increased inhale range slightly
                 // Check if enemy is generally in front based on horizontal velocity or default right

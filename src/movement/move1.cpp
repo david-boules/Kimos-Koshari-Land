@@ -22,8 +22,8 @@ void move1::move() {
 
     angle += 0.1;
     setPos(x() -speed, y() + qSin(angle) * 5);
-    if (x() <= 0 || x() >= 800 - pixmap().width()) {
-        speed = -speed; // Change direction
+    if (x() <= minX || x() >= maxX - pixmap().width()) {
+        speed = -speed; // bounce between minX and maxX
     }
 }
 

@@ -73,6 +73,19 @@ int main(int argc, char *argv[])
     scene.addItem(onion);
     onion->setTargetKimo(kimo);
 
+    static bool enemySpawned = false;
+
+    QTimer* enemySpawnTimer = new QTimer();
+    QObject::connect(enemySpawnTimer, &QTimer::timeout, [&]() {
+        if (kimo->x() > 550 && !enemySpawned) {
+            move1* onion2 = new move1(":/images/enemies/onion.png", QPointF(800, 400));
+            onion2->setBounds(600,1400);
+            scene.addItem(onion2);
+            onion2->setTargetKimo(kimo);
+            enemySpawned = true;
+        }
+    });
+    enemySpawnTimer->start(16); // Check ~60 times per second
     // Create Platforms
     // Ground platform (extended for larger scene)
     StaticPlatform *ground = new StaticPlatform(1600, 50, 0, 550);

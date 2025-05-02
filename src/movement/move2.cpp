@@ -7,7 +7,7 @@ move2::move2(QString path, QPointF startingPos, QGraphicsItem* parent)
     damage=2;
     shootTimer = new QTimer(this);
     connect(shootTimer, &QTimer::timeout, this, &move2::shootFire);
-    shootTimer->start(800); // Shoot every 0.7 seconds
+    shootTimer->start(600); // Shoot every 0.8 seconds
 
 }
 void move2::shootFire(){
@@ -25,9 +25,7 @@ void move2::shootFire(){
 void move2::move() {
     if (kimoo && collidesWithItem(kimoo)) {
         kimoo->takeDamage(damage);
-        scene()->removeItem(this);
-        delete this;
-        return;
+
     }
 
     if (!kimoo) return; // If no Kimo linked, skip
