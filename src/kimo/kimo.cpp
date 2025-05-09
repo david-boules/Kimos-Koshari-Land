@@ -11,6 +11,53 @@
 #include <platform.h>
 #include <QGraphicsView> // Added for view reference
 #include <QRectF> // Added for sceneRect
+#include <QDialog>
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <functional>
+
+// --- LevelCompleteDialog: Custom dialog for level completion ---
+class LevelCompleteDialog : public QDialog {
+public:
+    // Pass a callback for replay logic
+    LevelCompleteDialog(std::function<void()> replayCallback, QWidget* parent = nullptr) : QDialog(parent), onReplay(replayCallback) {
+        setWindowTitle("Level Complete!");
+        setModal(true);
+        setMinimumSize(350, 200);
+        // --- Add your game design images here (e.g., QLabel with QPixmap) ---
+        // QLabel* imageLabel = new QLabel(this);
+        // imageLabel->setPixmap(QPixmap(":/images/your_image.png"));
+        // imageLabel->setAlignment(Qt::AlignCenter);
+
+        QLabel* congratsLabel = new QLabel("<h2>Congratulations!</h2><p>You finished level 1!</p>", this);
+        congratsLabel->setAlignment(Qt::AlignCenter);
+
+        QPushButton* quitButton = new QPushButton("Quit", this);
+        QPushButton* replayButton = new QPushButton("Replay Level", this); // TODO: Change to 'Next Level' in the future
+        // --- In the future, replace 'Replay Level' with 'Next Level' and connect to next level logic ---
+
+        QHBoxLayout* buttonLayout = new QHBoxLayout;
+        buttonLayout->addWidget(quitButton);
+        buttonLayout->addWidget(replayButton);
+
+        QVBoxLayout* mainLayout = new QVBoxLayout;
+        // mainLayout->addWidget(imageLabel); // Uncomment if you add an image
+        mainLayout->addWidget(congratsLabel);
+        mainLayout->addLayout(buttonLayout);
+        setLayout(mainLayout);
+
+        connect(quitButton, &QPushButton::clicked, this, &QDialog::accept); // Accept = quit
+        connect(replayButton, &QPushButton::clicked, this, [this]() {
+            if (onReplay) onReplay();
+            close();
+        });
+    }
+private:
+    std::function<void()> onReplay; // Callback for replay logic
+};
+// --- End LevelCompleteDialog ---
 
 Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // Load and scale the character sprites (for different states)
@@ -286,12 +333,18 @@ void Kimo::checkCollision() {
             QRectF platformRect = hitbox->sceneBoundingRect();
 
             if (goal && collidingItems().contains(goal)) {
-                QGraphicsTextItem* cleared = new QGraphicsTextItem("Level Complete!");
-                cleared->setFont(QFont("Arial", 30));
-                cleared->setDefaultTextColor(Qt::green);
-                cleared->setPos(x()-80, y()-150);
-                scene()->addItem(cleared);
-                qApp->exit();
+                // Show the level complete dialog instead of exiting
+                LevelCompleteDialog* dialog = new LevelCompleteDialog([this]() {
+                    // --- Replay logic: reset Kimo and the level ---
+                    this->respawn();
+                    // TODO: Add logic to reset enemies, platforms, etc. if needed
+                });
+                // Accepting the dialog (Quit) will exit the game
+                if (dialog->exec() == QDialog::Accepted) {
+                    qApp->exit();
+                }
+                // --- In the future, add a 'Next Level' button and connect it to next level logic here ---
+                return;
             }
 
             // Calculate intersection
