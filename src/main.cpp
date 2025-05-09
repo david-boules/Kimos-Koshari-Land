@@ -7,10 +7,11 @@
 #include "kimo/kimo.h"
 #include "enemies/enemy.h"
 #include "environment/platform.h"
-#include "movement/move1.h"
-#include "movement/move2.h"
-#include "move1.h"
-#include "move2.h"
+#include "movement/onion.h"
+#include "movement/chili.h"
+#include "onion.h"
+#include "chili.h"
+#include "macaroni.h"
 #include "enemy.h"
 int main(int argc, char *argv[])
 {
@@ -60,19 +61,19 @@ int main(int argc, char *argv[])
     scene.addItem(levelNameText); // Add to scene, position updated in timer
 
     //Create enemy
-    move2* Chili = new move2(":/images/enemies/chiliLeft.png",QPointF(500,336));
-    scene.addItem(Chili);
-    Chili->setTargetKimo(kimo);
+    chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",QPointF(500,336));
+    scene.addItem(ChiliEnemy);
+    ChiliEnemy->setTargetKimo(kimo);
 
-    Enemy* macaroni = new Enemy(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
-    scene.addItem(macaroni);
-    macaroni->setTargetKimo(kimo);
+    macaroni* macaroni1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
+    scene.addItem(macaroni1);
+    macaroni1->setTargetKimo(kimo);
 
-    move1* onion = new move1(":/images/enemies/onion.png",QPointF(500,400));
-    scene.addItem(onion);
-    onion->setTargetKimo(kimo);
+    onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(500,400));
+    scene.addItem(OnionEnemy);
+    OnionEnemy->setTargetKimo(kimo);
 
-    Enemy* macaroniBig = new Enemy(QPixmap(":/images/enemies/macaroni.png"), QPointF(1300,250));
+    macaroni* macaroniBig = new macaroni(QPixmap(":/images/enemies/macaroni.png"), QPointF(1300,250));
     macaroniBig->setScale(5.0);
     macaroniBig->setTargetKimo(kimo);
     macaroniBig->setSpeed(0);
@@ -84,7 +85,7 @@ int main(int argc, char *argv[])
     QTimer* enemySpawnTimer = new QTimer();
     QObject::connect(enemySpawnTimer, &QTimer::timeout, [&]() {
         if (kimo->x() > 550 && !enemySpawned) {
-            move1* onion2 = new move1(":/images/enemies/onion.png", QPointF(800, 400));
+            onion* onion2 = new onion(":/images/enemies/onion.png", QPointF(800, 400));
             onion2->setBounds(600,1400);
             scene.addItem(onion2);
             onion2->setTargetKimo(kimo);

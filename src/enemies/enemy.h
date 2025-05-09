@@ -24,17 +24,18 @@ signals:
     void enemyDefeated(Enemy* enemy);
 
 private slots:
-    virtual void move();
+    virtual void move()=0;
 protected:
     qreal speed;
      Kimo* kimoo;
     qreal damage;
+    int health;
 
 private:
     QTimer* moveTimer;
 
 
-    int health;
+
     QGraphicsRectItem* healthBar;
     QGraphicsRectItem* healthBarBackground;
 

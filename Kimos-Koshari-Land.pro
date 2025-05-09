@@ -17,21 +17,25 @@ SOURCES += \
     src/main.cpp \
     src/kimo/kimo.cpp \
     src/enemies/enemy.cpp \
+    src/movement/chili.cpp \
+    src/movement/macaroni.cpp \
+    src/movement/onion.cpp \
     src/projectiles/fireball.cpp \
     src/projectiles/macaronimissile.cpp \
-    src/movement/move1.cpp \
-    src/movement/move2.cpp \
     src/environment/platform.cpp \
     src/projectiles/projectile.cpp
 
 HEADERS += \
     src/kimo/kimo.h \
     src/enemies/enemy.h \
+    src/movement/chili.h \
+    src/movement/macaroni.h \
+    src/movement/onion.h \
     src/projectiles/fireball.h \
     src/projectiles/macaronimissile.h \
-    src/movement/move1.h \
-    src/movement/move2.h \
     src/environment/platform.h \
     src/projectiles/projectile.h
 
 RESOURCES += src/resources.qrc
+
+FORMS +=

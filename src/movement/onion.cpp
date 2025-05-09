@@ -1,11 +1,11 @@
-#include "move1.h"
+#include "onion.h"
 
-move1::move1(QString path, QPointF startingPos, QGraphicsItem* parent)
-    : Enemy(path, startingPos, parent), angle(0){
+onion::onion(QString path, QPointF startingPos, QGraphicsItem* parent)
+    : Enemy(QPixmap(path), startingPos, parent), angle(0){
     speed=2.0;
     damage=1;
 }
-void move1::move() {
+void onion::move() {
 
     if (kimoo && collidesWithItem(kimoo)) {
         kimoo->takeDamage(damage);
@@ -18,6 +18,7 @@ void move1::move() {
         // delete this;
         // return;
     }
+
 
 
     angle += 0.1;

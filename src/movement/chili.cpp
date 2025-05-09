@@ -1,16 +1,16 @@
-#include "move2.h"
+#include "chili.h"
 #include <QGraphicsScene>
 
-move2::move2(QString path, QPointF startingPos, QGraphicsItem* parent)
+chili::chili(QString path, QPointF startingPos, QGraphicsItem* parent)
     : Enemy(path, startingPos, parent){
     speed=2.0;
     damage=2;
     shootTimer = new QTimer(this);
-    connect(shootTimer, &QTimer::timeout, this, &move2::shootFire);
-    shootTimer->start(600); // Shoot every 0.8 seconds
+    connect(shootTimer, &QTimer::timeout, this, &chili::shootFire);
+    shootTimer->start(18000); // Shoot every 0.8 seconds
 
 }
-void move2::shootFire(){
+void chili::shootFire(){
     if (!kimoo || !scene()) return;
        if (qAbs(kimoo->y() - y()) <= 20  && qAbs(kimoo->x() - x()) <= 300){
 
@@ -22,7 +22,7 @@ void move2::shootFire(){
     }
 }
 
-void move2::move() {
+void chili::move() {
     if (kimoo && collidesWithItem(kimoo)) {
         kimoo->takeDamage(damage);
 
@@ -34,11 +34,13 @@ void move2::move() {
     qreal distancex = qAbs(x() - kimoo->x());
     qreal distancey=qAbs(y()-kimoo->y());
 
-    // If Kimo is close (for example, within 50 pixels)
+    // If Kimo is close
     if (distancex <300&&distancey<120) {
         // Move towards Kimo
         if (x() > kimoo->x()) {
-            setPos(x() - qAbs(speed), y()); // Move left towards Kimo
+            do
+            setPos(x() - qAbs(speed), y());            // Move left towards Kimo
+            while(x()<=0|| x()>=800-pixmap().width());
         } else if (x() < kimoo->x()) {
             setPos(x() + qAbs(speed), y()); // Move right towards Kimo
         }
