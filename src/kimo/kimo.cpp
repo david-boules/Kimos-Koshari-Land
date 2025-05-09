@@ -161,13 +161,21 @@ void Kimo::updatePhysics() {
     QList<QGraphicsItem*> itemsBelowLeft = scene()->items(QPointF(x() + 2, footY));
     for (QGraphicsItem* item : itemsBelowLeft) {
         // Check if item is either a Platform or a hitbox of a Platform
-        if (dynamic_cast<Platform*>(item)) {
+        if (Platform* platform = dynamic_cast<Platform*>(item)) {
             leftFootOnPlatform = true;
+            // Check if it's a spiky platform
+            if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
+                spikyPlatform->handleCollision(this);
+            }
             break;
         } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
             // If it's a rect, check if its parent is a Platform
-            if (rect->parentItem() && dynamic_cast<Platform*>(rect->parentItem())) {
+            if (Platform* platform = dynamic_cast<Platform*>(rect->parentItem())) {
                 leftFootOnPlatform = true;
+                // Check if it's a spiky platform
+                if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
+                    spikyPlatform->handleCollision(this);
+                }
                 break;
             }
         }
@@ -178,13 +186,21 @@ void Kimo::updatePhysics() {
     QList<QGraphicsItem*> itemsBelowRight = scene()->items(QPointF(x() + pixmap().width() - 2, footY));
     for (QGraphicsItem* item : itemsBelowRight) {
         // Check if item is either a Platform or a hitbox of a Platform
-        if (dynamic_cast<Platform*>(item)) {
+        if (Platform* platform = dynamic_cast<Platform*>(item)) {
             rightFootOnPlatform = true;
+            // Check if it's a spiky platform
+            if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
+                spikyPlatform->handleCollision(this);
+            }
             break;
         } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
             // If it's a rect, check if its parent is a Platform
-            if (rect->parentItem() && dynamic_cast<Platform*>(rect->parentItem())) {
+            if (Platform* platform = dynamic_cast<Platform*>(rect->parentItem())) {
                 rightFootOnPlatform = true;
+                // Check if it's a spiky platform
+                if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
+                    spikyPlatform->handleCollision(this);
+                }
                 break;
             }
         }
@@ -358,16 +374,32 @@ void Kimo::setHealthText(QGraphicsTextItem* text) {
     healthText = text;
 }
 
-void Kimo::takeDamage(int amount) {
-if (damageTimer.elapsed() < 800) return; // Only take damage once per second
-    damageTimer.restart();
+void Kimo::setKnockback(double verticalForce, double horizontalForce) {
+    // Apply knockback forces
+    verticalVelocity = verticalForce;
+    horizontalVelocity = horizontalForce;
+    
+    // Disable air control temporarily during knockback
+    airControlEnabled = false;
+    
+    // Re-enable air control after knockback duration
+    QTimer::singleShot(500, this, [this]() {
+        airControlEnabled = true;
+    });
+}
 
-    health -= amount;
-    if (healthText) { // Check if healthText is valid
-         healthText->setPlainText("Health: " + QString::number(health)); // Updating health on screen
-    }
-    if(isDead()) {
-        respawn();
+void Kimo::takeDamage(int amount) {
+    // Only take damage if enough time has passed since last damage
+    if (damageTimer.elapsed() > 1000) { // 1 second invulnerability
+        health -= amount;
+        if (healthText) {
+            healthText->setPlainText(QString("Health: %1").arg(health));
+        }
+        damageTimer.restart();
+        
+        if (isDead()) {
+            respawn();
+        }
     }
 }
 
