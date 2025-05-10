@@ -6,7 +6,7 @@
 class chili: public Enemy{
     Q_OBJECT
 public:
-    chili(QString path, QPointF startingPos, QGraphicsItem* parent = nullptr);
+    chili(QString left,QString right, QPointF startingPos, QGraphicsItem* parent = nullptr);
     void move() override;
     void shootFire();
 
@@ -14,11 +14,16 @@ public:
         return enemy_health;
     }
 
+
 private:
     qreal speed;
     qreal damage;
     QTimer* shootTimer;
     int enemy_health=2;
+    bool facingKimo = false;
+    QPixmap enemy_left;
+    QPixmap enemy_right;
+
     // void shootFire();
 };
 

@@ -9,7 +9,13 @@
 
 
 macaroni::macaroni(QPixmap pixmap, QPointF start, QGraphicsItem* parent)
-    : Enemy(pixmap, start, parent) {}
+    : Enemy(pixmap, start, parent) {
+
+    speed=2.0;
+    damage=3;
+}
+
+
 
 
 void macaroni::move(){

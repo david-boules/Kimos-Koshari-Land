@@ -12,8 +12,7 @@ Enemy::Enemy(QPixmap pixmap, QPointF startingPos, QGraphicsItem* parent) : QObje
     setPixmap(scaled);
     setPos(startingPos);  // Starting position
 
-    speed=2.0;
-    damage=3;
+
     health=1;
 
     healthBarBackground = new QGraphicsRectItem(0, 0, 60, 6, this);

@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     scene.addItem(levelNameText); // Add to scene, position updated in timer
 
     //Create enemy
-    chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",QPointF(500,336));
+    chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(500,336));
     scene.addItem(ChiliEnemy);
     ChiliEnemy->setTargetKimo(kimo);
 
