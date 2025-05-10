@@ -46,6 +46,8 @@ public:
     SpikyPlatform(int width, int height, int x, int y);
     // No movement, but can override collision logic elsewhere
     void update() override;
+    // Handle collision with Kimo
+    void handleCollision(class Kimo* kimo);
 private:
     QGraphicsPixmapItem* spikeOverlay;
 };

@@ -34,6 +34,7 @@ public:
     void setGravity(bool enabled);               // Enables/disables gravity effect
     void setJumpVelocity(double velocity);       // Sets the initial jump velocity
     void setAirControl(bool enabled);            // Enables/disables air control
+    void setKnockback(double verticalForce, double horizontalForce); // Sets knockback forces
 
     // View setter
     void setView(QGraphicsView* v); // Added setter for the view

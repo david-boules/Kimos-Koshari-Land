@@ -11,6 +11,53 @@
 #include <platform.h>
 #include <QGraphicsView> // Added for view reference
 #include <QRectF> // Added for sceneRect
+#include <QDialog>
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <functional>
+
+// --- LevelCompleteDialog: Custom dialog for level completion ---
+class LevelCompleteDialog : public QDialog {
+public:
+    // Pass a callback for replay logic
+    LevelCompleteDialog(std::function<void()> replayCallback, QWidget* parent = nullptr) : QDialog(parent), onReplay(replayCallback) {
+        setWindowTitle("Level Complete!");
+        setModal(true);
+        setMinimumSize(350, 200);
+        // --- Add your game design images here (e.g., QLabel with QPixmap) ---
+        // QLabel* imageLabel = new QLabel(this);
+        // imageLabel->setPixmap(QPixmap(":/images/your_image.png"));
+        // imageLabel->setAlignment(Qt::AlignCenter);
+
+        QLabel* congratsLabel = new QLabel("<h2>Congratulations!</h2><p>You finished level 1!</p>", this);
+        congratsLabel->setAlignment(Qt::AlignCenter);
+
+        QPushButton* quitButton = new QPushButton("Quit", this);
+        QPushButton* replayButton = new QPushButton("Replay Level", this); // TODO: Change to 'Next Level' in the future
+        // --- In the future, replace 'Replay Level' with 'Next Level' and connect to next level logic ---
+
+        QHBoxLayout* buttonLayout = new QHBoxLayout;
+        buttonLayout->addWidget(quitButton);
+        buttonLayout->addWidget(replayButton);
+
+        QVBoxLayout* mainLayout = new QVBoxLayout;
+        // mainLayout->addWidget(imageLabel); // Uncomment if you add an image
+        mainLayout->addWidget(congratsLabel);
+        mainLayout->addLayout(buttonLayout);
+        setLayout(mainLayout);
+
+        connect(quitButton, &QPushButton::clicked, this, &QDialog::accept); // Accept = quit
+        connect(replayButton, &QPushButton::clicked, this, [this]() {
+            if (onReplay) onReplay();
+            close();
+        });
+    }
+private:
+    std::function<void()> onReplay; // Callback for replay logic
+};
+// --- End LevelCompleteDialog ---
 
 Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // Load and scale the character sprites (for different states)
@@ -161,13 +208,21 @@ void Kimo::updatePhysics() {
     QList<QGraphicsItem*> itemsBelowLeft = scene()->items(QPointF(x() + 2, footY));
     for (QGraphicsItem* item : itemsBelowLeft) {
         // Check if item is either a Platform or a hitbox of a Platform
-        if (dynamic_cast<Platform*>(item)) {
+        if (Platform* platform = dynamic_cast<Platform*>(item)) {
             leftFootOnPlatform = true;
+            // Check if it's a spiky platform
+            if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
+                spikyPlatform->handleCollision(this);
+            }
             break;
         } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
             // If it's a rect, check if its parent is a Platform
-            if (rect->parentItem() && dynamic_cast<Platform*>(rect->parentItem())) {
+            if (Platform* platform = dynamic_cast<Platform*>(rect->parentItem())) {
                 leftFootOnPlatform = true;
+                // Check if it's a spiky platform
+                if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
+                    spikyPlatform->handleCollision(this);
+                }
                 break;
             }
         }
@@ -178,13 +233,21 @@ void Kimo::updatePhysics() {
     QList<QGraphicsItem*> itemsBelowRight = scene()->items(QPointF(x() + pixmap().width() - 2, footY));
     for (QGraphicsItem* item : itemsBelowRight) {
         // Check if item is either a Platform or a hitbox of a Platform
-        if (dynamic_cast<Platform*>(item)) {
+        if (Platform* platform = dynamic_cast<Platform*>(item)) {
             rightFootOnPlatform = true;
+            // Check if it's a spiky platform
+            if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
+                spikyPlatform->handleCollision(this);
+            }
             break;
         } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
             // If it's a rect, check if its parent is a Platform
-            if (rect->parentItem() && dynamic_cast<Platform*>(rect->parentItem())) {
+            if (Platform* platform = dynamic_cast<Platform*>(rect->parentItem())) {
                 rightFootOnPlatform = true;
+                // Check if it's a spiky platform
+                if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
+                    spikyPlatform->handleCollision(this);
+                }
                 break;
             }
         }
@@ -270,12 +333,18 @@ void Kimo::checkCollision() {
             QRectF platformRect = hitbox->sceneBoundingRect();
 
             if (goal && collidingItems().contains(goal)) {
-                QGraphicsTextItem* cleared = new QGraphicsTextItem("Level Complete!");
-                cleared->setFont(QFont("Arial", 30));
-                cleared->setDefaultTextColor(Qt::green);
-                cleared->setPos(x()-80, y()-150);
-                scene()->addItem(cleared);
-                qApp->exit();
+                // Show the level complete dialog instead of exiting
+                LevelCompleteDialog* dialog = new LevelCompleteDialog([this]() {
+                    // --- Replay logic: reset Kimo and the level ---
+                    this->respawn();
+                    // TODO: Add logic to reset enemies, platforms, etc. if needed
+                });
+                // Accepting the dialog (Quit) will exit the game
+                if (dialog->exec() == QDialog::Accepted) {
+                    qApp->exit();
+                }
+                // --- In the future, add a 'Next Level' button and connect it to next level logic here ---
+                return;
             }
 
             // Calculate intersection
@@ -358,16 +427,32 @@ void Kimo::setHealthText(QGraphicsTextItem* text) {
     healthText = text;
 }
 
-void Kimo::takeDamage(int amount) {
-if (damageTimer.elapsed() < 800) return; // Only take damage once per second
-    damageTimer.restart();
+void Kimo::setKnockback(double verticalForce, double horizontalForce) {
+    // Apply knockback forces
+    verticalVelocity = verticalForce;
+    horizontalVelocity = horizontalForce;
+    
+    // Disable air control temporarily during knockback
+    airControlEnabled = false;
+    
+    // Re-enable air control after knockback duration
+    QTimer::singleShot(500, this, [this]() {
+        airControlEnabled = true;
+    });
+}
 
-    health -= amount;
-    if (healthText) { // Check if healthText is valid
-         healthText->setPlainText("Health: " + QString::number(health)); // Updating health on screen
-    }
-    if(isDead()) {
-        respawn();
+void Kimo::takeDamage(int amount) {
+    // Only take damage if enough time has passed since last damage
+    if (damageTimer.elapsed() > 1000) { // 1 second invulnerability
+        health -= amount;
+        if (healthText) {
+            healthText->setPlainText(QString("Health: %1").arg(health));
+        }
+        damageTimer.restart();
+        
+        if (isDead()) {
+            respawn();
+        }
     }
 }
 

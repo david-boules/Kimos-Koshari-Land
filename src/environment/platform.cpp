@@ -2,6 +2,7 @@
 #include <QGraphicsScene>
 #include <QPixmap>
 #include <QPainter> // Needed to resize Pixmap items
+#include "kimo.h" // Add this include for Kimo class
 
 // Platform base constructor: sets size and position
 Platform::Platform(int width, int height, int x, int y) {
@@ -62,4 +63,20 @@ SpikyPlatform::SpikyPlatform(int width, int height, int x, int y)
 void SpikyPlatform::update() {
     // Spiky platforms do not move by default
     // You can add animation or effects here if desired
+}
+
+void SpikyPlatform::handleCollision(Kimo* kimo) {
+    // Check if Kimo is falling onto the spikes
+    if (kimo->y() + kimo->pixmap().height() <= y() + 20) { // 20 is spike height
+        // Apply damage
+        kimo->takeDamage(1);
+        
+        // Apply knockback
+        // Knockback direction depends on which side of the platform Kimo is on
+        double knockbackForce = -8.0; // Upward force
+        double horizontalKnockback = (kimo->x() < x() + pixmap().width() / 2) ? -5.0 : 5.0; // Left or right knockback
+        
+        // Set Kimo's velocities for knockback
+        kimo->setKnockback(knockbackForce, horizontalKnockback);
+    }
 }
