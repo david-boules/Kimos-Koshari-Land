@@ -5,6 +5,8 @@ chili::chili(QString left,QString right, QPointF startingPos, QGraphicsItem* par
     : Enemy(QPixmap(left), startingPos, parent){
     speed=2.0;
     damage=2;
+    health=2;
+
     enemy_left=QPixmap(left).scaled(60,60);
     enemy_right=QPixmap(right).scaled(64,64);
     shootTimer = new QTimer(this);
@@ -24,11 +26,14 @@ void chili::shootFire(){
     }
 }
 
+
 void chili::move() {
     if (kimoo && collidesWithItem(kimoo)) {
         kimoo->takeDamage(damage);
 
     }
+
+
 
     if (!kimoo) return; // If no Kimo linked, skip
 

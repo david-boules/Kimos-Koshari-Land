@@ -9,9 +9,7 @@ class onion : public Enemy {
 public:
     onion(QString path, QPointF startingPos, QGraphicsItem* parent = nullptr);
     void move() override;
-    int get_enemy_health() const override{
-        return enemy_health;
-    }
+
     void setBounds(qreal min, qreal max){
         minX=min;
         maxX=max;

@@ -13,7 +13,7 @@ Enemy::Enemy(QPixmap pixmap, QPointF startingPos, QGraphicsItem* parent) : QObje
     setPos(startingPos);  // Starting position
 
 
-    health=1;
+    //health=3;
 
     healthBarBackground = new QGraphicsRectItem(0, 0, 60, 6, this);
     healthBarBackground->setBrush(Qt::black);
@@ -31,6 +31,16 @@ Enemy::Enemy(QPixmap pixmap, QPointF startingPos, QGraphicsItem* parent) : QObje
 
 void Enemy::setSpeed(qreal s) {
     speed = s;
+}
+void Enemy::takedamage(int enemydamage){
+    health -= enemydamage;
+//     if (health <= 0) {
+//         scene()->removeItem(this);
+//         deleteLater();
+// }
+}
+int Enemy::get_enemy_health()const{
+    return health;
 }
 
 

@@ -28,8 +28,13 @@ void MacaroniMissile::setDirection(int dir) {
 void MacaroniMissile::hit(QGraphicsItem* target) {
     // Check if the target is an Enemy
     if(Enemy* e = dynamic_cast<Enemy*>(target)) {
-        scene()->removeItem(target);
-        delete e; // Consider using deleteLater() if issues arise
+        e->takedamage(1);
+        if(e->get_enemy_health()<=0){
+            scene()->removeItem(target);
+            delete e;
+        }
+       /* scene()->removeItem(target);
+        delete e;*/ // Consider using deleteLater() if issues arise
         scene()->removeItem(this);
         deleteLater(); // Safe deletion
         return; // Stop processing after hitting an enemy

@@ -15,10 +15,8 @@ public:
     void setTargetKimo(Kimo* kimo) { kimoo = kimo; }
     void SetHealth(int health);
     void setSpeed(qreal s);
-    virtual int get_enemy_health() const {
-        return health;
-    }
-   // void damage(int damage1);
+    int get_enemy_health() const;
+    void takedamage(int enemydamage);
 
 signals:
     void enemyDefeated(Enemy* enemy);

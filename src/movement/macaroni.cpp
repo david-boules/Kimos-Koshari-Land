@@ -13,6 +13,7 @@ macaroni::macaroni(QPixmap pixmap, QPointF start, QGraphicsItem* parent)
 
     speed=2.0;
     damage=3;
+    health=1;
 }
 
 

@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     scene.addItem(macaroni1);
     macaroni1->setTargetKimo(kimo);
 
-    onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(500,400));
+    onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(500,420));
     scene.addItem(OnionEnemy);
     OnionEnemy->setTargetKimo(kimo);
 
@@ -85,8 +85,8 @@ int main(int argc, char *argv[])
     QTimer* enemySpawnTimer = new QTimer();
     QObject::connect(enemySpawnTimer, &QTimer::timeout, [&]() {
         if (kimo->x() > 550 && !enemySpawned) {
-            onion* onion2 = new onion(":/images/enemies/onion.png", QPointF(800, 400));
-            onion2->setBounds(600,1400);
+            onion* onion2 = new onion(":/images/enemies/onion.png", QPointF(1000, 400));
+            onion2->setBounds(850,1400);
             scene.addItem(onion2);
             onion2->setTargetKimo(kimo);
             enemySpawned = true;

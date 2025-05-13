@@ -10,10 +10,6 @@ public:
     void move() override;
     void shootFire();
 
-    int get_enemy_health() const override{
-        return enemy_health;
-    }
-
 
 private:
     qreal speed;
