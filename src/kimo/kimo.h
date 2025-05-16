@@ -19,7 +19,7 @@ public:
     
     // Gameplay Mechanics member functions
     void setHealthText(QGraphicsTextItem* text); // Updates Health on-screen
-    void takeDamage(int amount);                           // Reduces Kimo's health
+    void takeDamage(int amount);                 // Reduces Kimo's health
     bool isDead() const;                         // Checks whether Kimo's health is 0
     void respawn();                              // Relocates Kimo to starting position
     void inhale();                               // Kimo's 'inhale' function
@@ -39,6 +39,8 @@ public:
     // View setter
     void setView(QGraphicsView* v); // Added setter for the view
     QElapsedTimer damageTimer;
+
+    int getHealth(); // Getter for Kimo's health
 
 private slots:
     // Slots only called from inside 'Kimo' objects

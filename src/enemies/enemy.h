@@ -25,14 +25,12 @@ private slots:
     virtual void move()=0;
 protected:
     qreal speed;
-     Kimo* kimoo;
+    Kimo* kimoo;
     qreal damage;
     int health;
 
 private:
     QTimer* moveTimer;
-
-
 
     QGraphicsRectItem* healthBar;
     QGraphicsRectItem* healthBarBackground;

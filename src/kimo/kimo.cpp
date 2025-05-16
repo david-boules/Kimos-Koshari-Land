@@ -84,6 +84,11 @@ void Kimo::setView(QGraphicsView* v) {
     view = v;
 }
 
+// Getter for Kimo's health:
+int Kimo::getHealth() {
+    return health;
+}
+
 // Updating Kimo's sprite based on his current state
 void Kimo::updateSprite() {
     if(currentState == NormalRight)
