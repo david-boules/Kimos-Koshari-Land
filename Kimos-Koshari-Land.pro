@@ -8,7 +8,6 @@ INCLUDEPATH += src \
                src/kimo \
                src/enemies \
                src/projectiles \
-               src/movement \
                src/environment \
 
 DEPENDPATH  += src
@@ -17,9 +16,9 @@ SOURCES += \
     src/main.cpp \
     src/kimo/kimo.cpp \
     src/enemies/enemy.cpp \
-    src/movement/chili.cpp \
-    src/movement/macaroni.cpp \
-    src/movement/onion.cpp \
+    src/enemies/chili.cpp \
+    src/enemies/macaroni.cpp \
+    src/enemies/onion.cpp \
     src/projectiles/fireball.cpp \
     src/projectiles/macaronimissile.cpp \
     src/environment/platform.cpp \
@@ -28,9 +27,9 @@ SOURCES += \
 HEADERS += \
     src/kimo/kimo.h \
     src/enemies/enemy.h \
-    src/movement/chili.h \
-    src/movement/macaroni.h \
-    src/movement/onion.h \
+    src/enemies/chili.h \
+    src/enemies/macaroni.h \
+    src/enemies/onion.h \
     src/projectiles/fireball.h \
     src/projectiles/macaronimissile.h \
     src/environment/platform.h \
