@@ -3,6 +3,7 @@
 #include "enemy.h"
 #include <QtMath>
 
+enum class onion_move { level1, level2, level3, level4 };
 
 class onion : public Enemy {
     Q_OBJECT
@@ -15,6 +16,11 @@ public:
         maxX=max;
     }
 
+public:
+    void setMoveStyle(onion_move style);
+    onion_move getMoveStyle() const;
+
+
 private:
     qreal angle = 0.0;
     qreal speed;
@@ -23,6 +29,8 @@ private:
     qreal minX = 0;
     qreal maxX = 800;
     //qreal healthOfEnemy;
+    onion_move moveStyle = onion_move::level1;
+
 
 
 };

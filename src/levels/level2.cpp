@@ -1,4 +1,7 @@
 #include "level2.h"
+#include "enemies/chili.h"
+#include "enemies/macaroni.h"
+#include "enemies/onion.h"
 #include "environment/platform.h"
 
 
@@ -8,6 +11,42 @@ Level2::Level2(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, Q
 
 void Level2::setEnemies() {
     // Add the enemies in Level 2
+
+
+
+        chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(420,300));
+         addItem(ChiliEnemy);
+        ChiliEnemy->setMoveStyle(chili_move::level2);
+         ChiliEnemy->setTargetKimo(kimo);
+
+        macaroni* macaroni1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
+         //macaroni1->setMoveStyle(macaroni_move::level2);
+        addItem(macaroni1);
+        macaroni1->setTargetKimo(kimo);
+
+
+        macaroni* macaroni2 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(235,480));
+        macaroni2->setMoveStyle(macaroni_move::level2);
+        addItem(macaroni2);
+        macaroni2->setTargetKimo(kimo);
+
+        macaroni* macaroni3 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(180,340));
+        macaroni3->setMoveStyle(macaroni_move::level2_1);
+        addItem(macaroni3);
+        macaroni3->setTargetKimo(kimo);
+
+
+        onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(630,70));
+        addItem(OnionEnemy);
+        OnionEnemy->setMoveStyle(onion_move::level2);
+        OnionEnemy->setTargetKimo(kimo);
+
+        // macaroni* macaroniBig = new macaroni(QPixmap(":/images/enemies/macaroni.png"), QPointF(1300,250));
+        // macaroniBig->setScale(5.0);
+        // macaroniBig->setTargetKimo(kimo);
+        // macaroniBig->setSpeed(0);
+        // macaroniBig->setTargetKimo(kimo);
+        // addItem(macaroniBig);
 }
 
 void Level2::setEnvironment() {

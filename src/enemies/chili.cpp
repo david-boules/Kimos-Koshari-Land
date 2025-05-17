@@ -3,17 +3,31 @@
 
 chili::chili(QString left,QString right, QPointF startingPos, QGraphicsItem* parent)
     : Enemy(QPixmap(left), startingPos, parent){
-    speed=2.0;
+    speed=1.5;
     damage=2;
     health=2;
+    max_health=2;
+    update_health_bar();
+
 
     enemy_left=QPixmap(left).scaled(60,60);
     enemy_right=QPixmap(right).scaled(64,64);
     shootTimer = new QTimer(this);
     connect(shootTimer, &QTimer::timeout, this, &chili::shootFire);
-    shootTimer->start(18000); // Shoot every 0.8 seconds
+    shootTimer->start(800); // Shoot every 0.8 seconds 800
 
 }
+
+void chili::setMoveStyle(chili_move style) {
+    moveStyle = style;
+}
+
+chili_move chili::getMoveStyle() const {
+    return moveStyle;
+}
+
+
+
 void chili::shootFire(){
     if (!kimoo || !scene()) return;
        if (qAbs(kimoo->y() - y()) <= 20  && qAbs(kimoo->x() - x()) <= 300){
@@ -53,7 +67,12 @@ void chili::move() {
 
     //     }
     // }
-     {
+
+
+    switch (moveStyle)
+    {
+    case chili_move::level1:           // original “bounce” code
+
         // Normal bouncing movement (if Kimo is far)
         setPos(x() - speed, y());
         if(speed>0){
@@ -67,9 +86,22 @@ void chili::move() {
         if (x() <= 0 || x() >= 800 - pixmap().width()) {
             speed = -speed; // Change direction
         }
+        break;
+
+
+case chili_move::level2:
+
+        setPos(x(), y() + verticalSpeed);
+
+        if (y() <= minY || y() >= maxY) {
+            verticalSpeed = -verticalSpeed;  // reverse direction
+        }
+
+        // Check if Kimo is to the LEFT and roughly on the same vertical level
+        if (kimoo->x() < x() && qAbs(kimoo->y() - y()) <= 20) {
+            shootFire();
+        }
+        break;
+
     }
-    }
-
-;
-
-
+}

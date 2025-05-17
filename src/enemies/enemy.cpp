@@ -19,6 +19,10 @@ Enemy::Enemy(QPixmap pixmap, QPointF startingPos, QGraphicsItem* parent) : QObje
     healthBar= new QGraphicsRectItem(0,0,60,6,healthBarBackground);
     healthBar->setBrush(Qt::green);
 
+    enemy_health = new QGraphicsTextItem(QString::number(health), healthBarBackground);
+    enemy_health->setPos(25, -8);
+    enemy_health->setDefaultTextColor(Qt::white);
+
 
     // Set up movement timer for smooth update
     moveTimer = new QTimer(this);
@@ -29,8 +33,25 @@ Enemy::Enemy(QPixmap pixmap, QPointF startingPos, QGraphicsItem* parent) : QObje
 void Enemy::setSpeed(qreal s) {
     speed = s;
 }
+
+void Enemy::update_health_bar() {
+    if (max_health <= 0) return;  // Prevent division by zero
+
+    qreal percentage = static_cast<qreal>(health) / static_cast<qreal>(max_health);
+    percentage = qMax(0.0, percentage); // Avoid negative bar
+
+    healthBar->setRect(0, 0, 60 * percentage, 6);
+
+    if (enemy_health) {
+        enemy_health->setPlainText(QString::number(health));
+    }
+}
+
+
+
 void Enemy::takedamage(int enemydamage){
     health -= enemydamage;
+     update_health_bar();
 //     if (health <= 0) {
 //         scene()->removeItem(this);
 //         deleteLater();

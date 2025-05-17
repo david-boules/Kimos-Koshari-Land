@@ -17,6 +17,7 @@ public:
     void setSpeed(qreal s);
     int get_enemy_health() const;
     void takedamage(int enemydamage);
+    void update_health_bar();
 
 signals:
     void enemyDefeated(Enemy* enemy);
@@ -28,13 +29,14 @@ protected:
     Kimo* kimoo;
     qreal damage;
     int health;
+    int max_health;
 
 private:
     QTimer* moveTimer;
 
     QGraphicsRectItem* healthBar;
     QGraphicsRectItem* healthBarBackground;
-
+    QGraphicsTextItem* enemy_health;
 
 };
 

@@ -5,7 +5,18 @@ onion::onion(QString path, QPointF startingPos, QGraphicsItem* parent)
     speed=2.0;
     damage=1;
     health=1;
+    max_health=1;
+    update_health_bar();
 }
+
+void onion::setMoveStyle(onion_move style) {
+    moveStyle = style;
+}
+
+onion_move onion::getMoveStyle() const {
+    return moveStyle;
+}
+
 void onion::move() {
 
     if (kimoo && collidesWithItem(kimoo)) {
@@ -25,6 +36,9 @@ void onion::move() {
         // return;
     }
 
+    switch (moveStyle)
+    {
+    case onion_move::level1:
 
 
     angle += 0.1;
@@ -32,8 +46,19 @@ void onion::move() {
     if (x() <= minX || x() >= maxX - pixmap().width()) {
         speed = -speed; // bounce between minX and maxX
     }
+    break;
+
+    case onion_move::level2:
+        angle += 0.1;
+        setPos(x() -speed, y() + qSin(angle) * 3.5);
+        if (x() <= 500 || x() >= 800 - pixmap().width()) {
+            speed = -speed; // bounce between minX and maxX
+        }
+
+break;
 }
 
+}
 ;
 
 

@@ -14,6 +14,18 @@ macaroni::macaroni(QPixmap pixmap, QPointF start, QGraphicsItem* parent)
     speed=2.0;
     damage=3;
     health=1;
+    max_health=1;
+    update_health_bar();
+}
+
+
+
+void macaroni::setMoveStyle(macaroni_move style) {
+    moveStyle = style;
+}
+
+macaroni_move macaroni::getMoveStyle() const {
+    return moveStyle;
 }
 
 
@@ -29,7 +41,14 @@ void macaroni::move(){
         }
     }
 
+
+
     if (!kimoo) return; // If no Kimo linked, skip
+
+
+    switch (moveStyle)
+    {
+    case macaroni_move::level1:  {
 
     // Distance between enemy and Kimo
     qreal distancex = qAbs(x() - kimoo->x());
@@ -55,8 +74,37 @@ void macaroni::move(){
             speed = -speed; // Change direction
         }
     }
-}
 
+
+    break;
+    }
+    case macaroni_move::level2:
+
+        {
+        setPos(x() - speed, y());
+
+
+        if (x() <= 10|| x() >= 300 - pixmap().width()) {
+            speed = -speed; // Change direction
+        }
+        break;
+
+    }
+    case macaroni_move::level2_1:{
+
+        setPos(x() - speed, y());
+
+
+        if (x() <= 60|| x() >=  280- pixmap().width()) {
+            speed = -speed; // Change direction
+        }
+
+        break;
+    }
+
+
+    }
+}
 //      setPos(x() - speed, y());
 
 //  // Bounce back at edges
