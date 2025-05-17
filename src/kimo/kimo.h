@@ -42,6 +42,9 @@ public:
 
     int getHealth(); // Getter for Kimo's health
 
+signals:
+    void levelComplete(); // Singal emitted when Kimo reaches the goal
+
 private slots:
     // Slots only called from inside 'Kimo' objects
     void updatePhysics();                        // Updates physics calculations every frame

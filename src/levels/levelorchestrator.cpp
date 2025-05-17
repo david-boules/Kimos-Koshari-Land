@@ -1,4 +1,5 @@
 #include "levelorchestrator.h"
+#include "levelcompletedialog.h"
 #include "level1.h"
 #include "level2.h"
 #include "level3.h"
@@ -22,6 +23,7 @@ void LevelOrchestrator::loadLevel(Level level) {
     case L1:
         currentLevel = new Level1(view, kimo, healthText, levelText);
         currentLevel->setupScene("Koshari Kitchen");
+        connect(kimo, &Kimo::levelComplete, this, &LevelOrchestrator::onLevelComplete);
         break;
 
     case L2:
@@ -46,6 +48,11 @@ void LevelOrchestrator::loadLevel(Level level) {
     }
 
     view->setScene(currentLevel);
+}
+
+void LevelOrchestrator::onLevelComplete() {
+    LevelCompleteDialog* LevelComplete = new LevelCompleteDialog(currentLevel->getLevelName());
+    connect(LevelComplete, &LevelCompleteDialog::replayPushed, this, &LevelOrchestrator::reloadCurrenentLevel);
 }
 
 void LevelOrchestrator::switchLevel() {

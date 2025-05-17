@@ -16,6 +16,9 @@ public:
     void loadLevel(Level level); // Sets up the level environment, objects, etc.
     void switchLevel();
 
+public slots:
+    void onLevelComplete();
+
 private:
     QGraphicsView* view;
     QVector<QString> levelNames = {"Koshari Kitchen", "Streets of Cairo", "Pyramids Dash", "Abou Tarek's Castle", "Rooftop Showdown"};
