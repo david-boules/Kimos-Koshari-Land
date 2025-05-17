@@ -6,6 +6,7 @@ LevelCompleteDialog::LevelCompleteDialog(const QString& levelName, QWidget *pare
     setMinimumSize(350, 200);
 
     QLabel* congratsLabel = new QLabel("Congratulations! </h2><p>You completed the level: <b>" + levelName + "</b>!</p>");
+    congratsLabel->setTextFormat(Qt::RichText); // So HTML tags are rendered properly
     congratsLabel->setAlignment(Qt::AlignCenter);
 
     QPushButton* replayButton = new QPushButton("Replay Level", this);

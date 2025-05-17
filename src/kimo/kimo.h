@@ -41,6 +41,9 @@ public:
     QElapsedTimer damageTimer;
 
     int getHealth(); // Getter for Kimo's health
+    //int getCoins(); // Getter for Kimo's coins
+
+    ~Kimo() {if(physicsTimer) physicsTimer->deleteLater();}
 
 signals:
     void levelComplete(); // Singal emitted when Kimo reaches the goal

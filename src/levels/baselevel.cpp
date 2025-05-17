@@ -5,19 +5,31 @@ BaseLevel::BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthT
 {}
 
 void BaseLevel::setupScene(QString levelName) {
+    qDebug() << "[SETUP] BaseLevel::setupScene() called";
     setSceneRect(0, 0, 2000, 600);
 
+    qDebug() << "[SETUP] calling setKimo()";
     setKimo();
+
+    qDebug() << "[SETUP] calling setHUD()";
     setHUD(levelName);
+
+    qDebug() << "[SETUP] calling setEnemies()";
     setEnemies();
+
+    qDebug() << "[SETUP] calling setEnvironment()";
     setEnvironment();
 
+    qDebug() << "[SETUP] setting kimo view";
     kimo->setView(view);
 
-    // Ensuring HUD element positions stay in the view's top-left as the view moves
+    qDebug() << "[SETUP] starting HUD timer";
     QTimer* hudUpdateTimer = new QTimer(this);
     connect(hudUpdateTimer, &QTimer::timeout, this, [this]() {
-        if (!view || !HUD_health || !HUD_levelName) return;
+        if (!view || !HUD_health || !HUD_levelName) {
+            qDebug() << "[HUD] skipped update due to null pointer";
+            return;
+        }
 
         QPointF viewTopLeft = view->mapToScene(0, 0);
         HUD_health->setPos(viewTopLeft.x() + 10, viewTopLeft.y() + 10);
@@ -25,7 +37,9 @@ void BaseLevel::setupScene(QString levelName) {
     });
 
     hudUpdateTimer->start(16); // ~60 FPS
+    qDebug() << "[SETUP] HUD timer started";
 }
+
 
 void BaseLevel::setKimo() {
     kimo->setFlag(QGraphicsItem::ItemIsFocusable);
@@ -33,21 +47,33 @@ void BaseLevel::setKimo() {
     kimo->setPos(25,450);
     kimo->setPixmap(QPixmap(":/images/kimo/Kimo_right.png").scaled(64,64));
     addItem(kimo);
+    kimo->setParentItem(nullptr); // Ensures that when 'currentLevel' (in 'LevelOrchestrator') is deleted, that Kimo is not deleted with it
 }
 
 void BaseLevel::setHUD(QString levelName) {
-    // Health Text in HUD
-    HUD_health->setDefaultTextColor(Qt::white);
-    HUD_health->setFont(QFont("Arial", 16));
-    HUD_health->setPlainText(QString("Health: " + QString::number(kimo->getHealth() ) ));
-    HUD_health->setZValue(1); // To ensure HUD is drawn on top
-    addItem(HUD_health); // Add to scene, position updated in timer
-    kimo->setHealthText(HUD_health); // Link Kimo to update the text content
 
-    // Level Name Text in HUD
-    HUD_levelName->setDefaultTextColor(Qt::white);
-    HUD_levelName->setFont(QFont("Arial", 16));
-    HUD_levelName->setPlainText("Level: " + levelName); // Level name
-    HUD_levelName->setZValue(1); // Ensure HUD is drawn on top
-    addItem(HUD_levelName); // Add to scene, position updated in timer
+    // Ensuring setHUD() doesn't reuse a scene-bound text item which leads to crashes
+    if (HUD_health && HUD_health->scene()) {
+        HUD_health->scene()->removeItem(HUD_health);
+    }
+    if (HUD_levelName && HUD_levelName->scene()) {
+        HUD_levelName->scene()->removeItem(HUD_levelName);
+    }
+
+    // Health Text in HUD
+    if (HUD_health) {
+        if (HUD_health->scene()) HUD_health->scene()->removeItem(HUD_health);
+        HUD_health->setPlainText("Health: " + QString::number(kimo->getHealth()));
+        HUD_health->setDefaultTextColor(Qt::white);
+        HUD_health->setFont(QFont("Arial", 16));
+        addItem(HUD_health);
+    }
+
+    if (HUD_levelName) {
+        if (HUD_levelName->scene()) HUD_levelName->scene()->removeItem(HUD_levelName);
+        HUD_levelName->setPlainText("Level: " + levelName);
+        HUD_levelName->setDefaultTextColor(Qt::white);
+        HUD_levelName->setFont(QFont("Arial", 16));
+        addItem(HUD_levelName);
+    }
 }

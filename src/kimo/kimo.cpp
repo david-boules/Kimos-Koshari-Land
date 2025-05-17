@@ -33,7 +33,7 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     damageTimer.start();
 
     // Set up physics timer for smooth movement
-    physicsTimer = new QTimer(this);
+    physicsTimer = new QTimer();
     connect(physicsTimer, SIGNAL(timeout()), this, SLOT(updatePhysics()));
     physicsTimer->start(16); // ~60 FPS for smooth physics
 }
@@ -163,6 +163,12 @@ void Kimo::jump() {
 }
 
 void Kimo::updatePhysics() {
+    if (!scene()) {
+        qDebug() << "[CRASH GUARD] updatePhysics triggered with null scene";
+        return;
+    }
+
+    qDebug() << "[Tick] Kimo physics ticked - scene okay";
     // Fix edge bug: Check for platform under both left and right edges of the character
     isGrounded = false;
     int footY = y() + pixmap().height() + 1;

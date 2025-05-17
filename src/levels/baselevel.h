@@ -18,7 +18,7 @@ public:
     virtual void setEnemies() = 0; // MUST be pure virtual: function must be overriden in each subclass due to different enemies in different levels
     virtual void setEnvironment() = 0; // MUST be pure virtual: function must be overriden in each subclass due to different objects, and environment in general, in different levels
 
-    QString getLevelName() {return HUD_levelName};
+    QGraphicsTextItem* getLevelName() {return HUD_levelName;}
 
 protected:
     QGraphicsView* view;
