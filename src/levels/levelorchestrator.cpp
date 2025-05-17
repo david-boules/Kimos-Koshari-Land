@@ -19,6 +19,8 @@ void LevelOrchestrator::loadLevel(Level level) {
     view->setScene(nullptr);
     // Check for an existing 'currentLevel' pointer when loading a level and delete this object
     if (currentLevel) {
+        if (auto kimo = currentLevel->BaseLevel::getKimo())
+            disconnect(kimo, nullptr, this, nullptr);
         delete currentLevel;
         currentLevel = nullptr;
     }
@@ -85,14 +87,6 @@ void LevelOrchestrator::switchLevel() {
 
 void LevelOrchestrator::reloadCurrentLevel() {
     loadLevel(currentLevelEnum);
-
-    BaseLevel* levelToDelete = currentLevel;
-    currentLevel = nullptr;
-
-    QTimer::singleShot(0, this, [this, levelToDelete]() {
-        delete levelToDelete;
-        loadLevel(currentLevelEnum);
-    });
 }
 
 void LevelOrchestrator::showLevelSelect() {

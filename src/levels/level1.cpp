@@ -28,8 +28,6 @@ void Level1::setEnemies() {
     macaroniBig->setTargetKimo(kimo);
     addItem(macaroniBig);
 
-    static bool enemySpawned = false;
-
     QTimer* enemySpawnTimer = new QTimer(this);
     QObject::connect(enemySpawnTimer, &QTimer::timeout, this, [this]() {
         if (!this) return;
@@ -112,9 +110,9 @@ void Level1::setEnvironment() {
     view->show(); // Show the view
 
     // Timer for game updates (platforms, HUD)
-    QTimer *gameUpdateTimer = new QTimer(this);
-    QObject::connect(gameUpdateTimer, &QTimer::timeout, [=]() {
-        if (!moving1 || moving2) return;
+    gameUpdateTimer = new QTimer(this);
+    connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
+        if (!moving1 || !moving2) return;
         // Update moving platforms
         moving1->update();
         moving2->update();

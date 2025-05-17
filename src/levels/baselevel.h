@@ -18,11 +18,14 @@ public:
     virtual void setEnemies() = 0; // MUST be pure virtual: function must be overriden in each subclass due to different enemies in different levels
     virtual void setEnvironment() = 0; // MUST be pure virtual: function must be overriden in each subclass due to different objects, and environment in general, in different levels
 
+    Kimo* getKimo() {return kimo;} // Kimo getter for disconnecting a signal in the 'Level Orchestrator'
+
     QGraphicsTextItem* getLevelName() {return HUD_levelName;}
 
 protected:
     QGraphicsView* view;
     Kimo* kimo;
+    QTimer* gameUpdateTimer = nullptr;
     QGraphicsTextItem* HUD_health;
     QGraphicsTextItem* HUD_levelName;
 };

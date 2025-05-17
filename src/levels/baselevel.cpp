@@ -8,22 +8,12 @@ void BaseLevel::setupScene(QString levelName) {
     qDebug() << "[SETUP] BaseLevel::setupScene() called";
     setSceneRect(0, 0, 2000, 600);
 
-    qDebug() << "[SETUP] calling setKimo()";
     setKimo();
-
-    qDebug() << "[SETUP] calling setHUD()";
     setHUD(levelName);
-
-    qDebug() << "[SETUP] calling setEnemies()";
     setEnemies();
-
-    qDebug() << "[SETUP] calling setEnvironment()";
     setEnvironment();
-
-    qDebug() << "[SETUP] setting kimo view";
     kimo->setView(view);
 
-    qDebug() << "[SETUP] starting HUD timer";
     QTimer* hudUpdateTimer = new QTimer(this);
     connect(hudUpdateTimer, &QTimer::timeout, this, [this]() {
         if (!view || !HUD_health || !HUD_levelName) {
@@ -37,7 +27,6 @@ void BaseLevel::setupScene(QString levelName) {
     });
 
     hudUpdateTimer->start(16); // ~60 FPS
-    qDebug() << "[SETUP] HUD timer started";
 }
 
 
@@ -47,7 +36,9 @@ void BaseLevel::setKimo() {
     kimo->setPos(25,450);
     kimo->setPixmap(QPixmap(":/images/kimo/Kimo_right.png").scaled(64,64));
     addItem(kimo);
-    kimo->setParentItem(nullptr); // Ensures that when 'currentLevel' (in 'LevelOrchestrator') is deleted, that Kimo is not deleted with it
+    kimo->setParentItem(nullptr);
+    kimo->setParent(nullptr); // Ensures that when 'currentLevel' (in 'LevelOrchestrator') is deleted, that Kimo is not deleted with it
+    kimo->setView(view);
 }
 
 void BaseLevel::setHUD(QString levelName) {

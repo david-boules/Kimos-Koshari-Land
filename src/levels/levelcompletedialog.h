@@ -14,6 +14,9 @@ class LevelCompleteDialog : public QDialog
 public:
     explicit LevelCompleteDialog(const QString& levelName, QWidget* parent = nullptr);
 
+protected:
+    void closeEvent(QCloseEvent* event) override;
+
 signals:
     void replayPushed();
     void nextLevelPushed();

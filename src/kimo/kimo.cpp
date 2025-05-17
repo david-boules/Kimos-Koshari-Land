@@ -168,7 +168,6 @@ void Kimo::updatePhysics() {
         return;
     }
 
-    qDebug() << "[Tick] Kimo physics ticked - scene okay";
     // Fix edge bug: Check for platform under both left and right edges of the character
     isGrounded = false;
     int footY = y() + pixmap().height() + 1;
@@ -303,8 +302,12 @@ void Kimo::checkCollision() {
             QRectF platformRect = hitbox->sceneBoundingRect();
 
             if (goal && collidingItems().contains(goal)) {
-                emit levelComplete(); // Singal emitted to display the 'LevelCompleteDialog'
-                return;
+                if (physicsTimer && physicsTimer->isActive()) {
+                    setPos(goal->x(), goal->y());
+                    physicsTimer->stop();
+                    emit levelComplete();
+                    return;
+                }
             }
 
             // Calculate intersection

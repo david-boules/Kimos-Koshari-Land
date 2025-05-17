@@ -132,11 +132,9 @@ void Level2::setEnvironment() {
     view->show(); // Show the view
 
     // Timer for game updates (platforms, HUD)
-    QTimer *gameUpdateTimer = new QTimer(this);
-    QObject::connect(gameUpdateTimer, &QTimer::timeout, [=]() {
-        if (!this) return;
-
-        if (!moving1 || moving2) return;
+    gameUpdateTimer = new QTimer(this);
+    connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
+        if (!moving1 || !moving2) return;
         // Update moving platforms
         moving1->update();
         moving2->update();

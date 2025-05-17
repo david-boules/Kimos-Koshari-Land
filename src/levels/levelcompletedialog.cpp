@@ -21,7 +21,25 @@ LevelCompleteDialog::LevelCompleteDialog(const QString& levelName, QWidget *pare
     setLayout(layout);
 
     // General Qt Syntax for 'connect:' connect(sender, signal, receiver, slot/signal);
-    connect(replayButton, &QPushButton::clicked, this, &LevelCompleteDialog::replayPushed);
-    connect(nextLevelButton, &QPushButton::clicked, this, &LevelCompleteDialog::nextLevelPushed);
-    connect(levelSelectButton, &QPushButton::clicked, this, &LevelCompleteDialog::levelSelectPushed);
+    connect(replayButton, &QPushButton::clicked, this, [this]() {
+        emit replayPushed();
+        accept();
+    });
+
+    connect(nextLevelButton, &QPushButton::clicked, this, [this]() {
+        emit nextLevelPushed();
+        this->accept();
+    });
+
+    connect(levelSelectButton, &QPushButton::clicked, this, [this]() {
+        emit levelSelectPushed();
+        this->accept();
+    });
+
+}
+
+void LevelCompleteDialog::closeEvent(QCloseEvent* event) {
+    // Simply closing the dialog wihtout the app crashing or quitting
+    accept();
+    QDialog::closeEvent(event);  // This passes control to a default handler
 }
