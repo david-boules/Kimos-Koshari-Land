@@ -3,7 +3,7 @@
 #include "enemy.h"
 #include <QtMath>
 
-enum class onion_move { level1, level2, level3, level4 };
+enum class onion_move { level1, level2,level2_1, level3, level4 };
 
 class onion : public Enemy {
     Q_OBJECT

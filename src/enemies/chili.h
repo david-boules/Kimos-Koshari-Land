@@ -3,7 +3,7 @@
 #include "enemy.h"
 #include "fireball.h"
 
-enum class chili_move { level1, level2, level3, level4 };
+enum class chili_move { level1, level2,level2_1, level3, level4 };
 
 class chili: public Enemy{
     Q_OBJECT
@@ -28,11 +28,14 @@ private:
     //level 2
     chili_move moveStyle= chili_move::level1;
 
+    QTimer* fire_cooldown_timer = nullptr;// to pause fire
+    bool canFire = true;
 
     float verticalSpeed = 2.0;  // vertical movement speed
     float minY = 300;           // minimum Y position chili can move to
     float maxY = 490;
 
+    bool canShoot = true;// pause shoots in vertical move
     // void shootFire();
 };
 

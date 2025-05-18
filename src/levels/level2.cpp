@@ -19,6 +19,13 @@ void Level2::setEnemies() {
         ChiliEnemy->setMoveStyle(chili_move::level2);
          ChiliEnemy->setTargetKimo(kimo);
 
+
+         chili* ChiliEnemy1 = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(1450,300));
+         addItem(ChiliEnemy1);
+         ChiliEnemy1->setMoveStyle(chili_move::level2_1);
+         ChiliEnemy1->setTargetKimo(kimo);
+
+
         macaroni* macaroni1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
          //macaroni1->setMoveStyle(macaroni_move::level2);
         addItem(macaroni1);
@@ -40,6 +47,11 @@ void Level2::setEnemies() {
         addItem(OnionEnemy);
         OnionEnemy->setMoveStyle(onion_move::level2);
         OnionEnemy->setTargetKimo(kimo);
+
+        onion* OnionEnemy1 = new onion(":/images/enemies/onion.png",QPointF(1260,400));
+        addItem(OnionEnemy1);
+        OnionEnemy1->setMoveStyle(onion_move::level2_1);
+        OnionEnemy1->setTargetKimo(kimo);
 
         // macaroni* macaroniBig = new macaroni(QPixmap(":/images/enemies/macaroni.png"), QPointF(1300,250));
         // macaroniBig->setScale(5.0);

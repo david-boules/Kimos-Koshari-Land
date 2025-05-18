@@ -56,6 +56,15 @@ void onion::move() {
         }
 
 break;
+
+    case onion_move::level2_1:
+        angle += 0.1;
+        setPos(x() -speed, y() + qSin(angle) * 2.0);
+        if (x() <= 1220 || x() >= 1310) {
+            speed = -speed; // bounce between minX and maxX
+        }
+
+
 }
 
 }
