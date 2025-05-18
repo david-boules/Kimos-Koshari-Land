@@ -3,30 +3,26 @@
 #include "macaroni.h"
 #include "onion.h"
 #include "platform.h"
-#include "misc/fallinglaundry.h"
+#include "fallinglaundry.h"
 
 Level2::Level2(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
     : BaseLevel(view, kimo, healthText, levelText, parent) {}
 
 void Level2::setEnemies() {
-    // Add the enemies in Level 2
-
-
-
         chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(420,300));
-         addItem(ChiliEnemy);
+        addItem(ChiliEnemy);
         ChiliEnemy->setMoveStyle(chili_move::level2);
-         ChiliEnemy->setTargetKimo(kimo);
+        ChiliEnemy->setTargetKimo(kimo);
 
 
-         chili* ChiliEnemy1 = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(1450,300));
-         addItem(ChiliEnemy1);
-         ChiliEnemy1->setMoveStyle(chili_move::level2_1);
-         ChiliEnemy1->setTargetKimo(kimo);
+        chili* ChiliEnemy1 = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(1450,300));
+        addItem(ChiliEnemy1);
+        ChiliEnemy1->setMoveStyle(chili_move::level2_1);
+        ChiliEnemy1->setTargetKimo(kimo);
 
 
         macaroni* macaroni1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
-         //macaroni1->setMoveStyle(macaroni_move::level2);
+        //macaroni1->setMoveStyle(macaroni_move::level2);
         addItem(macaroni1);
         macaroni1->setTargetKimo(kimo);
 
@@ -54,10 +50,12 @@ void Level2::setEnemies() {
 }
 
 void Level2::setEnvironment() {
-    // Add the platforms, spikes, background, etc. for Level 2
 
     // Background
-    view->setBackgroundBrush(QPixmap(":/images/levels/L2background.png"));
+    QPixmap bg(":/images/levels/L2background.png");
+    QGraphicsPixmapItem* background = new QGraphicsPixmapItem(bg.scaled(2000,600));
+    background->setZValue(-100);
+    addItem(background);
 
     // Ground platform
     StaticPlatform *ground1 = new StaticPlatform(300, 50, 0, 550);

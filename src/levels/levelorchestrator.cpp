@@ -10,7 +10,7 @@
 LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
     : QObject(parent), view(view)
 {
-    loadLevel(L1);
+    loadLevel(L2);
 }
 
 void LevelOrchestrator::loadLevel(Level level) {
