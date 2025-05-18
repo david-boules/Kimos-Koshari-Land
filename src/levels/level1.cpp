@@ -28,10 +28,11 @@ void Level1::setEnemies() {
     macaroniBig->setTargetKimo(kimo);
     addItem(macaroniBig);
 
-    static bool enemySpawned = false;
+    QTimer* enemySpawnTimer = new QTimer(this);
+    QObject::connect(enemySpawnTimer, &QTimer::timeout, this, [this]() {
+        if (!this) return;
 
-    QTimer* enemySpawnTimer = new QTimer();
-    QObject::connect(enemySpawnTimer, &QTimer::timeout, [&]() {
+
         if (kimo->x() > 550 && !enemySpawned) {
             onion* onion2 = new onion(":/images/enemies/onion.png", QPointF(1000, 400));
             onion2->setBounds(850,1400);
@@ -109,8 +110,9 @@ void Level1::setEnvironment() {
     view->show(); // Show the view
 
     // Timer for game updates (platforms, HUD)
-    QTimer *gameUpdateTimer = new QTimer();
-    QObject::connect(gameUpdateTimer, &QTimer::timeout, [=]() {
+    gameUpdateTimer = new QTimer(this);
+    connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
+        if (!moving1 || !moving2) return;
         // Update moving platforms
         moving1->update();
         moving2->update();

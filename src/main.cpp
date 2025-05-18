@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
 
     // Instantiating the Level Orchestrator
     LevelOrchestrator orchestrator(&view);
-    orchestrator.loadLevel(LevelOrchestrator::L2); // Currently loads 'Level 1' by default
 
     view.show();
 

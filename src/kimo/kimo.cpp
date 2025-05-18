@@ -9,55 +9,13 @@
 #include <QTimer>
 #include <QList>
 #include <platform.h>
-#include <QGraphicsView> // Added for view reference
-#include <QRectF> // Added for sceneRect
+#include <QGraphicsView>
+#include <QRectF>
 #include <QDialog>
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <functional>
-
-// --- LevelCompleteDialog: Custom dialog for level completion ---
-class LevelCompleteDialog : public QDialog {
-public:
-    // Pass a callback for replay logic
-    LevelCompleteDialog(std::function<void()> replayCallback, QWidget* parent = nullptr) : QDialog(parent), onReplay(replayCallback) {
-        setWindowTitle("Level Complete!");
-        setModal(true);
-        setMinimumSize(350, 200);
-        // --- Add your game design images here (e.g., QLabel with QPixmap) ---
-        // QLabel* imageLabel = new QLabel(this);
-        // imageLabel->setPixmap(QPixmap(":/images/your_image.png"));
-        // imageLabel->setAlignment(Qt::AlignCenter);
-
-        QLabel* congratsLabel = new QLabel("<h2>Congratulations!</h2><p>You finished level 1!</p>", this);
-        congratsLabel->setAlignment(Qt::AlignCenter);
-
-        QPushButton* quitButton = new QPushButton("Quit", this);
-        QPushButton* replayButton = new QPushButton("Replay Level", this); // TODO: Change to 'Next Level' in the future
-        // --- In the future, replace 'Replay Level' with 'Next Level' and connect to next level logic ---
-
-        QHBoxLayout* buttonLayout = new QHBoxLayout;
-        buttonLayout->addWidget(quitButton);
-        buttonLayout->addWidget(replayButton);
-
-        QVBoxLayout* mainLayout = new QVBoxLayout;
-        // mainLayout->addWidget(imageLabel); // Uncomment if you add an image
-        mainLayout->addWidget(congratsLabel);
-        mainLayout->addLayout(buttonLayout);
-        setLayout(mainLayout);
-
-        connect(quitButton, &QPushButton::clicked, this, &QDialog::accept); // Accept = quit
-        connect(replayButton, &QPushButton::clicked, this, [this]() {
-            if (onReplay) onReplay();
-            close();
-        });
-    }
-private:
-    std::function<void()> onReplay; // Callback for replay logic
-};
-// --- End LevelCompleteDialog ---
 
 Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // Load and scale the character sprites (for different states)
@@ -69,12 +27,14 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     fullLeftKimo = QPixmap(":/images/kimo/Kimo_fullLeft.png").scaled(64,64);
     spittingRightKimo = QPixmap(":/images/kimo/Kimo_spitRight.png").scaled(64,64);
     spittingLeftKimo = QPixmap(":/images/kimo/Kimo_spitLeft.png").scaled(64,64);
+    crouchingRightKimo = QPixmap(":/images/kimo/Kimo_crouchRight.png").scaled(64,48);
+    crouchingLeftKimo = QPixmap(":/images/kimo/Kimo_crouchLeft.png").scaled(64,48);
 
     // Initialize the damage timer
     damageTimer.start();
 
     // Set up physics timer for smooth movement
-    physicsTimer = new QTimer(this);
+    physicsTimer = new QTimer();
     connect(physicsTimer, SIGNAL(timeout()), this, SLOT(updatePhysics()));
     physicsTimer->start(16); // ~60 FPS for smooth physics
 }
@@ -115,6 +75,12 @@ void Kimo::updateSprite() {
             setPixmap(spittingRightKimo);
         }
     }
+    else if(currentState == Crouching) {
+        if (lastDirection == Left)
+            setPixmap(crouchingLeftKimo);
+        else
+            setPixmap(crouchingRightKimo);
+    }
 }
 
 void Kimo::setGoal(QGraphicsRectItem* g) {
@@ -141,8 +107,8 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
             updateSprite();
             horizontalVelocity = -5.0; // Move left
         }
-        else if(currentState == Full) {
-            horizontalVelocity = -2.0; // Moves slower when full
+        else if(currentState == Full || currentState == Crouching) {
+            horizontalVelocity = -2.0; // Moves slower when full/crouching
             updateSprite();
         }
     }
@@ -153,8 +119,8 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
             updateSprite();
             horizontalVelocity = 5.0; // Move right
         }
-        else if(currentState == Full) {
-            horizontalVelocity = 2.0; // Moves slower when full
+        else if(currentState == Full || currentState == Crouching) {
+            horizontalVelocity = 2.0; // Moves slower when full/crouching
             updateSprite();
         }
     }
@@ -162,9 +128,12 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
     else if (event->key() == Qt::Key_Up && isGrounded) {
         jump();
     }
-    // Handle crouching (placeholder for future implementation)
-    else if (event->key() == Qt::Key_Down) {
-        //crouch
+    // Handle crouching (only when grounded)
+    else if (event->key() == Qt::Key_Down && isGrounded && !isCrouching) {
+        currentState = Crouching;
+        setPixmap(lastDirection==Left ? crouchingLeftKimo : crouchingRightKimo);
+        setY(y() + 16);
+        isCrouching = true;
     }
     else if (event->key() == Qt::Key_Space) {
         if(currentState != Full){
@@ -193,6 +162,13 @@ void Kimo::keyReleaseEvent(QKeyEvent * event) {
             updateSprite();
         }
     }
+
+    if (event->key() == Qt::Key_Down) {
+        currentState = (lastDirection == Left) ? NormalLeft : NormalRight;
+        setY(y() - 16);
+        updateSprite();
+        isCrouching = false;
+    }
 }
 
 void Kimo::jump() {
@@ -204,6 +180,8 @@ void Kimo::jump() {
 }
 
 void Kimo::updatePhysics() {
+    if (!scene()) return;
+
     // Fix edge bug: Check for platform under both left and right edges of the character
     isGrounded = false;
     int footY = y() + pixmap().height() + 1;
@@ -338,18 +316,12 @@ void Kimo::checkCollision() {
             QRectF platformRect = hitbox->sceneBoundingRect();
 
             if (goal && collidingItems().contains(goal)) {
-                // Show the level complete dialog instead of exiting
-                LevelCompleteDialog* dialog = new LevelCompleteDialog([this]() {
-                    // --- Replay logic: reset Kimo and the level ---
-                    this->respawn();
-                    // TODO: Add logic to reset enemies, platforms, etc. if needed
-                });
-                // Accepting the dialog (Quit) will exit the game
-                if (dialog->exec() == QDialog::Accepted) {
-                    qApp->exit();
+                if (physicsTimer && physicsTimer->isActive()) {
+                    setPos(goal->x(), goal->y());
+                    physicsTimer->stop();
+                    emit levelComplete();
+                    return;
                 }
-                // --- In the future, add a 'Next Level' button and connect it to next level logic here ---
-                return;
             }
 
             // Calculate intersection

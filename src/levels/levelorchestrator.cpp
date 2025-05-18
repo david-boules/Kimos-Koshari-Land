@@ -1,23 +1,33 @@
 #include "levelorchestrator.h"
+#include "levelcompletedialog.h"
 #include "level1.h"
 #include "level2.h"
 #include "level3.h"
 #include "level4.h"
 #include "level5.h"
+#include "kimo.h"
 
 LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
     : QObject(parent), view(view)
 {
-    kimo = new Kimo();
-    healthText = new QGraphicsTextItem();
-    levelText = new QGraphicsTextItem();
+    loadLevel(L1);
 }
 
 void LevelOrchestrator::loadLevel(Level level) {
-    qDebug() << "[loadLevel] Entered with level:" << level;
-    if (!kimo || !view || !healthText || !levelText) {
-        qDebug() << "[ERROR] Null pointers found during loadLevel!";
+    currentLevelEnum = level;
+    view->setScene(nullptr);
+    // Check for an existing 'currentLevel' pointer when loading a level and delete this object
+    if (currentLevel) {
+        if (auto kimo = currentLevel->BaseLevel::getKimo())
+            disconnect(kimo, nullptr, this, nullptr);
+        delete currentLevel;
+        currentLevel = nullptr;
     }
+
+    QGraphicsTextItem* healthText = new QGraphicsTextItem();
+    QGraphicsTextItem* levelText = new QGraphicsTextItem();
+    Kimo* kimo = new Kimo(); // Creating the new Kimo to be used in the new level
+
     switch (level) {
     case L1:
         currentLevel = new Level1(view, kimo, healthText, levelText);
@@ -46,8 +56,38 @@ void LevelOrchestrator::loadLevel(Level level) {
     }
 
     view->setScene(currentLevel);
+    connect(kimo, &Kimo::levelComplete, this, &LevelOrchestrator::onLevelComplete);
 }
 
-void LevelOrchestrator::switchLevel() {
+void LevelOrchestrator::onLevelComplete() {
 
+    QString levelName = currentLevel->getLevelName()->toPlainText().remove("Level: ");
+    LevelCompleteDialog LevelComplete(levelName);
+
+    connect(&LevelComplete, &LevelCompleteDialog::replayPushed, this, &LevelOrchestrator::reloadCurrentLevel);
+    connect(&LevelComplete, &LevelCompleteDialog::nextLevelPushed, this, &LevelOrchestrator::switchLevel);
+    connect(&LevelComplete, &LevelCompleteDialog::levelSelectPushed, this, &LevelOrchestrator::showLevelSelect);
+
+    LevelComplete.exec();
+}
+
+
+void LevelOrchestrator::switchLevel() {
+    int next = static_cast<int>(currentLevelEnum) + 1;
+    if (next < 5) loadLevel(static_cast<Level>(next));
+    else {
+        QGraphicsTextItem* winText = new QGraphicsTextItem("You have defeated Abou Tarek and completed the game!");
+        winText->setDefaultTextColor(Qt::yellow);
+        winText->setFont(QFont("Arial", 32));
+        winText->setPos(600, 300);
+        currentLevel->addItem(winText);
+    }
+}
+
+void LevelOrchestrator::reloadCurrentLevel() {
+    loadLevel(currentLevelEnum);
+}
+
+void LevelOrchestrator::showLevelSelect() {
+    // To-Do: Level Select screen is not yet defined
 }

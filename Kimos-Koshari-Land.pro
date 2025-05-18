@@ -19,6 +19,7 @@ SOURCES += \
     src/levels/level3.cpp \
     src/levels/level4.cpp \
     src/levels/level5.cpp \
+    src/levels/levelcompletedialog.cpp \
     src/levels/levelorchestrator.cpp \
     src/main.cpp \
     src/kimo/kimo.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     src/levels/level3.h \
     src/levels/level4.h \
     src/levels/level5.h \
+    src/levels/levelcompletedialog.h \
     src/levels/levelorchestrator.h \
     src/projectiles/fireball.h \
     src/projectiles/macaronimissile.h \
