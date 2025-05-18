@@ -13,12 +13,20 @@
         <file>../images/projectiles/fireball.png</file>
         <file>../images/projectiles/macaroni_missile.png</file>
         <file>../images/tiles/spikes.png</file>
-        <file>../images/levels/background.png</file>
         <file>../images/tiles/brick.png</file>
         <file>../images/kimo/Kimo_fullLeft.png</file>
         <file>../images/kimo/Kimo_inhaleLeft.png</file>
         <file>../images/kimo/Kimo_spitLeft.png</file>
         <file>../images/kimo/Kimo_crouchLeft.png</file>
         <file>../images/kimo/Kimo_crouchRight.png</file>
+        <file>../images/misc/pants.png</file>
+        <file>../images/misc/shirt.png</file>
+        <file>../images/levels/L2background.png</file>
+        <file>../images/levels/L3background.png</file>
+        <file>../images/levels/L4background.png</file>
+        <file>../images/levels/L5background.png</file>
+        <file>../images/levels/L1background.png</file>
+        <file>../images/enemies/eagle.png</file>
+        <file>../images/enemies/streetcat.png</file>
     </qresource>
 </RCC>

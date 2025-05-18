@@ -21,13 +21,6 @@ void Level1::setEnemies() {
     addItem(OnionEnemy);
     OnionEnemy->setTargetKimo(kimo);
 
-    macaroni* macaroniBig = new macaroni(QPixmap(":/images/enemies/macaroni.png"), QPointF(1300,250));
-    macaroniBig->setScale(5.0);
-    macaroniBig->setTargetKimo(kimo);
-    macaroniBig->setSpeed(0);
-    macaroniBig->setTargetKimo(kimo);
-    addItem(macaroniBig);
-
     QTimer* enemySpawnTimer = new QTimer(this);
     QObject::connect(enemySpawnTimer, &QTimer::timeout, this, [this]() {
         if (!this) return;
@@ -48,7 +41,7 @@ void Level1::setEnvironment() {
     // Add the platforms, spikes, background, etc. for Level 1
 
     // Background
-    view->setBackgroundBrush(QPixmap(":/images/levels/background.png"));
+    view->setBackgroundBrush(QPixmap(":/images/levels/L1background.png"));
 
     // Ground platform (extended for larger scene)
     StaticPlatform *ground1 = new StaticPlatform(200, 50, 0, 550);

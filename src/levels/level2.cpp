@@ -65,7 +65,7 @@ void Level2::setEnvironment() {
     // Add the platforms, spikes, background, etc. for Level 2
 
     // Background
-    view->setBackgroundBrush(QPixmap(":/images/levels/background.png"));
+    view->setBackgroundBrush(QPixmap(":/images/levels/L2background.png"));
 
     // Ground platform
     StaticPlatform *ground1 = new StaticPlatform(300, 50, 0, 550);

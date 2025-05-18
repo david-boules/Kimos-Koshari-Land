@@ -9,4 +9,8 @@ void Level3::setEnemies() {
 
 void Level3::setEnvironment() {
     // Add the platforms, spikes, background, etc. for Level 3
+
+    view->setBackgroundBrush(QPixmap(":/images/levels/L3background.png"));
+
+    // Temporary ground block for the whole level
 }

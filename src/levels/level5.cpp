@@ -9,4 +9,7 @@ void Level5::setEnemies() {
 
 void Level5::setEnvironment() {
     // Add the platforms, spikes, background, etc. for Level 5
+
+    view->setBackgroundBrush(QPixmap(":/images/levels/L5background.png"));
+
 }
