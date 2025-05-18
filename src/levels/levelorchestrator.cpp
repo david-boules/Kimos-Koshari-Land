@@ -66,7 +66,9 @@ void LevelOrchestrator::onLevelComplete() {
     LevelCompleteDialog LevelComplete(levelName);
 
     connect(&LevelComplete, &LevelCompleteDialog::replayPushed, this, &LevelOrchestrator::reloadCurrentLevel);
-    connect(&LevelComplete, &LevelCompleteDialog::nextLevelPushed, this, &LevelOrchestrator::switchLevel);
+    connect(&LevelComplete, &LevelCompleteDialog::nextLevelPushed, this, [=]() {
+        QTimer::singleShot(0, this, &LevelOrchestrator::switchLevel);
+    });
     connect(&LevelComplete, &LevelCompleteDialog::levelSelectPushed, this, &LevelOrchestrator::showLevelSelect);
 
     LevelComplete.exec();
