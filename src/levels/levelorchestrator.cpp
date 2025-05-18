@@ -1,5 +1,6 @@
 #include "levelorchestrator.h"
 #include "levelcompletedialog.h"
+#include "levelselect.h"
 #include "level1.h"
 #include "level2.h"
 #include "level3.h"
@@ -10,7 +11,7 @@
 LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
     : QObject(parent), view(view)
 {
-    loadLevel(L2);
+    loadLevel(L1);
 }
 
 void LevelOrchestrator::loadLevel(Level level) {
@@ -89,5 +90,6 @@ void LevelOrchestrator::reloadCurrentLevel() {
 }
 
 void LevelOrchestrator::showLevelSelect() {
-    // To-Do: Level Select screen is not yet defined
+    LevelSelect ls(this);
+    ls.exec();
 }

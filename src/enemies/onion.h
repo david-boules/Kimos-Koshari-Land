@@ -28,7 +28,6 @@ private:
     int enemy_health=1;
     qreal minX = 0;
     qreal maxX = 800;
-    //qreal healthOfEnemy;
     onion_move moveStyle = onion_move::level1;
 
 

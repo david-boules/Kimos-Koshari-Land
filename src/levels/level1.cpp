@@ -13,9 +13,9 @@ void Level1::setEnemies() {
     addItem(ChiliEnemy);
     ChiliEnemy->setTargetKimo(kimo);
 
-    macaroni* macaroni1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
-    addItem(macaroni1);
-    macaroni1->setTargetKimo(kimo);
+    macaroni* MacaroniEnemy = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
+    addItem(MacaroniEnemy);
+    MacaroniEnemy->setTargetKimo(kimo);
 
     onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(500,420));
     addItem(OnionEnemy);
