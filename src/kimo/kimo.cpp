@@ -16,7 +16,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <functional>
 
 Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // Load and scale the character sprites (for different states)
@@ -28,6 +27,8 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     fullLeftKimo = QPixmap(":/images/kimo/Kimo_fullLeft.png").scaled(64,64);
     spittingRightKimo = QPixmap(":/images/kimo/Kimo_spitRight.png").scaled(64,64);
     spittingLeftKimo = QPixmap(":/images/kimo/Kimo_spitLeft.png").scaled(64,64);
+    crouchingRightKimo = QPixmap(":/images/kimo/Kimo_crouchRight.png").scaled(64,48);
+    crouchingLeftKimo = QPixmap(":/images/kimo/Kimo_crouchLeft.png").scaled(64,48);
 
     // Initialize the damage timer
     damageTimer.start();
@@ -74,6 +75,12 @@ void Kimo::updateSprite() {
             setPixmap(spittingRightKimo);
         }
     }
+    else if(currentState == Crouching) {
+        if (lastDirection == Left)
+            setPixmap(crouchingLeftKimo);
+        else
+            setPixmap(crouchingRightKimo);
+    }
 }
 
 void Kimo::setGoal(QGraphicsRectItem* g) {
@@ -100,8 +107,8 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
             updateSprite();
             horizontalVelocity = -5.0; // Move left
         }
-        else if(currentState == Full) {
-            horizontalVelocity = -2.0; // Moves slower when full
+        else if(currentState == Full || currentState == Crouching) {
+            horizontalVelocity = -2.0; // Moves slower when full/crouching
             updateSprite();
         }
     }
@@ -112,8 +119,8 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
             updateSprite();
             horizontalVelocity = 5.0; // Move right
         }
-        else if(currentState == Full) {
-            horizontalVelocity = 2.0; // Moves slower when full
+        else if(currentState == Full || currentState == Crouching) {
+            horizontalVelocity = 2.0; // Moves slower when full/crouching
             updateSprite();
         }
     }
@@ -121,9 +128,12 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
     else if (event->key() == Qt::Key_Up && isGrounded) {
         jump();
     }
-    // Handle crouching (placeholder for future implementation)
-    else if (event->key() == Qt::Key_Down) {
-        //crouch
+    // Handle crouching (only when grounded)
+    else if (event->key() == Qt::Key_Down && isGrounded && !isCrouching) {
+        currentState = Crouching;
+        setPixmap(lastDirection==Left ? crouchingLeftKimo : crouchingRightKimo);
+        setY(y() + 16);
+        isCrouching = true;
     }
     else if (event->key() == Qt::Key_Space) {
         if(currentState != Full){
@@ -152,6 +162,13 @@ void Kimo::keyReleaseEvent(QKeyEvent * event) {
             updateSprite();
         }
     }
+
+    if (event->key() == Qt::Key_Down) {
+        currentState = (lastDirection == Left) ? NormalLeft : NormalRight;
+        setY(y() - 16);
+        updateSprite();
+        isCrouching = false;
+    }
 }
 
 void Kimo::jump() {
@@ -163,10 +180,7 @@ void Kimo::jump() {
 }
 
 void Kimo::updatePhysics() {
-    if (!scene()) {
-        qDebug() << "[CRASH GUARD] updatePhysics triggered with null scene";
-        return;
-    }
+    if (!scene()) return;
 
     // Fix edge bug: Check for platform under both left and right edges of the character
     isGrounded = false;

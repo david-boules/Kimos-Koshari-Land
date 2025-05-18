@@ -5,7 +5,6 @@ BaseLevel::BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthT
 {}
 
 void BaseLevel::setupScene(QString levelName) {
-    qDebug() << "[SETUP] BaseLevel::setupScene() called";
     setSceneRect(0, 0, 2000, 600);
 
     setKimo();
@@ -17,7 +16,6 @@ void BaseLevel::setupScene(QString levelName) {
     QTimer* hudUpdateTimer = new QTimer(this);
     connect(hudUpdateTimer, &QTimer::timeout, this, [this]() {
         if (!view || !HUD_health || !HUD_levelName) {
-            qDebug() << "[HUD] skipped update due to null pointer";
             return;
         }
 
@@ -39,6 +37,9 @@ void BaseLevel::setKimo() {
     kimo->setParentItem(nullptr);
     kimo->setParent(nullptr); // Ensures that when 'currentLevel' (in 'LevelOrchestrator') is deleted, that Kimo is not deleted with it
     kimo->setView(view);
+
+    if (HUD_health)
+        kimo->setHealthText(HUD_health); // This connects the 'HUD_health' text with Kimo's 'healthText'
 }
 
 void BaseLevel::setHUD(QString levelName) {

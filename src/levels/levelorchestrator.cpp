@@ -14,7 +14,6 @@ LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
 }
 
 void LevelOrchestrator::loadLevel(Level level) {
-    qDebug() << "[LOAD] Level loaded:" << level;
     currentLevelEnum = level;
     view->setScene(nullptr);
     // Check for an existing 'currentLevel' pointer when loading a level and delete this object
