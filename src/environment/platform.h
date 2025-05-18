@@ -38,6 +38,17 @@ private:
     int startX, moveRange, moveSpeed, direction;
 };
 
+// VerticallyMovingPlatform: A platform that moves up and down
+class VerticallyMovingPlatform : public Platform {
+public:
+    // Constructor initializes platform size, position, movement range and speed
+    VerticallyMovingPlatform(int width, int height, int x, int y, int range, int speed = 2);
+    // Called every frame or tick to update the platform's position
+    void update() override;
+private:
+    int startY, moveRange, moveSpeed, direction;
+};
+
 // SpikyPlatform: A static platform with a spike PNG overlay
 // Inherits from Platform and adds a QGraphicsPixmapItem for the spikes
 class SpikyPlatform : public Platform {

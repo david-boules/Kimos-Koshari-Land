@@ -48,6 +48,21 @@ void MovingPlatform::update() {
     }
 }
 
+// VerticallyMovingPlatform constructor: calls base Platform constructor and initializes movement variables
+VerticallyMovingPlatform::VerticallyMovingPlatform(int width, int height, int x, int y, int range, int speed)
+    : Platform(width, height, x, y), startY(y), moveRange(range), moveSpeed(speed), direction(1) {}
+
+// VerticallyMovingPlatform update: moves the platform up and down
+void VerticallyMovingPlatform::update() {
+    // Move the platform using QGraphicsItem coordinates
+    setPos(x(), y() + direction * moveSpeed);
+    
+    // Check if platform has reached movement boundaries
+    if (y() >= startY + moveRange || y() <= startY) {
+        direction *= -1;
+    }
+}
+
 // SpikyPlatform constructor overlays a spike PNG on the platform
 SpikyPlatform::SpikyPlatform(int width, int height, int x, int y)
     : Platform(width, height, x, y), spikeOverlay(nullptr)
