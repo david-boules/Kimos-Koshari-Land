@@ -1,10 +1,9 @@
 #include "level2.h"
-#include "enemies/chili.h"
-#include "enemies/macaroni.h"
-#include "enemies/onion.h"
-#include "environment/platform.h"
-
-
+#include "chili.h"
+#include "macaroni.h"
+#include "onion.h"
+#include "platform.h"
+#include "misc/fallinglaundry.h"
 
 Level2::Level2(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
     : BaseLevel(view, kimo, healthText, levelText, parent) {}
@@ -52,13 +51,6 @@ void Level2::setEnemies() {
         addItem(OnionEnemy1);
         OnionEnemy1->setMoveStyle(onion_move::level2_1);
         OnionEnemy1->setTargetKimo(kimo);
-
-        // macaroni* macaroniBig = new macaroni(QPixmap(":/images/enemies/macaroni.png"), QPointF(1300,250));
-        // macaroniBig->setScale(5.0);
-        // macaroniBig->setTargetKimo(kimo);
-        // macaroniBig->setSpeed(0);
-        // macaroniBig->setTargetKimo(kimo);
-        // addItem(macaroniBig);
 }
 
 void Level2::setEnvironment() {
@@ -133,6 +125,21 @@ void Level2::setEnvironment() {
 
     MovingPlatform *moving2 = new MovingPlatform(150, 20, 1050, 250, 250, 3);
     addItem(moving2);
+
+    // Falling Laundry
+
+    QTimer* laundryTimer = new QTimer(this);
+    connect (laundryTimer, &QTimer::timeout, this, [=]() {
+        QPixmap shirtPixmap(":/images/misc/shirt.png");
+        QPixmap pantsPixmap(":/images/misc/pants.png");
+        // Choosing which item to drop at random (for variety):
+        QPixmap chosenObject = (rand() % 2 == 0) ? shirtPixmap : pantsPixmap;
+
+        QPointF pos(kimo->x() + rand() % 200 - 100, 0); // Determine the random position where the laundry falls relative to Kimo (random number bewteen -100, 99 for around 100 pixels close to Kimo)
+        FallingLaundry* laundry = new FallingLaundry(chosenObject, pos);
+        addItem(laundry);
+    });
+    laundryTimer->start(2000);
 
     // Adding temporary 'Clear Condition' object
     QGraphicsRectItem* goal = new QGraphicsRectItem(0,0,64,64);

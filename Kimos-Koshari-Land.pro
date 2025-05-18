@@ -9,6 +9,7 @@ INCLUDEPATH += src \
                src/enemies \
                src/projectiles \
                src/environment \
+               src/misc \
 
 DEPENDPATH  += src
 
@@ -27,6 +28,7 @@ SOURCES += \
     src/enemies/chili.cpp \
     src/enemies/macaroni.cpp \
     src/enemies/onion.cpp \
+    src/misc/fallinglaundry.cpp \
     src/projectiles/fireball.cpp \
     src/projectiles/macaronimissile.cpp \
     src/environment/platform.cpp \
@@ -46,6 +48,7 @@ HEADERS += \
     src/levels/level5.h \
     src/levels/levelcompletedialog.h \
     src/levels/levelorchestrator.h \
+    src/misc/fallinglaundry.h \
     src/projectiles/fireball.h \
     src/projectiles/macaronimissile.h \
     src/environment/platform.h \
