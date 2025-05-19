@@ -62,6 +62,13 @@ void Level4::setEnvironment() {
     StaticPlatform *platform2 = new StaticPlatform(100, 20, 630, 400);
     addItem(platform2);
 
+    StaticPlatform *platform3 = new StaticPlatform(100, 20, 1370, 180);
+    addItem(platform3);
+
+    StaticPlatform *platform4 = new StaticPlatform(100, 20, 1620, 180);
+    addItem(platform4);
+
+
     // Moving platform (moves horizontally)
     MovingPlatform *moving1 = new MovingPlatform(100, 20, 380, 300, 150, 2);
     addItem(moving1);
