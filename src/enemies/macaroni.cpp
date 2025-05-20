@@ -115,5 +115,32 @@ void macaroni::move(){
     }
 
 
+    case macaroni_move::level4_1: //second macaroni in level 4
+    {
+        setPos(x() - speed, y());
+
+
+        if (x() <= 635|| x() >=  730- pixmap().width()) {
+            speed = -speed; // Change direction
+        }
+
+        break;
+
+    }
+
+    case macaroni_move::level5: //second macaroni in level 4
+    {
+        setPos(x() - speed, y());
+
+
+        if (x() <= 635|| x() >=  730- pixmap().width()) {
+            speed = -speed; // Change direction
+        }
+
+        break;
+
+    }
+
+
     }
 }

@@ -32,6 +32,7 @@ public slots:
 
 protected:
     QGraphicsView* view;
+     QGraphicsScene *scene;
     Kimo* kimo;
     QTimer* gameUpdateTimer = nullptr;
     QGraphicsTextItem* HUD_health;

@@ -16,10 +16,18 @@ void Level4::setEnemies() {
     addItem(macaroni1);
     macaroni1->setTargetKimo(kimo);
 
+
+    macaroni* macaroni2 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(650,340));
+    macaroni2->setMoveStyle(macaroni_move::level4_1);
+    addItem(macaroni2);
+    macaroni2->setTargetKimo(kimo);
+
+
+
     // onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(660,340));
     // addItem(OnionEnemy);
     // OnionEnemy->setMoveStyle(onion_move::level3);
-    // OnionEnemy->setTargetKimo(kimo);
+    // OnionEnemy->setTargetKimo(kimo); /// remove
 
     onion* EagleEnemy1 = new onion(":/images/enemies/eagle_left.png",":/images/enemies/eagle.png",QPointF(400,170));
     addItem(EagleEnemy1);
@@ -37,11 +45,18 @@ void Level4::setEnemies() {
     OnionEnemy->setMoveStyle(onion_move::level3);
     OnionEnemy->setTargetKimo(kimo);
 
+    onion* OnionEnemy1 = new onion(":/images/enemies/onion.png",QPointF(1650,120));
+    addItem(OnionEnemy1);
+    OnionEnemy1->setMoveStyle(onion_move::level3);
+    OnionEnemy1->setTargetKimo(kimo);
 
 
-    cat* cat1 = new cat(":/images/enemies/cat_left.png",":/images/enemies/streetcat.png", QPointF(1490, 520));
+
+
+
+    cat* cat1 = new cat(":/images/enemies/cat_left.png",":/images/enemies/streetcat.png", QPointF(1480, 495));
     addItem(cat1);
-
+    cat1->setMoveStyle(cat_move::level4);
     cat1->setTargetKimo(kimo);
 
 

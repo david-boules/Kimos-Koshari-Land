@@ -3,7 +3,7 @@
 
 #include "enemy.h"
 
-enum class macaroni_move { level1, level2,level2_1, level3, level4 };
+enum class macaroni_move { level1, level2,level2_1, level3, level4,level4_1,level5 };
 
 
 class macaroni : public Enemy {

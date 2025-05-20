@@ -29,8 +29,12 @@ Store::Store(QGraphicsView *view, Kimo *kimo, QObject *parent)
     // Create close button
     closeButton = new QPushButton("Close");
     closeButton->setFixedSize(80, 30);
-    QGraphicsProxyWidget *closeProxy = view->scene()->addWidget(closeButton);
-    closeProxy->setPos(700, 20);
+    if (view && view->scene()) {
+        QGraphicsProxyWidget *closeProxy = view->scene()->addWidget(closeButton);
+        closeProxy->setPos(700, 20);
+    } else {
+        qWarning() << "ERROR: view or scene not initialized yet!";
+    }
     connect(closeButton, &QPushButton::clicked, this, &Store::closeStore);
 
     // Connect ability countdown signal

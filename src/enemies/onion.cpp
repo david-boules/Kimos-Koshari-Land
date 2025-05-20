@@ -178,7 +178,7 @@ is_jumping = false;
             if (jump >= 3.14) jump = 0;
 
             // Vertical jump using sine wave
-            qreal jumpY = original_y + qSin(jump) * -50;  // -20 = jump height
+            qreal jumpY = original_y + qSin(jump) * -50;  // -50 = jump height
             setY(jumpY);
 
             shoot_poison();

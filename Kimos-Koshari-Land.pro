@@ -14,6 +14,7 @@ INCLUDEPATH += src \
 DEPENDPATH  += src
 
 SOURCES += \
+    src/enemies/boss.cpp \
     src/enemies/cat.cpp \
     src/levels/baselevel.cpp \
     src/levels/level1.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
     src/misc/fallinglaundry.cpp \
     src/misc/kosharitrophy.cpp \
     src/misc/store.cpp \
+    src/projectiles/fire_chili.cpp \
     src/projectiles/fireball.cpp \
     src/projectiles/macaronimissile.cpp \
     src/environment/platform.cpp \
@@ -41,6 +43,7 @@ SOURCES += \
     src/projectiles/projectile.cpp
 
 HEADERS += \
+    src/enemies/boss.h \
     src/enemies/cat.h \
     src/levels/baselevel.h \
     src/kimo/kimo.h \
@@ -60,6 +63,7 @@ HEADERS += \
     src/misc/fallinglaundry.h \
     src/misc/kosharitrophy.h \
     src/misc/store.h \
+    src/projectiles/fire_chili.h \
     src/projectiles/fireball.h \
     src/projectiles/macaronimissile.h \
     src/environment/platform.h \

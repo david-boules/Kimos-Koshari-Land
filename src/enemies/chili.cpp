@@ -159,6 +159,19 @@ case chili_move::level4:
     }
     break;
 
+
+case chili_move::level5:
+
+
+    if (!kimoo) return;
+
+    if (kimoo->x() < x()) {
+        setPixmap(enemy_left);
+    } else {
+        setPixmap(enemy_right);
+    }
+    break;
+
     }
 }
 

@@ -21,6 +21,10 @@ BaseLevel::BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthT
     lvlMusicPlayer->play();
 
     // Create store
+
+    view = new QGraphicsView(this);           // 1. create the view
+    scene = new QGraphicsScene(this);         // 2. create the scene
+    view->setScene(scene);
     store = new Store(view, kimo, this);
     connect(store, &Store::storeClosed, this, &BaseLevel::toggleStore);
 

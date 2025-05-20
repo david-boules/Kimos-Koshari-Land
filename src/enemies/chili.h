@@ -3,7 +3,7 @@
 #include "enemy.h"
 #include "fireball.h"
 
-enum class chili_move { level1, level2,level2_1, level3, level4 };
+enum class chili_move { level1, level2,level2_1, level3, level4,level5 };
 
 class chili: public Enemy{
     Q_OBJECT

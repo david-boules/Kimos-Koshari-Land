@@ -13,7 +13,19 @@ cat::cat(QString leftPath, QString rightPath, QPointF startPos, QGraphicsItem* p
     update_health_bar();
     cat_left_img = QPixmap(leftPath).scaled(60, 60);
     cat_right_img = QPixmap(rightPath).scaled(60, 60);
+     originalPos = startPos;  //save the original poistion to make cat return back
 }
+
+
+
+void cat::setMoveStyle(cat_move style) {
+    moveStyle = style;
+}
+
+cat_move cat::getMoveStyle() const {
+    return moveStyle;
+}
+
 
 // void cat::setRange(qreal minX, qreal maxX) {
 //     rangeMin = minX;
@@ -158,6 +170,9 @@ void cat::move() {
     qreal dx = kimoo->x() - x();
     qreal dy = kimoo->y() - y();
 
+
+
+
     // 1. Trigger jump only once, when Kimo is on the left and within range
     if (!isJumping && dx < 0 && qAbs(dx) < 200 && qAbs(dy) < 50) {
         if (kimoo->x() < 600) return;
@@ -193,11 +208,40 @@ void cat::move() {
             // Deal damage only if it lands and collides
             if (collidesWithItem(kimoo)) {
                 kimoo->takeDamage(damage);
+
+                isReturning = true;
+                angle = 0.0;
+                returnStartPos = pos();
+                returnTargetPos = originalPos;
             }
         }
 
         return;
     }
+
+
+
+    if (isReturning) {
+        angle += 0.1;
+        qreal progress = angle / 3.14;
+        if (progress > 1.0) progress = 1.0;
+
+        qreal newX = returnStartPos.x() + (returnTargetPos.x() - returnStartPos.x()) * progress;
+        qreal newY = returnStartPos.y() + qSin(angle) * -25;
+        setPos(newX, newY);
+
+        if (angle >= 3.14) {
+            isReturning = false;
+            angle = 0.0;
+            setPos(originalPos);  // Snap exactly back
+        }
+        return;
+    }
+
+
+    switch (moveStyle)
+    {
+    case cat_move::level3:
 
     //  Regular speed
     setPos(x() + speed, y());
@@ -207,6 +251,31 @@ void cat::move() {
     }
 
     setPixmap(speed > 0 ? cat_right_img : cat_left_img);
+    break;
+
+
+
+    case cat_move::level4:
+
+        if (!kimoo) return;
+
+        if (kimoo->x() < x()) {
+            setPixmap(cat_left_img);
+        } else {
+            setPixmap(cat_right_img);
+        }
+
+        // if (collidesWithItem(kimoo)) {
+        //     kimoo->takeDamage(damage);
+        //     setPos(originalPos);  // Return cat to its initial spawn point
+        // }
+
+        break;
+
+}
+
+
+
 }
 
 

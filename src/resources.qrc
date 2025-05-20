@@ -35,5 +35,7 @@
         <file>../audio/lvlmusic.mp3</file>
         <file>../audio/damage.mp3</file>
         <file>../images/misc/koshari_trophy.png</file>
+        <file>../images/enemies/Boss.png</file>
+        <file>../images/projectiles/chiliLeft.png</file>
     </qresource>
 </RCC>
