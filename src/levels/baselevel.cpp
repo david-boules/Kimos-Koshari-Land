@@ -10,7 +10,7 @@ BaseLevel::BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthT
     // Adding 'Clear Condition' object
     KoshariTrophy* goal = new KoshariTrophy();
     addItem(goal);
-    goal->setPos(1800, 480);
+    goal->setPos(1800, 485);
     kimo->setGoal(goal);
 
     // Level Music
@@ -101,8 +101,6 @@ void BaseLevel::setKimo() {
     kimo->setPos(25,450);
     kimo->setPixmap(QPixmap(":/images/kimo/Kimo_right.png").scaled(64,64));
     addItem(kimo);
-    kimo->setParentItem(nullptr);
-    kimo->setParent(nullptr); // Ensures that when 'currentLevel' (in 'LevelOrchestrator') is deleted, that Kimo is not deleted with it
     kimo->setView(view);
 
     if (HUD_health)

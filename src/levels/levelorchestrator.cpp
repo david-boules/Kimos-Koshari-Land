@@ -41,12 +41,12 @@ void LevelOrchestrator::loadLevel(Level level) {
 
     case L2:
         currentLevel = new Level2(view, kimo, healthText, levelText);
-        currentLevel->setupScene("Streets of Cairo");
+        currentLevel->setupScene("Pyramids Dash");
         break;
 
     case L3:
         currentLevel = new Level3(view, kimo, healthText, levelText);
-        currentLevel->setupScene("Pyramids Dash");
+        currentLevel->setupScene("Streets of Cairo");
         break;
 
     case L4:

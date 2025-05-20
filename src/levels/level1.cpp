@@ -1,8 +1,9 @@
 #include "level1.h"
-#include "enemies/chili.h"
-#include "enemies/macaroni.h"
-#include "enemies/onion.h"
-#include "environment/platform.h"
+#include "chili.h"
+#include "macaroni.h"
+#include "onion.h"
+#include "platform.h"
+#include "coin.h"
 
 Level1::Level1(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
     : BaseLevel(view, kimo, healthText, levelText, parent) {}
@@ -104,4 +105,23 @@ void Level1::setEnvironment() {
     });
 
     gameUpdateTimer->start(16); // ~60 FPS
+
+    // Add coins in strategic locations
+    // First platform coins
+    addItem(new Coin(QPointF(130, 250)));
+    addItem(new Coin(QPointF(180, 230)));
+    addItem(new Coin(QPointF(230, 250)));
+
+    // Second platform coins
+    addItem(new Coin(QPointF(380, 270)));
+    addItem(new Coin(QPointF(430, 270)));
+
+    // Third platform coins
+    addItem(new Coin(QPointF(700, 250)));
+    addItem(new Coin(QPointF(750, 300)));
+    addItem(new Coin(QPointF(800, 350)));
+
+    // Fourth platform coins
+    addItem(new Coin(QPointF(1000, 500)));
+    addItem(new Coin(QPointF(1050, 500)));
 }

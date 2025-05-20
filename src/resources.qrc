@@ -37,5 +37,6 @@
         <file>../images/misc/koshari_trophy.png</file>
         <file>../images/enemies/Boss.png</file>
         <file>../images/projectiles/chiliLeft.png</file>
+        <file>../images/misc/coin.png</file>
     </qresource>
 </RCC>

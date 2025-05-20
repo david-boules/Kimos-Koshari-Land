@@ -195,6 +195,13 @@ void Kimo::jump() {
 void Kimo::updatePhysics() {
     if (!scene()) return;
 
+    if (goal && this->collidesWithItem(goal, Qt::IntersectsItemShape)) {
+        if (physicsTimer && physicsTimer->isActive()) {
+            emit levelComplete();  // orchestrator begins transition
+            return;
+        }
+    }
+
     // Fix edge bug: Check for platform under both left and right edges of the character
     isGrounded = false;
     int footY = y() + pixmap().height() + 1;
@@ -336,15 +343,6 @@ void Kimo::checkCollision() {
         if (hitbox) {
             QRectF kimoRect = this->sceneBoundingRect();
             QRectF platformRect = hitbox->sceneBoundingRect();
-
-            if (goal && collidingItems().contains(goal)) {
-                if (physicsTimer && physicsTimer->isActive()) {
-                    setPos(goal->x(), 550);
-                    physicsTimer->stop();
-                    emit levelComplete();
-                    return;
-                }
-            }
 
             // Calculate intersection
             QRectF intersection = kimoRect.intersected(platformRect);
