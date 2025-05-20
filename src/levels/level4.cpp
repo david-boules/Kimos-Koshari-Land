@@ -1,11 +1,50 @@
 #include "level4.h"
 #include "platform.h"
+#include "macaroni.h"
+#include "onion.h"
+#include "chili.h"
+#include "cat.h"
 
 Level4::Level4(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
     : BaseLevel(view, kimo, healthText, levelText, parent) {}
 
 void Level4::setEnemies() {
     // Add the enemies in Level 4
+
+    macaroni* macaroni1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(340,340));
+    macaroni1->setMoveStyle(macaroni_move::level4);
+    addItem(macaroni1);
+    macaroni1->setTargetKimo(kimo);
+
+    // onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(660,340));
+    // addItem(OnionEnemy);
+    // OnionEnemy->setMoveStyle(onion_move::level3);
+    // OnionEnemy->setTargetKimo(kimo);
+
+    onion* EagleEnemy1 = new onion(":/images/enemies/eagle_left.png",":/images/enemies/eagle.png",QPointF(400,170));
+    addItem(EagleEnemy1);
+    EagleEnemy1->setMoveStyle(onion_move::level4);
+    EagleEnemy1->setTargetKimo(kimo);
+
+    chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(1300,200));
+    addItem(ChiliEnemy);
+    ChiliEnemy->setMoveStyle(chili_move::level4);
+    ChiliEnemy->setTargetKimo(kimo);
+
+
+    onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(950,400));
+    addItem(OnionEnemy);
+    OnionEnemy->setMoveStyle(onion_move::level3);
+    OnionEnemy->setTargetKimo(kimo);
+
+
+
+    cat* cat1 = new cat(":/images/enemies/cat_left.png",":/images/enemies/streetcat.png", QPointF(1490, 520));
+    addItem(cat1);
+
+    cat1->setTargetKimo(kimo);
+
+
 }
 
 void Level4::setEnvironment() {

@@ -141,8 +141,25 @@ case chili_move::level2_1:
     }
     break;
 
-}
+
+
+case chili_move::level4:
+
+    setPos(x(), y() + verticalSpeed);
+
+    if (y() <= 100 || y() >= 300) {
+        verticalSpeed = -verticalSpeed;  // reverse direction
+    }
+
+    // Check if Kimo is to the LEFT and roughly on the same vertical level
+    if (kimoo->x() < x()&&distancex<=320 && qAbs(kimoo->y() - y()) <= 20 && canFire) {
+        shootFire();
+        canFire = false;
+        fire_cooldown_timer->start();
+    }
+    break;
 
     }
+}
 
 

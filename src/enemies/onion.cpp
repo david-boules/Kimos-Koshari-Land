@@ -166,7 +166,7 @@ is_jumping = false;
 
 
 
-    case onion_move::level3:
+    case onion_move::level3:{
 
 
         if (!kimoo) break;
@@ -185,7 +185,33 @@ is_jumping = false;
 
 
 
+            break;
+    }
+
+
+    case onion_move::level4:{  //first eagle
+        is_jumping = false;
+        angle += 0.1;
+        setPos(x() -speed, y() + qSin(angle) * 3.5);
+
+        if (has_left_and_right) {
+            if (speed > 0) {
+                setPixmap(leftPixmap);
+            } else {
+                setPixmap(rightPixmap);
+            }
+        }
+
+        if (x() <= 380 || x() >= 660 - pixmap().width()) {
+            speed = -speed; // bounce between minX and maxX
+        }
         break;
+    }
+
+
+
+
+
 }
 
 }

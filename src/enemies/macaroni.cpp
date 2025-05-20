@@ -103,6 +103,20 @@ void macaroni::move(){
     }
 
 
+    case macaroni_move::level4:
+    {
+        setPos(x() - speed, y());
+
+
+        if (x() <= 305|| x() >=  400- pixmap().width()) {
+            speed = -speed; // Change direction
+        }
+
+        break;
+
+    }
+
+
     }
 }
 //      setPos(x() - speed, y());

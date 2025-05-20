@@ -169,7 +169,7 @@ void cat::move() {
         return;
     }
 
-    // 2. Perform sine-curve jump toward Kimo
+    //  Perform sine-curve jump toward Kimo
     if (isJumping) {
         angle += 0.1;
 
@@ -199,7 +199,7 @@ void cat::move() {
         return;
     }
 
-    // 3. Regular patrol
+    //  Regular speed
     setPos(x() + speed, y());
 
     if (x() <= 600 || x() >= 1100 - pixmap().width()) {
