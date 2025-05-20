@@ -4,6 +4,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include "kimo.h"
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 class BaseLevel : public QGraphicsScene
 {
@@ -20,6 +22,8 @@ public:
 
     Kimo* getKimo() {return kimo;} // Kimo getter for disconnecting a signal in the 'Level Orchestrator'
 
+    void stopMusic();
+
     QGraphicsTextItem* getLevelName() {return HUD_levelName;}
 
 protected:
@@ -28,6 +32,9 @@ protected:
     QTimer* gameUpdateTimer = nullptr;
     QGraphicsTextItem* HUD_health;
     QGraphicsTextItem* HUD_levelName;
+
+    QMediaPlayer* lvlMusicPlayer;
+    QAudioOutput* lvlMusicOutput;
 };
 
 #endif // BASELEVEL_H

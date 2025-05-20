@@ -1,8 +1,17 @@
 #include "baselevel.h"
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 BaseLevel::BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
     : QGraphicsScene(parent), view(view), kimo(kimo), HUD_health(healthText), HUD_levelName(levelText)
-{}
+{
+    lvlMusicPlayer = new QMediaPlayer(this);
+    lvlMusicOutput = new QAudioOutput(this);
+
+    lvlMusicPlayer->setAudioOutput(lvlMusicOutput);
+    lvlMusicPlayer->setSource(QUrl("qrc:/audio/lvlmusic.mp3"));
+    lvlMusicPlayer->play();
+}
 
 void BaseLevel::setupScene(QString levelName) {
     setSceneRect(0, 0, 2000, 600);
@@ -68,4 +77,8 @@ void BaseLevel::setHUD(QString levelName) {
         HUD_levelName->setFont(QFont("Arial", 16));
         addItem(HUD_levelName);
     }
+}
+
+void BaseLevel::stopMusic() {
+    if (lvlMusicPlayer) lvlMusicPlayer->stop();
 }

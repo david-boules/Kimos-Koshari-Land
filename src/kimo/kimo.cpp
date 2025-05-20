@@ -16,6 +16,9 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGraphicsColorizeEffect>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     // Load and scale the character sprites (for different states)
@@ -129,7 +132,7 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
         jump();
     }
     // Handle crouching (only when grounded)
-    else if (event->key() == Qt::Key_Down && isGrounded && !isCrouching) {
+    else if (event->key() == Qt::Key_Down && isGrounded && !isCrouching && horizontalVelocity==0) {
         currentState = Crouching;
         setPixmap(lastDirection==Left ? crouchingLeftKimo : crouchingRightKimo);
         setY(y() + 16);
@@ -163,7 +166,7 @@ void Kimo::keyReleaseEvent(QKeyEvent * event) {
         }
     }
 
-    if (event->key() == Qt::Key_Down) {
+    if (event->key() == Qt::Key_Down && isCrouching && isGrounded) {   // Prevents unexpected action when trying to crouch in midair/on hitting the ground
         currentState = (lastDirection == Left) ? NormalLeft : NormalRight;
         setY(y() - 16);
         updateSprite();
@@ -420,16 +423,50 @@ void Kimo::setKnockback(double verticalForce, double horizontalForce) {
 
 void Kimo::takeDamage(int amount) {
     // Only take damage if enough time has passed since last damage
-    if (damageTimer.elapsed() > 1000) { // 1 second invulnerability
+    if (damageTimer.elapsed() > 700) { // 700ms invulnerability
+
+        QMediaPlayer* damagePlayer = new QMediaPlayer(this);
+        QAudioOutput* damageOutput = new QAudioOutput(this);
+
+        damagePlayer->setAudioOutput(damageOutput);
+        damagePlayer->setSource(QUrl("qrc:/audio/damage.mp3"));
+        damagePlayer->play();
+
         health -= amount;
         if (healthText) {
             healthText->setPlainText(QString("Health: %1").arg(health));
+
+            auto* redText = new QGraphicsColorizeEffect();
+            redText->setColor(Qt::red);
+            redText->setStrength(2.0);
+            healthText->setGraphicsEffect(redText);
+
+            // Removing the effect with a separate timer
+            QTimer::singleShot(1000, this, [this]() {
+                if (healthText)
+                    healthText->setGraphicsEffect(nullptr);
+            });
         }
-        damageTimer.restart();
-        
+
         if (isDead()) {
             respawn();
+            return;
         }
+
+        // Brief 'damage effect'
+        auto* redFlash = new QGraphicsColorizeEffect();
+        redFlash->setColor(Qt::red);
+        redFlash->setStrength(0.5);
+        setGraphicsEffect(redFlash);
+
+
+
+        setOpacity(0.8);  // Make Kimo semi-transparent
+        QTimer::singleShot(700, this, [this]() {
+            setOpacity(1.0); // Back to normal opacity after 700ms (same as 'invulnerability' timer)
+            setGraphicsEffect(nullptr);
+            damageTimer.restart();
+        });
     }
 }
 

@@ -7,11 +7,13 @@
 #include "level4.h"
 #include "level5.h"
 #include "kimo.h"
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
     : QObject(parent), view(view)
 {
-    loadLevel(L4);
+    loadLevel(L1);
 }
 
 void LevelOrchestrator::loadLevel(Level level) {
@@ -62,12 +64,22 @@ void LevelOrchestrator::loadLevel(Level level) {
 
 void LevelOrchestrator::onLevelComplete() {
 
+    // Victory Jingle:
+    currentLevel->stopMusic();
+    QMediaPlayer* lvlCompletePlayer = new QMediaPlayer(this);
+    QAudioOutput* lvlCompleteOutput = new QAudioOutput(this);
+    lvlCompletePlayer->setAudioOutput(lvlCompleteOutput);
+    lvlCompletePlayer->setSource(QUrl("qrc:/audio/lvlcomplete.mp3"));
+    lvlCompletePlayer->play();
+
+    // Display a 'Level Complete' dialog
     QString levelName = currentLevel->getLevelName()->toPlainText().remove("Level: ");
     LevelCompleteDialog LevelComplete(levelName);
 
+    // Singals / Slots for all options on the level complete dialog
     connect(&LevelComplete, &LevelCompleteDialog::replayPushed, this, &LevelOrchestrator::reloadCurrentLevel);
     connect(&LevelComplete, &LevelCompleteDialog::nextLevelPushed, this, [=]() {
-        QTimer::singleShot(0, this, &LevelOrchestrator::switchLevel);
+        QTimer::singleShot(0, this, &LevelOrchestrator::switchLevel);   // Ensures 'switchLevel' which triggers 'loadLevel' runs after the current dialog fully closes, preventing 'delete currentLevel' from accessing invalid memory
     });
     connect(&LevelComplete, &LevelCompleteDialog::levelSelectPushed, this, &LevelOrchestrator::showLevelSelect);
 

@@ -31,5 +31,8 @@
         <file>../images/enemies/cat_left.png</file>
         <file>../images/projectiles/poison.png</file>
         <file>../images/enemies/eagle_left.png</file>
+        <file>../audio/lvlcomplete.mp3</file>
+        <file>../audio/lvlmusic.mp3</file>
+        <file>../audio/damage.mp3</file>
     </qresource>
 </RCC>

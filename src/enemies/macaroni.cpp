@@ -97,11 +97,9 @@ void macaroni::move(){
 
         if (x() <= 60|| x() >=  280- pixmap().width()) {
             speed = -speed; // Change direction
-        }
-
+            }
         break;
-    }
-
+        }
 
     case macaroni_move::level4:
     {
@@ -119,15 +117,3 @@ void macaroni::move(){
 
     }
 }
-//      setPos(x() - speed, y());
-
-//  // Bounce back at edges
-//  if (x() <= 0 || x() >= 800 - pixmap().width()) {
-//      speed = -speed;
-// // Change direction
-//  }
-//  if (kimoo && kimoo->y() < 400) {
-//      setPos(x(), y() - 2); // Enemy moves up slightly
-//  }
-//  qDebug() << "Enemy at:" << pos();
-//  }

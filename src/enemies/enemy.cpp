@@ -52,26 +52,8 @@ void Enemy::update_health_bar() {
 void Enemy::takedamage(int enemydamage){
     health -= enemydamage;
      update_health_bar();
-//     if (health <= 0) {
-//         scene()->removeItem(this);
-//         deleteLater();
-// }
 }
+
 int Enemy::get_enemy_health()const{
     return health;
 }
-
-
-
-   //      setPos(x() - speed, y());
-
-   //  // Bounce back at edges
-   //  if (x() <= 0 || x() >= 800 - pixmap().width()) {
-   //      speed = -speed;
-   // // Change direction
-   //  }
-   //  if (kimoo && kimoo->y() < 400) {
-   //      setPos(x(), y() - 2); // Enemy moves up slightly
-   //  }
-   //  qDebug() << "Enemy at:" << pos();
-   //  }
