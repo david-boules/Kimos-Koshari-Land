@@ -73,13 +73,6 @@ void Level5::setEnvironment() {
     VerticallyMovingPlatform *movingup = new VerticallyMovingPlatform(100, 20, 100, 300, 200, 2);
     addItem(movingup);
 
-    // Adding temporary 'Clear Condition' object
-    QGraphicsRectItem* goal = new QGraphicsRectItem(0,0,64,64);
-    goal->setBrush(Qt::red);
-    goal->setPos(1800, 450);
-    addItem(goal);
-    kimo->setGoal(goal);
-
     view->show(); // Show the view
 
     // Timer for game updates (platforms, HUD)

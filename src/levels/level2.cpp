@@ -139,13 +139,6 @@ void Level2::setEnvironment() {
     });
     laundryTimer->start(2000);
 
-    // Adding temporary 'Clear Condition' object
-    QGraphicsRectItem* goal = new QGraphicsRectItem(0,0,64,64);
-    goal->setBrush(Qt::red);
-    goal->setPos(1800, 450);
-    addItem(goal);
-    kimo->setGoal(goal);
-
     view->show(); // Show the view
 
     // Timer for game updates (platforms, HUD)

@@ -32,6 +32,7 @@ SOURCES += \
     src/enemies/onion.cpp \
     src/misc/coin.cpp \
     src/misc/fallinglaundry.cpp \
+    src/misc/kosharitrophy.cpp \
     src/misc/store.cpp \
     src/projectiles/fireball.cpp \
     src/projectiles/macaronimissile.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
     src/levels/levelselect.h \
     src/misc/coin.h \
     src/misc/fallinglaundry.h \
+    src/misc/kosharitrophy.h \
     src/misc/store.h \
     src/projectiles/fireball.h \
     src/projectiles/macaronimissile.h \

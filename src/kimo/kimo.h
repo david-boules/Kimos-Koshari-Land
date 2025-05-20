@@ -24,7 +24,7 @@ public:
     void respawn();                              // Relocates Kimo to starting position
     void inhale();                               // Kimo's 'inhale' function
     void spit();                                 // Kimo's 'spit' function
-    void setGoal(QGraphicsRectItem* g);          // 'Setter' to update Kimo's pointer to the goal
+    void setGoal(QGraphicsPixmapItem* g);          // 'Setter' to update Kimo's pointer to the goal
     void addCoins(int amount);                   // Adds coins to player's balance
     int getCoins() const;                        // Returns current coin balance
     void setCoinText(QGraphicsTextItem *text);   // Sets the coin display text
@@ -95,7 +95,7 @@ private:
     // Gameplay Mechanics member variables
     int health = 3;                          // Kimo starts with 3 health strokes
     QGraphicsTextItem* healthText = nullptr; // Pointer to display health on screen
-    QGraphicsRectItem* goal = nullptr;       // Pointer to the goal ('Clear Condition')
+    QGraphicsPixmapItem* goal = nullptr;       // Pointer to the goal ('Clear Condition')
     int coins = 20;                          // Player's coin balance
     int score = 0;                           // Player's current score
     QGraphicsTextItem *coinText = nullptr;   // Pointer to display coins on screen

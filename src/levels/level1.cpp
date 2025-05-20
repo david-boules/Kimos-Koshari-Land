@@ -25,7 +25,6 @@ void Level1::setEnemies() {
     QObject::connect(enemySpawnTimer, &QTimer::timeout, this, [this]() {
         if (!this) return;
 
-
         if (kimo->x() > 550 && !enemySpawned) {
             onion* onion2 = new onion(":/images/enemies/onion.png", QPointF(1000, 400));
             onion2->setBounds(850,1400);
@@ -92,13 +91,6 @@ void Level1::setEnvironment() {
 
     MovingPlatform *moving2 = new MovingPlatform(160, 20, 1100, 150, 250, 3);
     addItem(moving2);
-
-    // Adding temporary 'Clear Condition' object
-    QGraphicsRectItem* goal = new QGraphicsRectItem(0,0,64,64);
-    goal->setBrush(Qt::red);
-    goal->setPos(1800, 450);
-    addItem(goal);
-    kimo->setGoal(goal);
 
     view->show(); // Show the view
 

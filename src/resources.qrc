@@ -34,5 +34,6 @@
         <file>../audio/lvlcomplete.mp3</file>
         <file>../audio/lvlmusic.mp3</file>
         <file>../audio/damage.mp3</file>
+        <file>../images/misc/koshari_trophy.png</file>
     </qresource>
 </RCC>

@@ -1,4 +1,5 @@
 #include "baselevel.h"
+#include "kosharitrophy.h"
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QGraphicsProxyWidget>
@@ -6,6 +7,12 @@
 BaseLevel::BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
     : QGraphicsScene(parent), view(view), kimo(kimo), HUD_health(healthText), HUD_levelName(levelText)
 {
+    // Adding 'Clear Condition' object
+    KoshariTrophy* goal = new KoshariTrophy();
+    addItem(goal);
+    goal->setPos(1800, 480);
+    kimo->setGoal(goal);
+
     // Level Music
     lvlMusicPlayer = new QMediaPlayer(this);
     lvlMusicOutput = new QAudioOutput(this);

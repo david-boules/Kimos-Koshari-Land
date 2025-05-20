@@ -3,7 +3,6 @@
 #include "macaronimissile.h"
 #include "fireball.h"
 #include "coin.h"
-#include <QApplication>
 #include <QKeyEvent>
 #include <QString>
 #include <QGraphicsScene>
@@ -92,7 +91,7 @@ void Kimo::updateSprite() {
     }
 }
 
-void Kimo::setGoal(QGraphicsRectItem* g) {
+void Kimo::setGoal(QGraphicsPixmapItem* g) {
     goal = g;
 }
 
@@ -340,7 +339,7 @@ void Kimo::checkCollision() {
 
             if (goal && collidingItems().contains(goal)) {
                 if (physicsTimer && physicsTimer->isActive()) {
-                    setPos(goal->x(), goal->y());
+                    setPos(goal->x(), 550);
                     physicsTimer->stop();
                     emit levelComplete();
                     return;
