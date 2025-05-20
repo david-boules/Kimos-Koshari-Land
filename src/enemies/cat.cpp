@@ -1,0 +1,212 @@
+#include "cat.h"
+
+cat::cat(QString leftPath, QString rightPath, QPointF startPos, QGraphicsItem* parent)
+    : Enemy(QPixmap(leftPath), startPos, parent) // start facing left
+{
+  //  setPos(startPos);
+
+
+    speed=2;
+    health=3;
+    damage=3;
+    max_health=3;
+    update_health_bar();
+    cat_left_img = QPixmap(leftPath).scaled(60, 60);
+    cat_right_img = QPixmap(rightPath).scaled(60, 60);
+}
+
+// void cat::setRange(qreal minX, qreal maxX) {
+//     rangeMin = minX;
+//     rangeMax = maxX;
+// }
+
+// void cat::move() {
+
+//     if (kimoo && collidesWithItem(kimoo)) {
+//         kimoo->takeDamage(damage);
+
+//     }
+
+
+
+//     if (!kimoo) return; // If no Kimo linked, skip
+
+//     // Distance between enemy and Kimo
+//     qreal distancex = qAbs(x() - kimoo->x());
+//     qreal distancey=qAbs(y()-kimoo->y());
+
+
+
+
+//     setPos(x() - speed, y());
+
+//     if (speed > 0) {
+//         setPixmap(cat_left_img);
+//     } else {
+//         setPixmap(cat_right_img);
+//     }
+
+//     if (x() <= 600 || x() >= 1100 - pixmap().width()) {
+//         speed = -speed;
+//     }
+// }
+
+
+// void cat::move() {
+//     if (!kimoo) return;
+
+//     qreal dx = kimoo->x() - x(); // Horizontal distance to Kimo
+//     qreal dy = kimoo->y() - y(); // Vertical distance to Kimo
+
+//     // 1. Detect Kimo on the left and within a specific range
+//     if (dx < 0 && qAbs(dx) < 200 && qAbs(dy) < 100) {
+//         // Face left and stop patrol
+//         setPixmap(cat_left_img);
+
+//         // Jump directly towards Kimo's current position
+//         setPos(kimoo->x(), kimoo->y());
+
+//         // Apply damage
+//         if (collidesWithItem(kimoo)) {
+//             kimoo->takeDamage(damage);
+//             hasJumped = true; //prevent repeated jumps
+//         }
+
+//         return; // Skip regular patrol
+//     }
+
+
+//     if (qAbs(dx) > 300) {
+//         hasJumped = false;
+//     }
+
+
+//     // 2. Regular patrol movement
+//     setPos(x() + speed, y());
+
+//     // 3. Flip direction at bounds
+//     if (x() <= 600 || x() >= 1100 - pixmap().width()) {
+//         speed = -speed;
+//     }
+
+//     // 4. Update facing image
+//     if (speed > 0) {
+//         setPixmap(cat_right_img);
+//     } else {
+//         setPixmap(cat_left_img);
+//     }
+// }
+
+
+
+// void cat::move() { almost work
+//     if (!kimoo) return;
+
+//     qreal dx = kimoo->x() - x();
+//     qreal dy = kimoo->y() - y();
+
+//     // 1. Start the jump when Kimo is on the left and in range
+//     if (!isJumping && dx < 0 && qAbs(dx) < 200 && qAbs(dy) < 50) {
+//         isJumping = true;
+//         angle = 0.0;
+//         jumpStartPos = pos();
+//         setPixmap(cat_left_img);
+//         return;
+//     }
+
+//     // 2. Perform sine-wave jump toward Kimo
+//     if (isJumping) {
+//         angle += 0.1;
+
+//         // Move horizontally toward Kimo
+//         qreal moveX = x() - speed; // toward left
+//         // Move vertically in an arc
+//         qreal moveY = jumpStartPos.y() + qSin(angle) * -25; // -25 for upward arc
+
+//         setPos(moveX, moveY);
+
+//         // Stop the jump after a full arc
+//         if (angle >= 3.14) { // π = half sine wave (up + down)
+//             isJumping = false;
+//             angle = 0;
+
+//             // Final landing position toward Kimo
+//             setPos(kimoo->x(), kimoo->y());
+
+//             // Deal damage if colliding
+//             if (collidesWithItem(kimoo)) {
+//                 kimoo->takeDamage(damage);
+//             }
+//         }
+
+//         return; // Skip normal patrol
+//     }
+
+//     // 3. Patrol if not jumping
+//     setPos(x() + speed, y());
+
+//     if (x() <= 600 || x() >= 1100 - pixmap().width()) {
+//         speed = -speed;
+//     }
+
+//     setPixmap(speed > 0 ? cat_right_img : cat_left_img);
+// }
+
+void cat::move() {
+    if (!kimoo) return;
+
+    qreal dx = kimoo->x() - x();
+    qreal dy = kimoo->y() - y();
+
+    // 1. Trigger jump only once, when Kimo is on the left and within range
+    if (!isJumping && dx < 0 && qAbs(dx) < 200 && qAbs(dy) < 50) {
+        if (kimoo->x() < 600) return;
+        isJumping = true;
+        angle = 0.0;
+        jumpStartPos = pos();
+        jumpTargetPos = kimoo->pos();
+        setPixmap(cat_left_img);
+        return;
+    }
+
+    // 2. Perform sine-curve jump toward Kimo
+    if (isJumping) {
+        angle += 0.1;
+
+        // Linear horizontal interpolation
+        qreal progress = angle / 3.14; // π is one full half sine wave
+        if (progress > 1.0) progress = 1.0;
+
+        qreal newX = jumpStartPos.x() + (jumpTargetPos.x() - jumpStartPos.x()) * progress;
+        qreal newY = jumpStartPos.y() + qSin(angle) * -25; // -25 = jump height
+
+        setPos(newX, newY);
+
+        // End of jump
+        if (angle >= 3.14) {
+            isJumping = false;
+            angle = 0.0;
+
+            // Snap to landing position
+            setPos(jumpTargetPos);
+
+            // Deal damage only if it lands and collides
+            if (collidesWithItem(kimoo)) {
+                kimoo->takeDamage(damage);
+            }
+        }
+
+        return;
+    }
+
+    // 3. Regular patrol
+    setPos(x() + speed, y());
+
+    if (x() <= 600 || x() >= 1100 - pixmap().width()) {
+        speed = -speed;
+    }
+
+    setPixmap(speed > 0 ? cat_right_img : cat_left_img);
+}
+
+

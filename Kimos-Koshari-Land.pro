@@ -14,6 +14,7 @@ INCLUDEPATH += src \
 DEPENDPATH  += src
 
 SOURCES += \
+    src/enemies/cat.cpp \
     src/levels/baselevel.cpp \
     src/levels/level1.cpp \
     src/levels/level2.cpp \
@@ -33,9 +34,11 @@ SOURCES += \
     src/projectiles/fireball.cpp \
     src/projectiles/macaronimissile.cpp \
     src/environment/platform.cpp \
+    src/projectiles/poison.cpp \
     src/projectiles/projectile.cpp
 
 HEADERS += \
+    src/enemies/cat.h \
     src/levels/baselevel.h \
     src/kimo/kimo.h \
     src/enemies/enemy.h \
@@ -54,6 +57,7 @@ HEADERS += \
     src/projectiles/fireball.h \
     src/projectiles/macaronimissile.h \
     src/environment/platform.h \
+    src/projectiles/poison.h \
     src/projectiles/projectile.h
 
 RESOURCES += src/resources.qrc
