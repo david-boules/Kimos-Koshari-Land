@@ -1,6 +1,8 @@
 #include "kimo.h"
 #include "enemy.h"
 #include "macaronimissile.h"
+#include "fireball.h"
+#include "coin.h"
 #include <QApplication>
 #include <QKeyEvent>
 #include <QString>
@@ -40,6 +42,10 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     physicsTimer = new QTimer();
     connect(physicsTimer, SIGNAL(timeout()), this, SLOT(updatePhysics()));
     physicsTimer->start(16); // ~60 FPS for smooth physics
+
+    abilityTimer = new QTimer(this);
+    abilityTimer->setInterval(1000);
+    connect(abilityTimer, &QTimer::timeout, this, &Kimo::updateAbilityCountdown);
 }
 
 // Added implementation for setView
@@ -90,17 +96,17 @@ void Kimo::setGoal(QGraphicsRectItem* g) {
     goal = g;
 }
 
-/* Movement & Physics functions
-keyPressEvent
-keyReleaseEvent
-jump
-crouch (not yet implemented)
-updatePhysics
-checkCollision
-setGravity
-setJumpVelocity
-setAirControl
- */
+void Kimo::pauseGame() {
+    if (physicsTimer) physicsTimer->stop();
+    if (abilityTimer && abilityTimer->isActive()) abilityTimer->stop();
+}
+
+void Kimo::resumeGame() {
+    if (physicsTimer && !physicsTimer->isActive()) physicsTimer->start(16);
+    if (!currentAbility.isEmpty()) abilityTimer->start(1000);
+}
+
+
 void Kimo::keyPressEvent(QKeyEvent * event) {
     // Handle horizontal movement
     if (event->key() == Qt::Key_Left) {
@@ -127,9 +133,13 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
             updateSprite();
         }
     }
+    else if (event->key() == Qt::Key_F) {
+        if (hasFireball) shootFireball();
+        }
     // Handle jumping (only when grounded)
-    else if (event->key() == Qt::Key_Up && isGrounded) {
-        jump();
+    else if (event->key() == Qt::Key_Up) {
+        if (isGrounded) jump();
+        else if (hasDoubleJump && canDoubleJump) doubleJump();
     }
     // Handle crouching (only when grounded)
     else if (event->key() == Qt::Key_Down && isGrounded && !isCrouching && horizontalVelocity==0) {
@@ -179,6 +189,7 @@ void Kimo::jump() {
         verticalVelocity = jumpForce;
         isJumping = true;
         isGrounded = false;
+        canDoubleJump = hasDoubleJump;
     }
 }
 
@@ -298,6 +309,15 @@ void Kimo::updatePhysics() {
 void Kimo::checkCollision() {
     QList<QGraphicsItem*> colliding_items = collidingItems();
     for (int i = 0; i < colliding_items.size(); ++i) {
+
+        // Coin collection
+        if (Coin *coin = dynamic_cast<Coin *>(colliding_items[i])) {
+            addCoins(1);
+            scene()->removeItem(coin);
+            delete coin;
+            continue;
+        }
+
         // Check for platform hitboxes or platform objects
         QGraphicsRectItem* hitbox = nullptr;
         
@@ -422,6 +442,13 @@ void Kimo::setKnockback(double verticalForce, double horizontalForce) {
 }
 
 void Kimo::takeDamage(int amount) {
+
+    // Check if shield is active
+    if (isShieldActive) {
+        deactivateShield();
+        return;
+    }
+
     // Only take damage if enough time has passed since last damage
     if (damageTimer.elapsed() > 700) { // 700ms invulnerability
 
@@ -530,4 +557,147 @@ void Kimo::finishSpit() {
     else
         currentState = NormalRight;
     updateSprite();
+}
+
+void Kimo::setCoinText(QGraphicsTextItem *text)
+{
+    coinText = text;
+    if (coinText)
+    {
+        coinText->setPlainText(QString("Coins: %1").arg(coins));
+    }
+}
+
+void Kimo::addCoins(int amount)
+{
+    coins += amount;
+    if (coinText)
+    {
+        coinText->setPlainText(QString("Coins: %1").arg(coins));
+    }
+    emit coinsChanged(coins);
+}
+
+int Kimo::getCoins() const {return coins;}
+
+int Kimo::getScore() const {return score;}
+
+void Kimo::updateScore(int points)
+{
+    score += points;
+}
+
+void Kimo::shootFireball()
+{
+    if (!hasFireball)
+        return;
+
+    // Create and shoot fireball
+    Fireball *fireball = new Fireball(lastDirection == Right ? 1 : -1);
+    qreal fireballX = lastDirection == Right ? x() + pixmap().width() : x() - fireball->pixmap().width();
+    fireball->setPos(fireballX -30, y() + pixmap().height() / 2);
+    scene()->addItem(fireball);
+}
+
+void Kimo::grantShield()
+{
+    hasShield = true;
+    currentAbility = "Shield";
+    abilityDuration = 5; // DURATION: Set shield ability duration in seconds
+    abilityTimer->start();
+    emit abilityCountdownChanged(currentAbility, abilityDuration);
+
+    // Activate shield immediately
+    activateShield();
+}
+
+void Kimo::activateShield()
+{
+    if (!hasShield || isShieldActive)
+        return;
+
+    isShieldActive = true;
+
+    // Add visual shield effect
+    QGraphicsEllipseItem *shield = new QGraphicsEllipseItem(-10, -10, pixmap().width() + 20, pixmap().height() + 20, this);
+    shield->setPen(QPen(Qt::cyan, 2));
+    shield->setBrush(QBrush(QColor(0, 255, 255, 50))); // Semi-transparent cyan
+    shield->setZValue(-1);                             // Place behind Kimo
+}
+
+void Kimo::deactivateShield()
+{
+    isShieldActive = false;
+    hasShield = false;
+
+    // Stop the ability timer and reset ability state
+    abilityTimer->stop();
+    currentAbility = "";
+    emit abilityCountdownChanged("", 0);
+
+    // Remove shield effect
+    for (QGraphicsItem *item : childItems())
+    {
+        if (QGraphicsEllipseItem *shield = dynamic_cast<QGraphicsEllipseItem *>(item))
+        {
+            delete shield;
+            break;
+        }
+    }
+}
+
+void Kimo::doubleJump()
+{
+    if (!hasDoubleJump || !canDoubleJump)
+        return;
+
+    // Perform double jump
+    verticalVelocity = jumpForce;
+    canDoubleJump = false; // Disable double jump after use
+}
+
+void Kimo::grantFireball()
+{
+    hasFireball = true;
+    currentAbility = "Fireball";
+    abilityDuration = 5; // DURATION: Set fireball ability duration in seconds
+    abilityTimer->start();
+    emit abilityCountdownChanged(currentAbility, abilityDuration);
+}
+
+void Kimo::grantDoubleJump()
+{
+    hasDoubleJump = true;
+    canDoubleJump = true;
+    currentAbility = "Double Jump";
+    abilityDuration = 10; // DURATION: Set double jump ability duration in seconds
+    abilityTimer->start();
+    emit abilityCountdownChanged(currentAbility, abilityDuration);
+}
+
+void Kimo::updateAbilityCountdown()
+{
+    if (abilityDuration > 0)
+    {
+        abilityDuration--;
+        emit abilityCountdownChanged(currentAbility, abilityDuration);
+    }
+    else
+    {
+        abilityTimer->stop();
+        if (currentAbility == "Fireball")
+            hasFireball = false;
+        else if (currentAbility == "Double Jump")
+        {
+            hasDoubleJump = false;
+            canDoubleJump = false;
+        }
+        else if (currentAbility == "Shield")
+        {
+            hasShield = false;
+            deactivateShield(); // Deactivate shield when ability expires
+        }
+        currentAbility = "";
+        emit abilityCountdownChanged("", 0);
+    }
 }

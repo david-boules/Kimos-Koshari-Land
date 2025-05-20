@@ -25,6 +25,16 @@ public:
     void inhale();                               // Kimo's 'inhale' function
     void spit();                                 // Kimo's 'spit' function
     void setGoal(QGraphicsRectItem* g);          // 'Setter' to update Kimo's pointer to the goal
+    void addCoins(int amount);                   // Adds coins to player's balance
+    int getCoins() const;                        // Returns current coin balance
+    void setCoinText(QGraphicsTextItem *text);   // Sets the coin display text
+    void updateScore(int points);                // Updates score
+    void shootFireball();                        // Shoots a fireball projectile
+    void activateShield();                       // Activates temporary invincibility
+    void doubleJump();                           // Performs a double jump if available
+    void grantFireball();                        // Grants the fireball ability
+    void grantDoubleJump();                      // Grants the double jump ability
+    void grantShield();                          // Grants the shield ability
 
     // Movement and physics functions
     void keyPressEvent(QKeyEvent * event);       // Handles keyboard input for movement
@@ -41,17 +51,26 @@ public:
     QElapsedTimer damageTimer;
 
     int getHealth(); // Getter for Kimo's health
-    //int getCoins(); // Getter for Kimo's coins
+    int getScore() const;
+
+    // Resume/Pause
+    void pauseGame();
+    void resumeGame();
 
     ~Kimo() {if(physicsTimer) physicsTimer->deleteLater();}
 
 signals:
     void levelComplete(); // Singal emitted when Kimo reaches the goal
+    void coinsChanged(int newAmount); // Signal emitted when coins change
+    void healthChanged(int health);
+    void abilityCountdownChanged(const QString &abilityName, int remainingTime);
 
 private slots:
     // Slots only called from inside 'Kimo' objects
     void updatePhysics();                        // Updates physics calculations every frame
     void finishSpit();
+    void deactivateShield(); // Deactivates the shield after its duration
+    void updateAbilityCountdown();
     
 private:
 
@@ -77,6 +96,20 @@ private:
     int health = 3;                          // Kimo starts with 3 health strokes
     QGraphicsTextItem* healthText = nullptr; // Pointer to display health on screen
     QGraphicsRectItem* goal = nullptr;       // Pointer to the goal ('Clear Condition')
+    int coins = 20;                          // Player's coin balance
+    int score = 0;                           // Player's current score
+    QGraphicsTextItem *coinText = nullptr;   // Pointer to display coins on screen
+
+    // Ability-related variables
+    bool hasFireball = false;      // Whether Kimo has the fireball ability
+    bool hasDoubleJump = false;    // Whether Kimo has the double jump ability
+    bool hasShield = false;        // Whether Kimo has the shield ability
+    bool isShieldActive = false;   // Whether the shield is currently active
+    bool canDoubleJump = false;    // Whether Kimo can perform a double jump
+    QTimer *shieldTimer = nullptr; // Timer for shield duration
+    QTimer *abilityTimer;
+    QString currentAbility;
+    int abilityDuration;
 
     // Timers and State variables
     QTimer * physicsTimer;                  // Timer for physics updates

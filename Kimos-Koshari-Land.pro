@@ -30,7 +30,9 @@ SOURCES += \
     src/enemies/chili.cpp \
     src/enemies/macaroni.cpp \
     src/enemies/onion.cpp \
+    src/misc/coin.cpp \
     src/misc/fallinglaundry.cpp \
+    src/misc/store.cpp \
     src/projectiles/fireball.cpp \
     src/projectiles/macaronimissile.cpp \
     src/environment/platform.cpp \
@@ -53,7 +55,9 @@ HEADERS += \
     src/levels/levelcompletedialog.h \
     src/levels/levelorchestrator.h \
     src/levels/levelselect.h \
+    src/misc/coin.h \
     src/misc/fallinglaundry.h \
+    src/misc/store.h \
     src/projectiles/fireball.h \
     src/projectiles/macaronimissile.h \
     src/environment/platform.h \

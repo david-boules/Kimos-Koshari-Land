@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include "kimo.h"
+#include "store.h"
 #include <QMediaPlayer>
 #include <QAudioOutput>
 
@@ -26,6 +27,9 @@ public:
 
     QGraphicsTextItem* getLevelName() {return HUD_levelName;}
 
+public slots:
+    void updateAbilityCountdown(const QString &abilityName, int remainingTime);
+
 protected:
     QGraphicsView* view;
     Kimo* kimo;
@@ -35,6 +39,15 @@ protected:
 
     QMediaPlayer* lvlMusicPlayer;
     QAudioOutput* lvlMusicOutput;
+
+    QGraphicsTextItem* HUD_coins;
+    QGraphicsTextItem* HUD_abilityCountdown; // Added for ability countdown
+    Store* store;
+    QPushButton* storeButton;
+    QGraphicsProxyWidget* storeButtonProxy;
+
+protected slots:
+    void toggleStore();
 };
 
 #endif // BASELEVEL_H
