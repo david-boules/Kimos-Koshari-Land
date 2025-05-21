@@ -14,6 +14,8 @@
 LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
     : QObject(parent), view(view)
 {
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     loadLevel(L5);
 }
 
@@ -91,6 +93,29 @@ void LevelOrchestrator::onLevelComplete() {
     lvlCompletePlayer->play();
 
     // Display a 'Level Complete' dialog
+    if (currentLevelEnum == L5) {
+        pause();  // Stop game activity
+
+        // Hide Kimo to freeze action
+        if (auto kimo = currentLevel->getKimo()) {
+            kimo->setEnabled(false);
+            kimo->hide();
+        }
+
+        QGraphicsTextItem* winText1 = new QGraphicsTextItem("🎉You have defeated Abou Tarek!");
+        QGraphicsTextItem* winText2 = new QGraphicsTextItem("Kimo's Koshari Land: Completed!");
+        winText1->setDefaultTextColor(Qt::yellow);
+        winText1->setFont(QFont("Arial", 32));
+        winText1->setPos(1400, 200);
+        winText2->setDefaultTextColor(Qt::yellow);
+        winText2->setFont(QFont("Arial", 32));
+        winText2->setPos(1400, 300);
+        currentLevel->addItem(winText1);
+        currentLevel->addItem(winText2);
+
+        return; // Skip normal LevelCompleteDialog flow
+    }
+
     QString levelName = currentLevel->getLevelName()->toPlainText().remove("Level: ");
     LevelCompleteDialog LevelComplete(levelName);
 
@@ -108,14 +133,7 @@ void LevelOrchestrator::onLevelComplete() {
 
 void LevelOrchestrator::switchLevel() {
     int next = static_cast<int>(currentLevelEnum) + 1;
-    if (next < 5) loadLevel(static_cast<Level>(next));
-    else {
-        QGraphicsTextItem* winText = new QGraphicsTextItem("You have defeated Abou Tarek and completed the game!");
-        winText->setDefaultTextColor(Qt::yellow);
-        winText->setFont(QFont("Arial", 32));
-        winText->setPos(600, 300);
-        currentLevel->addItem(winText);
-    }
+    loadLevel(static_cast<Level>(next));
 }
 
 void LevelOrchestrator::reloadCurrentLevel() {

@@ -137,7 +137,7 @@ void Level5::setEnvironment() {
             laundry->pause();
         }
     });
-    laundryTimer->start(2000);
+    laundryTimer->start(500);
 
     // Timer for game updates (platforms, HUD)
     gameUpdateTimer = new QTimer(this);
