@@ -30,6 +30,13 @@ Enemy::Enemy(QPixmap pixmap, QPointF startingPos, QGraphicsItem* parent) : QObje
     moveTimer->start(16); // ~60 FPS
 }
 
+void Enemy::pause() {
+    if (moveTimer && moveTimer->isActive()) moveTimer->stop();
+}
+void Enemy::resume() {
+    if (moveTimer && !moveTimer->isActive()) moveTimer->start(16);
+}
+
 void Enemy::setSpeed(qreal s) {
     speed = s;
 }

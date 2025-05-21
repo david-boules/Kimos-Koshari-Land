@@ -1,12 +1,13 @@
 #include "level1.h"
+#include "levelorchestrator.h"
 #include "chili.h"
 #include "macaroni.h"
 #include "onion.h"
 #include "platform.h"
 #include "coin.h"
 
-Level1::Level1(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
-    : BaseLevel(view, kimo, healthText, levelText, parent) {}
+Level1::Level1(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
+    : BaseLevel(view, kimo, healthText, levelText, orchestrator) {}
 
 void Level1::setEnemies() {
     // Add the enemies in Level 1
@@ -14,13 +15,16 @@ void Level1::setEnemies() {
     addItem(ChiliEnemy);
     ChiliEnemy->setTargetKimo(kimo);
 
-    macaroni* MacaroniEnemy = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
-    addItem(MacaroniEnemy);
-    MacaroniEnemy->setTargetKimo(kimo);
+    macaroni* MacaroniEnemy1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(364,236));
+    addItem(MacaroniEnemy1);
+    MacaroniEnemy1->setTargetKimo(kimo);
 
-    onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(400,490));
-    addItem(OnionEnemy);
-    OnionEnemy->setTargetKimo(kimo);
+    onion* OnionEnemy1 = new onion(":/images/enemies/onion.png",QPointF(400,490));
+    addItem(OnionEnemy1);
+    OnionEnemy1->setTargetKimo(kimo);
+
+    onion* OnionEnemy2 = new onion(":/images/enemies/onion.png",QPointF(910,246));
+    addItem(OnionEnemy2);
 
     QTimer* enemySpawnTimer = new QTimer(this);
     QObject::connect(enemySpawnTimer, &QTimer::timeout, this, [this]() {
@@ -98,7 +102,7 @@ void Level1::setEnvironment() {
     // Timer for game updates (platforms, HUD)
     gameUpdateTimer = new QTimer(this);
     connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
-        if (!moving1 || !moving2) return;
+        if (!moving1 || !moving2 || !kimo->isEnabled()) return;
         // Update moving platforms
         moving1->update();
         moving2->update();

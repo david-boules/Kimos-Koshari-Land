@@ -8,11 +8,13 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 
+class LevelOrchestrator; // Forward declaration
+
 class BaseLevel : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent = nullptr);
+    explicit BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent = nullptr);
     void setupScene(QString levelName); // This function sets up each level, some of the sub-functions are pure virtual:
 
     // 'setupScene()' sub-functions:
@@ -30,10 +32,16 @@ public:
 public slots:
     void updateAbilityCountdown(const QString &abilityName, int remainingTime);
 
+signals:
+    void storeOpened();
+    void storeClosed();
+
 protected:
     QGraphicsView* view;
-     QGraphicsScene *scene;
+    QGraphicsScene *scene;
     Kimo* kimo;
+    LevelOrchestrator* orchestrator;
+
     QTimer* gameUpdateTimer = nullptr;
     QGraphicsTextItem* HUD_health;
     QGraphicsTextItem* HUD_levelName;

@@ -47,11 +47,10 @@ void cat::move() {
     // 1. Trigger jump only once, when Kimo is on the left and within range
     if (!isJumping && qAbs(dx) < 200 && qAbs(dy) < 50)
      {
-        if (kimoo->x() < 600) return;
+        if (kimoo->x() < 320+pixmap().width() || kimoo->x() > 950 - pixmap().width()) return;
         isJumping = true;
         angle = 0.0;
         jumpStartPos = pos();
-       // jumpTargetPos = kimoo->pos();
         jumpTargetPos = QPointF(kimoo->pos().x(), jumpStartPos.y()); // use fixed y value
         if (kimoo->x() > x())
             setPixmap(cat_right_img);
@@ -77,6 +76,7 @@ void cat::move() {
         if (angle >= 3.14) {
             isJumping = false;
             angle = 0.0;
+            setY(jumpStartPos.y());
 
             // make y
             jumpTargetPos = QPointF(kimoo->pos().x(), jumpStartPos.y());
@@ -124,7 +124,7 @@ void cat::move() {
     //  Regular speed
     setPos(x() + speed, y());
 
-    if (x() <= 600 || x() >= 1100 - pixmap().width()) {
+    if (x() <= 320 || x() >= 950 - pixmap().width()) {
         speed = -speed;
     }
 
@@ -142,12 +142,6 @@ void cat::move() {
         } else {
             setPixmap(cat_right_img);
         }
-
-        // if (collidesWithItem(kimoo)) {
-        //     kimoo->takeDamage(damage);
-        //     setPos(originalPos);  // Return cat to its initial spawn point
-        // }
-
         break;
 
 }

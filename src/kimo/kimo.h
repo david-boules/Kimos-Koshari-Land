@@ -8,6 +8,7 @@
 #include <QGraphicsView> // Added for view reference
 #include <QGraphicsTextItem> // Added for health text
 #include <QKeyEvent> // Added for key events
+#include <QElapsedTimer>
 
 class Kimo : public QObject, public QGraphicsPixmapItem
 {
@@ -49,15 +50,17 @@ public:
     // View setter
     void setView(QGraphicsView* v); // Added setter for the view
     QElapsedTimer damageTimer;
+    QElapsedTimer fireballCooldown; // Added a cooldown timer for shooting fireballs (max 1 per second)
 
     int getHealth(); // Getter for Kimo's health
     int getScore() const;
 
-    // Resume/Pause
-    void pauseGame();
-    void resumeGame();
-
     ~Kimo() {if(physicsTimer) physicsTimer->deleteLater();}
+
+public slots:
+    // Resume/Pause
+    void pause();
+    void resume();
 
 signals:
     void levelComplete(); // Singal emitted when Kimo reaches the goal

@@ -4,8 +4,8 @@
 #include <QAudioOutput>
 #include <QGraphicsProxyWidget>
 
-BaseLevel::BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
-    : QGraphicsScene(parent), view(view), kimo(kimo), HUD_health(healthText), HUD_levelName(levelText)
+BaseLevel::BaseLevel(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
+    : QGraphicsScene(parent), view(view), kimo(kimo), HUD_health(healthText), HUD_levelName(levelText), orchestrator(orchestrator)
 {
     // Adding 'Clear Condition' object
     KoshariTrophy* goal = new KoshariTrophy();
@@ -140,19 +140,36 @@ void BaseLevel::stopMusic() {
 }
 
 void BaseLevel::toggleStore() {
-    if (!store->isVisible()) {
-        store->setPos(view->mapToScene(0,0));
-        addItem(store);
+
+    static bool isStoreOpen = false; // Track store state
+
+    if (isStoreOpen)
+    {
+        // Close store
+        store->hide();
+        if (store->scene() == this)
+        {
+            removeItem(store);
+        }
+        kimo->setEnabled(true);
+        kimo->setFocus();
+        kimo->resume();
+        isStoreOpen = false;
+    }
+    else
+    {
+        // Open store
+        if (store->scene() != this)
+        {
+            addItem(store);
+        }
+        store->setPos(view->mapToScene(0, 0));
         store->setZValue(100);
-        store->setVisible(true);
-        kimo->setEnabled(false);       // blocks input
-        kimo->pauseGame();             // pause logic
-    } else {
-        store->setVisible(false);
-        removeItem(store);
-        kimo->setEnabled(true);        // re-enable input
-        kimo->setFocus();              // restore focus
-        kimo->resumeGame();            // resume logic
+        store->show();
+        store->setFocus();
+        kimo->setEnabled(false);
+        kimo->pause();
+        isStoreOpen = true;
     }
 }
 

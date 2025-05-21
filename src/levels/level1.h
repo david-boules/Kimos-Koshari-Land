@@ -6,7 +6,7 @@
 class Level1 : public BaseLevel
 {
 public:
-    explicit Level1(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent = nullptr);
+    explicit Level1(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent = nullptr);
     void setEnemies() override;
     void setEnvironment() override;
 

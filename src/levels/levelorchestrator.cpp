@@ -13,16 +13,11 @@
 LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
     : QObject(parent), view(view)
 {
-
-
-
-
     loadLevel(L1);
-
-
 }
 
 void LevelOrchestrator::loadLevel(Level level) {
+
     currentLevelEnum = level;
     view->setScene(nullptr);
     // Check for an existing 'currentLevel' pointer when loading a level and delete this object
@@ -39,33 +34,49 @@ void LevelOrchestrator::loadLevel(Level level) {
 
     switch (level) {
     case L1:
-        currentLevel = new Level1(view, kimo, healthText, levelText);
+        currentLevel = new Level1(view, kimo, healthText, levelText, this);
         currentLevel->setupScene("Koshari Kitchen");
         break;
 
     case L2:
-        currentLevel = new Level2(view, kimo, healthText, levelText);
+        currentLevel = new Level2(view, kimo, healthText, levelText, this);
         currentLevel->setupScene("Pyramids Dash");
         break;
 
     case L3:
-        currentLevel = new Level3(view, kimo, healthText, levelText);
+        currentLevel = new Level3(view, kimo, healthText, levelText, this);
         currentLevel->setupScene("Streets of Cairo");
         break;
 
     case L4:
-        currentLevel = new Level4(view, kimo, healthText, levelText);
+        currentLevel = new Level4(view, kimo, healthText, levelText, this);
         currentLevel->setupScene("Abou Tarek's Castle");
         break;
 
     case L5:
-        currentLevel = new Level5(view, kimo, healthText, levelText);
+        currentLevel = new Level5(view, kimo, healthText, levelText, this);
         currentLevel->setupScene("Rooftop Showdown");
         break;
     }
 
     view->setScene(currentLevel);
+    // Connect pause/resume signals to all scene items
+    for (QGraphicsItem* item : currentLevel->items()) {
+        QObject* obj = dynamic_cast<QObject*>(item); // cast to QObject to check for active objects
+        if (!obj) continue;
+
+        const QMetaObject* meta = obj->metaObject(); // 'meta object' contains metadata about each class, checking if an object has a 'pause' function to connect these at runtime
+        if (meta->indexOfSlot("pause()") != -1)
+            connect(this, SIGNAL(pauseGame()), obj, SLOT(pause()));
+        if (meta->indexOfSlot("resume()") != -1)
+            connect(this, SIGNAL(resumeGame()), obj, SLOT(resume()));
+    }
+    connect(this, &LevelOrchestrator::pauseGame, kimo, &Kimo::pause);
+    connect(this, &LevelOrchestrator::resumeGame, kimo, &Kimo::resume);
     connect(kimo, &Kimo::levelComplete, this, &LevelOrchestrator::onLevelComplete);
+    // Connect store open/close to global pause/resume
+    connect(currentLevel, &BaseLevel::storeOpened, this, &LevelOrchestrator::pause);
+    connect(currentLevel, &BaseLevel::storeClosed, this, &LevelOrchestrator::resume);
 }
 
 void LevelOrchestrator::onLevelComplete() {
@@ -112,4 +123,12 @@ void LevelOrchestrator::reloadCurrentLevel() {
 void LevelOrchestrator::showLevelSelect() {
     LevelSelect ls(this);
     ls.exec();
+}
+
+void LevelOrchestrator::pause() {
+    emit pauseGame();
+}
+
+void LevelOrchestrator::resume() {
+    emit resumeGame();
 }

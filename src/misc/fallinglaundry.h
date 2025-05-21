@@ -12,6 +12,8 @@ public:
     explicit FallingLaundry(const QPixmap& pixmap, QPointF spawnPos, QObject* parent = nullptr); // Two distinct clothing items, so a pixmap argument is needed, along with the spawn point which is determined randomly
 
 public slots:
+    void pause();
+    void resume();
     void fall();
 
 private:

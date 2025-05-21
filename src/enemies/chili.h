@@ -1,7 +1,6 @@
 #ifndef CHILI_H
 #define CHILI_H
 #include "enemy.h"
-#include "fireball.h"
 
 enum class chili_move { level1, level2,level2_1, level3, level4,level5 };
 
@@ -14,9 +13,8 @@ public:
   // void setMoveStyle(MoveStyle s) { moveStyle = s; }
     void setMoveStyle(chili_move style);
     chili_move getMoveStyle() const;
-  bool can_be_inhaled() const override {
+  bool can_be_inhaled() const override {return false; }
 
-      return false; }
 private:
     qreal speed;
     qreal damage;

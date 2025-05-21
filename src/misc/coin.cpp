@@ -14,6 +14,13 @@ Coin::Coin(QPointF pos, QGraphicsItem *parent)
     startAnimation();
 }
 
+void Coin::pause() {
+    if (animationTimer && animationTimer->isActive()) animationTimer->stop();
+}
+void Coin::resume() {
+    if (animationTimer && !animationTimer->isActive()) animationTimer->start(16);
+}
+
 void Coin::startAnimation()
 {
     animationTimer->start(100); // Update every 100ms

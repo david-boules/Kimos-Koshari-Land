@@ -1,4 +1,5 @@
 #include "projectile.h"
+#include "kimo.h"
 #include <QGraphicsScene>
 #include <QTimer>
 
@@ -15,6 +16,10 @@ void Projectile::move() {
     // Check CollidingItems
     QList<QGraphicsItem*> items = collidingItems();
     for(int i = 0; i < items.size(); i++) {
+        if (Kimo* kimo = dynamic_cast<Kimo*>(items[i])) {
+            if (!kimo->isEnabled()) return; // Making all projectiles stop moving if the game is paused (store)
+            break;
+        }
         // Avoid hitting self or other projectiles immediately after firing
         if (items[i] == this || dynamic_cast<Projectile*>(items[i])) {
             continue;

@@ -35,8 +35,9 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     crouchingRightKimo = QPixmap(":/images/kimo/Kimo_crouchRight.png").scaled(64,48);
     crouchingLeftKimo = QPixmap(":/images/kimo/Kimo_crouchLeft.png").scaled(64,48);
 
-    // Initialize the damage timer
+    // Initialize the damage and fireball timer
     damageTimer.start();
+    fireballCooldown.start();
 
     // Set up physics timer for smooth movement
     physicsTimer = new QTimer();
@@ -96,15 +97,16 @@ void Kimo::setGoal(QGraphicsPixmapItem* g) {
     goal = g;
 }
 
-void Kimo::pauseGame() {
+void Kimo::pause() {
     if (physicsTimer) physicsTimer->stop();
     if (abilityTimer && abilityTimer->isActive()) abilityTimer->stop();
 }
 
-void Kimo::resumeGame() {
+void Kimo::resume() {
     if (physicsTimer && !physicsTimer->isActive()) physicsTimer->start(16);
     if (!currentAbility.isEmpty()) abilityTimer->start(1000);
 }
+
 
 
 void Kimo::keyPressEvent(QKeyEvent * event) {
@@ -134,8 +136,10 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
         }
     }
     else if (event->key() == Qt::Key_F) {
-        if (hasFireball) shootFireball();
+        if (hasFireball) {
+            shootFireball();
         }
+    }
     // Handle jumping (only when grounded)
     else if (event->key() == Qt::Key_Up) {
         if (isGrounded) jump();
@@ -157,7 +161,6 @@ void Kimo::keyPressEvent(QKeyEvent * event) {
         else if (currentState == Full) {
             spit();
         }
-
     }
 }
 
@@ -618,13 +621,22 @@ void Kimo::shootFireball()
     if (!hasFireball)
         return;
 
+    if (fireballCooldown.elapsed() < 1000)
+        return;
+
+    fireballCooldown.restart();
+
+    // Update Sprite
+    currentState = Spitting;
+    updateSprite();
+    QTimer::singleShot(400, this, SLOT(finishSpit())); // Resetting sprite after fireball spit animation
+
     // Create and shoot fireball
-    //Fireball *fireball = new Fireball(lastDirection == Right ? 1 : -1);
     Fireball *fireball = new Fireball(lastDirection == Right ? 1 : -1, this);
 
     qreal fireballX = lastDirection == Right ? x() + pixmap().width() : x() - fireball->pixmap().width();
     int direction = lastDirection == Right ? 1 : -1;
-    fireball->setPos(fireballX + (direction > 0 ? 10 : -10), y() + pixmap().height() / 2);
+    fireball->setPos(fireballX + (direction > 0 ? 10 : -10), y() - pixmap().height() + 80);
     scene()->addItem(fireball);
 }
 

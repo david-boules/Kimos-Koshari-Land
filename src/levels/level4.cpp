@@ -5,8 +5,8 @@
 #include "chili.h"
 #include "cat.h"
 
-Level4::Level4(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
-    : BaseLevel(view, kimo, healthText, levelText, parent) {}
+Level4::Level4(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
+    : BaseLevel(view, kimo, healthText, levelText, orchestrator) {}
 
 void Level4::setEnemies() {
     // Add the enemies in Level 4
@@ -136,7 +136,7 @@ void Level4::setEnvironment() {
     // Timer for game updates (platforms, HUD)
     gameUpdateTimer = new QTimer(this);
     connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
-        if (!moving1 || !movingup) return;
+        if (!moving1 || !movingup || !kimo->isEnabled()) return;
         // Update moving platforms
         moving1->update();
         movingup->update();

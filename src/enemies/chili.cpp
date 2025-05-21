@@ -1,4 +1,5 @@
 #include "chili.h"
+#include "fireball.h"
 #include <QGraphicsScene>
 
 chili::chili(QString left,QString right, QPointF startingPos, QGraphicsItem* parent)

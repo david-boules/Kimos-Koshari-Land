@@ -8,7 +8,7 @@ class Kimo;
 
 // Abstract base class for all platform types
 // Inherits from QGraphicsRectItem for rendering in the scene
-class Platform : public QGraphicsPixmapItem
+class Platform : public QObject, public QGraphicsPixmapItem
 {
 public:
     // Constructor for setting size and position
@@ -17,6 +17,10 @@ public:
     virtual void update() = 0;
 
     QGraphicsRectItem* getHitbox() const;
+
+public slots:
+    void pause();
+    void resume();
 
 protected:
     QGraphicsRectItem* hitbox = nullptr; // 'Hitbox' to handle rectangular platform collisions (now that QGraphicsPixmapItems are being used)
@@ -37,8 +41,14 @@ public:
     MovingPlatform(int width, int height, int x, int y, int range, int speed = 2);
     // Called every frame or tick to update the platform's position
     void update() override;
+
+public slots:
+    void pause() {isPaused = true;}
+    void resume() {isPaused = false;}
+
 private:
     int startX, moveRange, moveSpeed, direction;
+    bool isPaused;
 };
 
 // VerticallyMovingPlatform: A platform that moves up and down
@@ -52,9 +62,15 @@ public:
     void moveKimoWithPlatform(Kimo* kimo);
     // Clear Kimo from the platform
     void clearKimo();
+
+public slots:
+    void pause() {isPaused = true;}
+    void resume(){isPaused = false;}
+
 private:
     int startY, moveRange, moveSpeed, direction;
     Kimo* currentKimo = nullptr;
+    bool isPaused = false;
 };
 
 // SpikyPlatform: A static platform with a spike PNG overlay

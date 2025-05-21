@@ -12,6 +12,10 @@ public:
     explicit Coin(QPointF pos, QGraphicsItem *parent = nullptr);
     void startAnimation();
 
+public slots:
+    void pause();
+    void resume();
+
 private:
     QTimer *animationTimer;
     int animationFrame = 0;

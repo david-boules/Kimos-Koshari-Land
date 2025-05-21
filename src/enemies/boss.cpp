@@ -1,4 +1,5 @@
 #include "boss.h"
+#include "fire_chili.h"
 #include <QGraphicsScene>
 
 Boss::Boss(QString pixmap, QPointF start, QGraphicsItem* parent)

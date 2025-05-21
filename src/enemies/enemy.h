@@ -22,6 +22,10 @@ public:
         return true;
     }
 
+public slots:
+    void pause();
+    void resume();
+
 signals:
     void enemyDefeated(Enemy* enemy);
 

@@ -15,11 +15,19 @@ public:
     enum Level {L1, L2, L3, L4, L5}; // Public so that the enum values can be accessed outside the class
     void loadLevel(Level level); // Sets up the level environment, objects, etc.
 
+    // Functions that emit 'pauseGame()' and 'resumeGame()' signals
+    void pause();
+    void resume();
+
 public slots:
     void onLevelComplete();
     void reloadCurrentLevel();
     void switchLevel();
     void showLevelSelect();
+
+signals:
+    void pauseGame();
+    void resumeGame();
 
 private:
     QGraphicsView* view;

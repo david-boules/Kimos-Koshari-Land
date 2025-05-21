@@ -1,12 +1,13 @@
 #include "level2.h"
+#include "levelorchestrator.h"
 #include "platform.h"
 #include "onion.h"
 #include "cat.h"
 #include "fallinglaundry.h"
 #include "coin.h"
 
-Level2::Level2(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
-    : BaseLevel(view, kimo, healthText, levelText, parent) {}
+Level2::Level2(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
+    : BaseLevel(view, kimo, healthText, levelText, orchestrator) {}
 
 void Level2::setEnemies() {
     // Add the enemies in Level 3
@@ -65,15 +66,24 @@ void Level2::setEnvironment() {
     addItem(new SpikyPlatform(100, 20, 1600, 580));
 
     QTimer* laundryTimer = new QTimer(this);
-    connect (laundryTimer, &QTimer::timeout, this, [=]() {
+    connect (laundryTimer, &QTimer::timeout, this, [this]() {
         QPixmap shirtPixmap(":/images/misc/shirt.png");
         QPixmap pantsPixmap(":/images/misc/pants.png");
         // Choosing which item to drop at random (for variety):
         QPixmap chosenObject = (rand() % 2 == 0) ? shirtPixmap : pantsPixmap;
 
-        QPointF pos(kimo->x() + rand() % 200 - 100, 0); // Determine the random position where the laundry falls relative to Kimo (random number bewteen -100, 99 for around 100 pixels close to Kimo)
+        QPointF pos(kimo->x() + rand() % 300 - 150, 0); // Determine the random position where the laundry falls relative to Kimo (random number bewteen -100, 99 for around 100 pixels close to Kimo)
+
+        if (!this->kimo->isEnabled()) return; // Don’t create laundry while paused
         FallingLaundry* laundry = new FallingLaundry(chosenObject, pos);
-        addItem(laundry);
+        this->addItem(laundry);
+
+        connect(orchestrator, SIGNAL(pauseGame()), laundry, SLOT(pause()));
+        connect(orchestrator, SIGNAL(resumeGame()), laundry, SLOT(resume()));
+
+        if (!this->kimo->isEnabled()) {
+            laundry->pause();
+        }
     });
     laundryTimer->start(2000);
 }

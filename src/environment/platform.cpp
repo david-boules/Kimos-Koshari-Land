@@ -39,6 +39,7 @@ MovingPlatform::MovingPlatform(int width, int height, int x, int y, int range, i
 
 // MovingPlatform update: moves the platform back and forth horizontally
 void MovingPlatform::update() {
+    if(isPaused) return;
     // Move the platform using QGraphicsItem coordinates
     setPos(x() + direction * moveSpeed, y());
     
@@ -54,6 +55,7 @@ VerticallyMovingPlatform::VerticallyMovingPlatform(int width, int height, int x,
 
 // VerticallyMovingPlatform update: moves the platform up and down
 void VerticallyMovingPlatform::update() {
+    if(isPaused) return;
     // Store the previous Y position
     qreal oldY = y();
     

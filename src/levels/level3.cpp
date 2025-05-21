@@ -4,10 +4,11 @@
 #include "onion.h"
 #include "platform.h"
 #include "fallinglaundry.h"
+#include "levelorchestrator.h"
 #include "coin.h"
 
-Level3::Level3(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
-    : BaseLevel(view, kimo, healthText, levelText, parent) {}
+Level3::Level3(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
+    : BaseLevel(view, kimo, healthText, levelText, orchestrator) {}
 
 void Level3::setEnemies() {
     chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(420,300));
@@ -126,17 +127,25 @@ void Level3::setEnvironment() {
     addItem(moving2);
 
     // Falling Laundry
-
     QTimer* laundryTimer = new QTimer(this);
-    connect (laundryTimer, &QTimer::timeout, this, [=]() {
+    connect (laundryTimer, &QTimer::timeout, this, [this]() {
         QPixmap shirtPixmap(":/images/misc/shirt.png");
         QPixmap pantsPixmap(":/images/misc/pants.png");
         // Choosing which item to drop at random (for variety):
         QPixmap chosenObject = (rand() % 2 == 0) ? shirtPixmap : pantsPixmap;
 
         QPointF pos(kimo->x() + rand() % 200 - 100, 0); // Determine the random position where the laundry falls relative to Kimo (random number bewteen -100, 99 for around 100 pixels close to Kimo)
+
+        if (!this->kimo->isEnabled()) return; // Don’t create laundry while paused
         FallingLaundry* laundry = new FallingLaundry(chosenObject, pos);
-        addItem(laundry);
+        this->addItem(laundry);
+
+        connect(orchestrator, SIGNAL(pauseGame()), laundry, SLOT(pause()));
+        connect(orchestrator, SIGNAL(resumeGame()), laundry, SLOT(resume()));
+
+        if (!this->kimo->isEnabled()) {
+            laundry->pause();
+        }
     });
     laundryTimer->start(2000);
 
@@ -145,7 +154,7 @@ void Level3::setEnvironment() {
     // Timer for game updates (platforms, HUD)
     gameUpdateTimer = new QTimer(this);
     connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
-        if (!moving1 || !moving2) return;
+        if (!moving1 || !moving2 || !kimo->isEnabled()) return;
         // Update moving platforms
         moving1->update();
         moving2->update();

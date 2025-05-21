@@ -6,8 +6,8 @@
 #include "macaroni.h"
 #include "boss.h";
 
-Level5::Level5(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, QObject *parent)
-    : BaseLevel(view, kimo, healthText, levelText, parent) {}
+Level5::Level5(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
+    : BaseLevel(view, kimo, healthText, levelText, orchestrator) {}
 
 void Level5::setEnemies() {
   //  Add the enemies in Level 5
@@ -121,7 +121,7 @@ void Level5::setEnvironment() {
     // Timer for game updates (platforms, HUD)
     gameUpdateTimer = new QTimer(this);
     connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
-        if (!moving1 || !movingup || !moving2) return;
+        if (!moving1 || !movingup || !moving2 || !kimo->isEnabled()) return;
         // Update moving platforms
         moving1->update();
         movingup->update();

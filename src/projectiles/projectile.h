@@ -13,6 +13,10 @@ public:
 
     virtual void hit(QGraphicsItem* target) = 0; // Pure virtual function to damage/destroy object hit by the projectile (varies by class)
 
+public slots:
+    void pause() {if (moveTimer && moveTimer->isActive()) moveTimer->stop();}
+    void resume() { if (moveTimer && !moveTimer->isActive()) moveTimer->start(16);}
+
 protected:              // 'Protected' so inheriting classes can access these variables:
     int speed;          // Projectile's speed magnitude
     int direction = 1;  // Projectile's direction (1 for right, -1 for left)
