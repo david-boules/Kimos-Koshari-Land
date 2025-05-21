@@ -40,7 +40,7 @@ Kimo::Kimo(QGraphicsItem * parent) : QGraphicsPixmapItem(parent) {
     fireballCooldown.start();
 
     // Set up physics timer for smooth movement
-    physicsTimer = new QTimer();
+    physicsTimer = new QTimer(this);
     connect(physicsTimer, SIGNAL(timeout()), this, SLOT(updatePhysics()));
     physicsTimer->start(16); // ~60 FPS for smooth physics
 
