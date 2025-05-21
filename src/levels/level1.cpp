@@ -18,7 +18,7 @@ void Level1::setEnemies() {
     addItem(MacaroniEnemy);
     MacaroniEnemy->setTargetKimo(kimo);
 
-    onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(500,420));
+    onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(400,490));
     addItem(OnionEnemy);
     OnionEnemy->setTargetKimo(kimo);
 

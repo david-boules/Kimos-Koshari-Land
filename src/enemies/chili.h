@@ -14,7 +14,9 @@ public:
   // void setMoveStyle(MoveStyle s) { moveStyle = s; }
     void setMoveStyle(chili_move style);
     chili_move getMoveStyle() const;
+  bool can_be_inhaled() const override {
 
+      return false; }
 private:
     qreal speed;
     qreal damage;

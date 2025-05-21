@@ -13,6 +13,9 @@ public:
     void shoot_chili();
 
      void move() override;
+    bool can_be_inhaled() const override {
+
+        return false; }
 
 
 

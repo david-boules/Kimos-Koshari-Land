@@ -2,7 +2,7 @@
 #define CAT_H
 
 #include "enemy.h"
-#include <QTimer>
+#include <QElapsedTimer>
 
 enum class cat_move { level3,level4 };
 
@@ -15,6 +15,9 @@ public:
 
     void setMoveStyle(cat_move style);
     cat_move getMoveStyle() const;
+    bool can_be_inhaled() const override {
+
+        return false; }
 
 
 private:
@@ -38,7 +41,8 @@ private:
     bool isReturning = false;
     QPointF returnStartPos;
     QPointF returnTargetPos;
-
+    QElapsedTimer jumpCooldown;
+    bool jumpCooldownStarted = false;
 
     cat_move moveStyle= cat_move::level3;
 

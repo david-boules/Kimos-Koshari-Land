@@ -18,6 +18,9 @@ public:
     int get_enemy_health() const;
     void takedamage(int enemydamage);
     void update_health_bar();
+    virtual bool can_be_inhaled() const {
+        return true;
+    }
 
 signals:
     void enemyDefeated(Enemy* enemy);

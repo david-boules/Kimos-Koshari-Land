@@ -170,17 +170,28 @@ void cat::move() {
     qreal dx = kimoo->x() - x();
     qreal dy = kimoo->y() - y();
 
+    if (!isJumping) {
+        if (jumpCooldownStarted && jumpCooldown.elapsed() < 200) {
+
+            return;
+        }
+    }
 
 
 
     // 1. Trigger jump only once, when Kimo is on the left and within range
-    if (!isJumping && dx < 0 && qAbs(dx) < 200 && qAbs(dy) < 50) {
+    if (!isJumping && qAbs(dx) < 200 && qAbs(dy) < 50)
+     {
         if (kimoo->x() < 600) return;
         isJumping = true;
         angle = 0.0;
         jumpStartPos = pos();
-        jumpTargetPos = kimoo->pos();
-        setPixmap(cat_left_img);
+       // jumpTargetPos = kimoo->pos();
+        jumpTargetPos = QPointF(kimoo->pos().x(), jumpStartPos.y()); // use fixed y value
+        if (kimoo->x() > x())
+            setPixmap(cat_right_img);
+        else
+            setPixmap(cat_left_img);
         return;
     }
 
@@ -202,8 +213,8 @@ void cat::move() {
             isJumping = false;
             angle = 0.0;
 
-            // Snap to landing position
-            setPos(jumpTargetPos);
+            // make y
+            jumpTargetPos = QPointF(kimoo->pos().x(), jumpStartPos.y());
 
             // Deal damage only if it lands and collides
             if (collidesWithItem(kimoo)) {
@@ -214,6 +225,8 @@ void cat::move() {
                 returnStartPos = pos();
                 returnTargetPos = originalPos;
             }
+            jumpCooldown.restart();          // Restart timer
+            jumpCooldownStarted = true;
         }
 
         return;
@@ -221,7 +234,7 @@ void cat::move() {
 
 
 
-    if (isReturning) {
+    if (isReturning && moveStyle == cat_move::level4) {
         angle += 0.1;
         qreal progress = angle / 3.14;
         if (progress > 1.0) progress = 1.0;

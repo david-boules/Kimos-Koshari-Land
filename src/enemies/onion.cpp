@@ -56,12 +56,30 @@ onion_move onion::getMoveStyle() const {
 
 void onion::shoot_poison(){
     if (!kimoo || !scene()) return;
-    if (poisonCooldown.elapsed() < 300) return;
 
-    //  Reset cooldown timer
-    poisonCooldown.restart();
+    if (qAbs(kimoo->x() - x()) > 250) {
+        kimo_in_range = false; // Reset if Kimo moved away horizontally
+        return;
+    }
 
-    if (qAbs(kimoo->y() - y()) <= 40  && qAbs(kimoo->x() - x()) <= 250){
+    bool in_y_range = qAbs(kimoo->y() - y()) <= 35;
+    if (!in_y_range) {
+        kimo_in_range = false;
+        return;
+    }
+
+
+    if (in_y_range && kimo_in_range) return;
+
+    // if (poisonCooldown.elapsed() < 830) return;
+
+    // //  Reset cooldown timer
+    // poisonCooldown.restart();
+
+    //if (qAbs(kimoo->y() - y()) <= 60  && qAbs(kimoo->x() - x()) <= 250){
+    if (in_y_range && poisonCooldown.elapsed() >= 800) {
+        poisonCooldown.restart();
+        kimo_in_range = true;
 
 
         qreal direction = (kimoo->x() < x()) ? -1 : 1; // Left or right
@@ -100,11 +118,11 @@ void onion::move() {
     case onion_move::level1:
 
 
-    angle += 0.1;
-    setPos(x() -speed, y() + qSin(angle) * 3.5);
-    if (x() <= minX || x() >= maxX - pixmap().width()) {
-        speed = -speed; // bounce between minX and maxX
-    }
+    // angle += 0.1;
+    // setPos(x() -speed, y() + qSin(angle) * 3.5);
+    // if (x() <= minX || x() >= maxX - pixmap().width()) {
+    //     speed = -speed; // bounce between minX and maxX
+    // }
     break;
 
     case onion_move::level2:

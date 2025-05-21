@@ -16,7 +16,7 @@ Boss::Boss(QString pixmap, QPointF start, QGraphicsItem* parent)
 
     shoot_timer = new QTimer(this);
     connect(shoot_timer, &QTimer::timeout, this, &Boss::shoot_chili);
-    shoot_timer->start(900);
+    shoot_timer->start(1200);
 
 
    // boss_img=QPixmap(pixmap).scaled(200,200);

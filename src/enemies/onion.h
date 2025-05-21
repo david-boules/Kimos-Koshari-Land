@@ -43,7 +43,7 @@ private:
     QPixmap leftPixmap;
     QPixmap rightPixmap;
     bool has_left_and_right = false;
-
+   bool kimo_in_range=false;
 
 };
 #endif // ONION_H

@@ -531,7 +531,7 @@ void Kimo::inhale() {
     for(int i = 0; i< scene()->items().size(); i++) {
         if(Enemy* enemy = dynamic_cast <Enemy*>(scene()->items()[i])) {
             int enemy_health= enemy->get_enemy_health();
-            if(enemy_health<2)
+            if(enemy_health<2&& enemy->can_be_inhaled())
 
             // Check distance and relative position for inhale
             if(abs(x() - enemy->x()) < 100 && abs(y() - enemy->y()) < 50) { // Increased inhale range slightly
