@@ -47,7 +47,9 @@ void cat::move() {
     // 1. Trigger jump only once, when Kimo is on the left and within range
     if (!isJumping && qAbs(dx) < 200 && qAbs(dy) < 50)
      {
-        if (kimoo->x() < 320+pixmap().width() || kimoo->x() > 950 - pixmap().width()) return;
+
+       if (kimoo->x() <  320+pixmap().width()||kimoo->x()>950 - pixmap().width()&&kimoo->x() <  1200+pixmap().width()) return; //410
+
         isJumping = true;
         angle = 0.0;
         jumpStartPos = pos();
@@ -79,7 +81,7 @@ void cat::move() {
             setY(jumpStartPos.y());
 
             // make y
-            jumpTargetPos = QPointF(kimoo->pos().x(), jumpStartPos.y());
+                jumpTargetPos = QPointF(kimoo->pos().x(), jumpStartPos.y());
 
             // Deal damage only if it lands and collides
             if (collidesWithItem(kimoo)) {
@@ -124,7 +126,9 @@ void cat::move() {
     //  Regular speed
     setPos(x() + speed, y());
 
-    if (x() <= 320 || x() >= 950 - pixmap().width()) {
+
+    if (x() <= 320+pixmap().width() || x() >= 950 - pixmap().width()) {
+
         speed = -speed;
     }
 

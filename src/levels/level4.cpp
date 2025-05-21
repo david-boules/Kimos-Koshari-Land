@@ -34,10 +34,10 @@ void Level4::setEnemies() {
     EagleEnemy1->setMoveStyle(onion_move::level4);
     EagleEnemy1->setTargetKimo(kimo);
 
-    chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(1300,200));
-    addItem(ChiliEnemy);
-    ChiliEnemy->setMoveStyle(chili_move::level4);
-    ChiliEnemy->setTargetKimo(kimo);
+    // chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(1300,200));
+    // addItem(ChiliEnemy);
+    // ChiliEnemy->setMoveStyle(chili_move::level4);
+    // ChiliEnemy->setTargetKimo(kimo);
 
 
     onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(950,400));

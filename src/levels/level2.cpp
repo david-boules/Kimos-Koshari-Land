@@ -23,7 +23,7 @@ void Level2::setEnemies() {
 
     cat* cat1 = new cat(":/images/enemies/cat_left.png",":/images/enemies/streetcat.png", QPointF(650, 490));
     addItem(cat1);
-
+    cat1->setMoveStyle(cat_move::level3);
     cat1->setTargetKimo(kimo);
 
     onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(1100,400));

@@ -76,58 +76,50 @@ void chili::move() {
     qreal distancex = qAbs(x() - kimoo->x());
     qreal distancey=qAbs(y()-kimoo->y());
 
-    // If Kimo is close
-    // if (distancex <300&&distancey<120) {
-    //     // Move towards Kimo
-    //     if (x() > kimoo->x()) {
-
-    //         setPos(x() - qAbs(speed), y());         // Move left towards Kimo
-
-    //     } else if (x() < kimoo->x()) {
-    //        setPos(x() + qAbs(speed), y()); // Move right towards Kimo
-
-    //     }
-    // }
 
 
     switch (moveStyle)
     {
-    case chili_move::level1:           // original “bounce” code
+    case chili_move::level1:  {         // original “bounce” code
+        if (!kimoo) return;
 
-        if(!kimoo){
-            return;
-        }
-        //If Kimo is close
-        if (distancex <300&&distancey<120) {
-            // Move towards Kimo
-            if (x() > kimoo->x()) {
+        qreal distancex = qAbs(x() - kimoo->x());
+        qreal distancey = qAbs(y() - kimoo->y());
 
+        if (distancex < 300 && distancey < 120) {
+
+            if (kimoo->x() < x()) {
                 setPos(x() - qAbs(speed), y());
-                setPixmap(enemy_left);;         // Move left towards Kimo
-
-            } else if (x() < kimoo->x()) {
+                setPixmap(enemy_left);
+            } else if (kimoo->x() > x()) {
                 setPos(x() + qAbs(speed), y());
-                setPixmap(enemy_right);// Move right towards Kimo
+                setPixmap(enemy_right);
+            }
+        } else {
 
+            setPos(x() + speed, y());
+
+
+            if (x() <= 0 || x() >= 800 - pixmap().width()) {
+                speed = -speed; // Reverse direction
+            }
+
+
+            if (speed > 0) {
+                setPixmap(enemy_right);
+            } else {
+                setPixmap(enemy_left);
             }
         }
 
-
-
-        // Normal bouncing movement (if Kimo is far)
-        setPos(x() - speed, y());
-        if(speed>0){
-            setPixmap(enemy_left);
-        }
-        else{
-            setPixmap(enemy_right);
-        }
-
-        // Bounce back when hitting screen edges
-        if (x() <= 0 || x() >= 800 - pixmap().width()) {
-            speed = -speed; // Change direction
-        }
         break;
+    }
+
+
+
+
+
+
 
 
 case chili_move::level2:
