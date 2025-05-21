@@ -5,6 +5,7 @@
 #include "onion.h"
 #include "platform.h"
 #include "coin.h"
+#include <QDebug>
 
 Level1::Level1(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
     : BaseLevel(view, kimo, healthText, levelText, orchestrator) {}
@@ -102,6 +103,7 @@ void Level1::setEnvironment() {
     // Timer for game updates (platforms, HUD)
     gameUpdateTimer = new QTimer(this);
     connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
+        qDebug() << "Timer tick";
         if (!moving1 || !moving2 || !kimo->isEnabled()) return;
         // Update moving platforms
         moving1->update();

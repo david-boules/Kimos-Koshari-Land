@@ -48,7 +48,7 @@ public slots:
 
 private:
     int startX, moveRange, moveSpeed, direction;
-    bool isPaused;
+    bool isPaused = false;
 };
 
 // VerticallyMovingPlatform: A platform that moves up and down

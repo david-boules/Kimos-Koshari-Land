@@ -35,7 +35,7 @@ void StaticPlatform::update() {
 
 // MovingPlatform constructor: calls base Platform constructor and initializes movement variables
 MovingPlatform::MovingPlatform(int width, int height, int x, int y, int range, int speed)
-    : Platform(width, height, x, y), startX(x), moveRange(range), moveSpeed(speed), direction(1) {}
+    : Platform(width, height, x, y), startX(x), moveRange(range), moveSpeed(speed), direction(1), isPaused(false) {}
 
 // MovingPlatform update: moves the platform back and forth horizontally
 void MovingPlatform::update() {
@@ -51,7 +51,7 @@ void MovingPlatform::update() {
 
 // VerticallyMovingPlatform constructor: calls base Platform constructor and initializes movement variables
 VerticallyMovingPlatform::VerticallyMovingPlatform(int width, int height, int x, int y, int range, int speed)
-    : Platform(width, height, x, y), startY(y), moveRange(range), moveSpeed(speed), direction(1) {}
+    : Platform(width, height, x, y), startY(y), moveRange(range), moveSpeed(speed), direction(1), isPaused(false) {}
 
 // VerticallyMovingPlatform update: moves the platform up and down
 void VerticallyMovingPlatform::update() {
