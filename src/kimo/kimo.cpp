@@ -326,6 +326,16 @@ void Kimo::updatePhysics() {
         qreal viewCenterY = qBound(view->height() / 2.0, y() + pixmap().height() / 2.0, sceneBounds.bottom() - view->height() / 2.0);
         view->centerOn(viewCenterX, viewCenterY);
     }
+
+    // After checking both feet, clear Kimo from all VerticallyMovingPlatform if not standing on one
+    if (!leftFootOnPlatform && !rightFootOnPlatform) {
+        QList<QGraphicsItem*> allItems = scene()->items();
+        for (QGraphicsItem* item : allItems) {
+            if (VerticallyMovingPlatform* movingPlatform = dynamic_cast<VerticallyMovingPlatform*>(item)) {
+                movingPlatform->clearKimo();
+            }
+        }
+    }
 }
 
 void Kimo::checkCollision() {
@@ -381,6 +391,7 @@ void Kimo::checkCollision() {
                     if (hitbox->parentItem() && dynamic_cast<SpikyPlatform*>(hitbox->parentItem())) {
                         // Standing on a spiky platform: take damage
                         takeDamage(3); // Damage amount can be adjusted
+                        break; // Prevent double damage in one frame
                     }
                 }
                 // Collision from below (hitting head)
@@ -448,6 +459,10 @@ void Kimo::setKnockback(double verticalForce, double horizontalForce) {
     // Disable air control temporarily during knockback
     airControlEnabled = false;
     
+    // Stop horizontal movement after 200ms to prevent sliding
+    QTimer::singleShot(200, this, [this]() {
+        horizontalVelocity = 0;
+    });
     // Re-enable air control after knockback duration
     QTimer::singleShot(500, this, [this]() {
         airControlEnabled = true;
@@ -455,7 +470,6 @@ void Kimo::setKnockback(double verticalForce, double horizontalForce) {
 }
 
 void Kimo::takeDamage(int amount) {
-
     // Check if shield is active
     if (isShieldActive) {
         deactivateShield();
@@ -463,8 +477,8 @@ void Kimo::takeDamage(int amount) {
     }
 
     // Only take damage if enough time has passed since last damage
-    if (damageTimer.elapsed() > 700) { // 700ms invulnerability
-
+    if (damageTimer.elapsed() > 1000) { // 1000ms (1s) invulnerability
+        damageTimer.restart(); // Set invulnerability immediately
         QMediaPlayer* damagePlayer = new QMediaPlayer(this);
         QAudioOutput* damageOutput = new QAudioOutput(this);
 
@@ -499,13 +513,10 @@ void Kimo::takeDamage(int amount) {
         redFlash->setStrength(0.5);
         setGraphicsEffect(redFlash);
 
-
-
         setOpacity(0.8);  // Make Kimo semi-transparent
         QTimer::singleShot(700, this, [this]() {
             setOpacity(1.0); // Back to normal opacity after 700ms (same as 'invulnerability' timer)
             setGraphicsEffect(nullptr);
-            damageTimer.restart();
         });
     }
 }

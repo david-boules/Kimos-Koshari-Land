@@ -50,6 +50,8 @@ public:
     void update() override;
     // Handle Kimo's movement with the platform
     void moveKimoWithPlatform(Kimo* kimo);
+    // Clear Kimo from the platform
+    void clearKimo();
 private:
     int startY, moveRange, moveSpeed, direction;
     Kimo* currentKimo = nullptr;

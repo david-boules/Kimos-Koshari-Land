@@ -76,6 +76,10 @@ void VerticallyMovingPlatform::moveKimoWithPlatform(Kimo* kimo) {
     currentKimo = kimo;
 }
 
+void VerticallyMovingPlatform::clearKimo() {
+    currentKimo = nullptr;
+}
+
 // SpikyPlatform constructor overlays a spike PNG on the platform
 SpikyPlatform::SpikyPlatform(int width, int height, int x, int y)
     : Platform(width, height, x, y), spikeOverlay(nullptr)
