@@ -27,7 +27,7 @@ void Level1::setEnemies() {
         if (!this) return;
 
         if (kimo->x() > 550 && !enemySpawned) {
-            onion* onion2 = new onion(":/images/enemies/onion.png", QPointF(1000, 400));
+            onion* onion2 = new onion(":/images/enemies/onion.png", QPointF(1000, 490));
             onion2->setBounds(850,1400);
             addItem(onion2);
             onion2->setTargetKimo(kimo);

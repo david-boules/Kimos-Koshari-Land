@@ -4,7 +4,7 @@
 chili::chili(QString left,QString right, QPointF startingPos, QGraphicsItem* parent)
     : Enemy(QPixmap(left), startingPos, parent){
     speed=1.5;
-    damage=2;
+    damage=3;
     health=2;
     max_health=2;
     update_health_bar();
@@ -26,16 +26,16 @@ chili::chili(QString left,QString right, QPointF startingPos, QGraphicsItem* par
 
 void chili::setMoveStyle(chili_move style) {
     moveStyle = style;
-    if (moveStyle == chili_move::level2_1) {
-        health = 1;      // Increase health for level 2
-        max_health = 1;
-        update_health_bar();
-    }
-    else {
-        health=2;
-        max_health=2;
-        update_health_bar();
-    }
+    // if (moveStyle == chili_move::level2_1) {
+    //     health = 1;      // Increase health for level 2
+    //     max_health = 1;
+    //     update_health_bar();
+    // }
+    // else {
+    //     health=2;
+    //     max_health=2;
+    //     update_health_bar();
+    // }
 }
 
 chili_move chili::getMoveStyle() const {
@@ -92,6 +92,26 @@ void chili::move() {
     switch (moveStyle)
     {
     case chili_move::level1:           // original “bounce” code
+
+        if(!kimoo){
+            return;
+        }
+        //If Kimo is close
+        if (distancex <300&&distancey<120) {
+            // Move towards Kimo
+            if (x() > kimoo->x()) {
+
+                setPos(x() - qAbs(speed), y());
+                setPixmap(enemy_left);;         // Move left towards Kimo
+
+            } else if (x() < kimoo->x()) {
+                setPos(x() + qAbs(speed), y());
+                setPixmap(enemy_right);// Move right towards Kimo
+
+            }
+        }
+
+
 
         // Normal bouncing movement (if Kimo is far)
         setPos(x() - speed, y());

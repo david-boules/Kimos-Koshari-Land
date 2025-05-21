@@ -13,10 +13,10 @@ void Level5::setEnemies() {
   //  Add the enemies in Level 5
 
 
-    cat* cat1 = new cat(":/images/enemies/cat_left.png",":/images/enemies/streetcat.png", QPointF(780, 490));
-    addItem(cat1);
-    cat1->setMoveStyle(cat_move::level4);
-    cat1->setTargetKimo(kimo);
+    // cat* cat1 = new cat(":/images/enemies/cat_left.png",":/images/enemies/streetcat.png", QPointF(780, 490));
+    // addItem(cat1);
+    // cat1->setMoveStyle(cat_move::level4);
+    // cat1->setTargetKimo(kimo);
 
 
     onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(270,240));
