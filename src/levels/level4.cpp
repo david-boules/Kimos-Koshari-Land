@@ -4,6 +4,7 @@
 #include "onion.h"
 #include "chili.h"
 #include "cat.h"
+#include "coin.h"
 
 Level4::Level4(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
     : BaseLevel(view, kimo, healthText, levelText, orchestrator) {}
@@ -143,5 +144,25 @@ void Level4::setEnvironment() {
     });
 
     gameUpdateTimer->start(16); // ~60 FPS
+
+    addItem(new Coin(QPointF(180, 300)));
+
+    // Second platform coins
+    addItem(new Coin(QPointF(320, 270)));
+    addItem(new Coin(QPointF(370, 270)));
+    addItem(new Coin(QPointF(420, 270)));
+
+    // Third platform coins
+    addItem(new Coin(QPointF(700, 150)));
+    addItem(new Coin(QPointF(750, 150)));
+
+    // Fourth platform coins
+    addItem(new Coin(QPointF(1050, 350)));
+    addItem(new Coin(QPointF(1100, 410)));
+    addItem(new Coin(QPointF(1110, 470)));
+
+    // Fifth platform coins
+    addItem(new Coin(QPointF(1300, 200)));
+    addItem(new Coin(QPointF(1350, 200)));
 
 }

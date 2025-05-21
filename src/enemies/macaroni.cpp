@@ -11,7 +11,7 @@
 macaroni::macaroni(QPixmap pixmap, QPointF start, QGraphicsItem* parent)
     : Enemy(pixmap, start, parent) {
 
-    speed=2.0;
+    speed=1.0;
     damage=3;
     health=1;
     max_health=1;

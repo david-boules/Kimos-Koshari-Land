@@ -16,7 +16,7 @@ LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
 {
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    loadLevel(L5);
+    loadLevel(L1);
 }
 
 void LevelOrchestrator::loadLevel(Level level) {

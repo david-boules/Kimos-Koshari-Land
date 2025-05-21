@@ -43,7 +43,7 @@ void Level3::setEnemies() {
     addItem(OnionEnemy1);
     OnionEnemy1->setTargetKimo(kimo);
 
-    onion* OnionEnemy2 = new onion(":/images/enemies/onion.png",QPointF(1260,400));
+    onion* OnionEnemy2 = new onion(":/images/enemies/onion.png",QPointF(1260,445));
     addItem(OnionEnemy2);
     OnionEnemy2->setTargetKimo(kimo);
 }
