@@ -21,8 +21,6 @@
         <file>../images/kimo/Kimo_crouchRight.png</file>
         <file>../images/misc/pants.png</file>
         <file>../images/misc/shirt.png</file>
-        <file>../images/levels/L2background.png</file>
-        <file>../images/levels/L3background.png</file>
         <file>../images/levels/L4background.png</file>
         <file>../images/levels/L5background.png</file>
         <file>../images/levels/L1background.png</file>
@@ -38,5 +36,8 @@
         <file>../images/enemies/Boss.png</file>
         <file>../images/projectiles/chiliLeft.png</file>
         <file>../images/misc/coin.png</file>
+        <file>../images/levels/L2background.png</file>
+        <file>../images/levels/L3background.png</file>
+        <file>../images/enemies/abou-tarek.png</file>
     </qresource>
 </RCC>

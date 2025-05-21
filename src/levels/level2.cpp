@@ -39,7 +39,7 @@ void Level2::setEnemies() {
 }
 
 void Level2::setEnvironment() {
-    QPixmap bgPixmap(":/images/levels/L3background.png");
+    QPixmap bgPixmap(":/images/levels/L2background.png");
     // Due to issues with the background, it will be loaded as a pixmap item and pushed to the back instead
     QGraphicsPixmapItem* background = new QGraphicsPixmapItem(bgPixmap.scaled(2000, 600));
     background->setZValue(-100);  // Push behind everything

@@ -1,10 +1,10 @@
 #include "level5.h"
 #include "platform.h"
-#include "cat.h"
 #include "onion.h"
-#include "chili.h"
 #include "macaroni.h"
-#include "boss.h";
+#include "boss.h"
+#include "fallinglaundry.h"
+#include "levelorchestrator.h"
 
 Level5::Level5(QGraphicsView* view, Kimo* kimo, QGraphicsTextItem* healthText, QGraphicsTextItem* levelText, LevelOrchestrator* orchestrator, QObject *parent)
     : BaseLevel(view, kimo, healthText, levelText, orchestrator) {}
@@ -44,10 +44,9 @@ void Level5::setEnemies() {
 
 
 
-    Boss* boss1 = new Boss(":/images/enemies/Boss.png", QPointF(1550, 360));
-
-    boss1->setTargetKimo(kimo);
-    addItem(boss1);
+    Boss* boss = new Boss(":/images/enemies/Boss.png", QPointF(1550, 370));
+    boss->setTargetKimo(kimo);
+    addItem(boss);
 
 }
 
@@ -117,6 +116,28 @@ void Level5::setEnvironment() {
     addItem(movingup);
 
     view->show(); // Show the view
+
+    QTimer* laundryTimer = new QTimer(this);
+    connect (laundryTimer, &QTimer::timeout, this, [this]() {
+        QPixmap shirtPixmap(":/images/misc/shirt.png");
+        QPixmap pantsPixmap(":/images/misc/pants.png");
+        // Choosing which item to drop at random (for variety):
+        QPixmap chosenObject = (rand() % 2 == 0) ? shirtPixmap : pantsPixmap;
+
+        QPointF pos(kimo->x() + rand() % 100 - 50, 0); // Determine the random position where the laundry falls relative to Kimo (random number bewteen -100, 99 for around 100 pixels close to Kimo)
+
+        if (!this->kimo->isEnabled()) return; // Don’t create laundry while paused
+        FallingLaundry* laundry = new FallingLaundry(chosenObject, pos);
+        this->addItem(laundry);
+
+        connect(orchestrator, SIGNAL(pauseGame()), laundry, SLOT(pause()));
+        connect(orchestrator, SIGNAL(resumeGame()), laundry, SLOT(resume()));
+
+        if (!this->kimo->isEnabled()) {
+            laundry->pause();
+        }
+    });
+    laundryTimer->start(2000);
 
     // Timer for game updates (platforms, HUD)
     gameUpdateTimer = new QTimer(this);

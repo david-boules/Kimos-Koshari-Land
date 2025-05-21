@@ -532,7 +532,7 @@ bool Kimo::isDead() const {
 
 void Kimo::respawn() {
     //Instead of deleting the object which could cause some issues with other functions, we relocate Kimo and reset the key physics
-    this->setPos(100, 400); // Reset to initial position
+    this->setPos(0, 400); // Reset to initial position
     verticalVelocity = 0;
     horizontalVelocity = 0;
     health=3; // Reset health

@@ -10,30 +10,27 @@ Projectile::Projectile(QGraphicsItem *parent) : QGraphicsPixmapItem(parent) {
 }
 
 void Projectile::move() {
-    // Use direction when calculating horizontal movement
-    setPos(x() + (speed * direction), y());
-
-    // Check CollidingItems
-    QList<QGraphicsItem*> items = collidingItems();
-    for(int i = 0; i < items.size(); i++) {
-        if (Kimo* kimo = dynamic_cast<Kimo*>(items[i])) {
-            if (!kimo->isEnabled()) return; // Making all projectiles stop moving if the game is paused (store)
-           // break;
-        }
-        // Avoid hitting self or other projectiles immediately after firing
-        if (items[i] == this || dynamic_cast<Projectile*>(items[i])) {
-            continue;
-        }
-        hit(items[i]);
-        // If hit() resulted in deletion (e.g., hit an enemy), stop processing
-        // We check if the scene still contains this item. If not, it was deleted.
-        if (!scene() || !scene()->items().contains(this)) {
-             return;
+    // Pause check using Kimo's flag
+    for (QGraphicsItem* item : scene()->items()) {
+        if (Kimo* kimo = dynamic_cast<Kimo*>(item)) {
+            if (!kimo->isEnabled()) return; // Pause movement
+            break;
         }
     }
 
-    // Remove projectile if it goes off scene boundaries
-    if (scene()) { // Check if scene exists before accessing its properties
+    // Perform movement
+    setPos(x() + (speed * direction), y());
+
+    // Check for collisions
+    QList<QGraphicsItem*> items = collidingItems();
+    for (QGraphicsItem* item : items) {
+        if (item == this || dynamic_cast<Projectile*>(item)) continue;
+        hit(item);
+        if (!scene() || !scene()->items().contains(this)) return;
+    }
+
+    // Remove projectile if out of bounds
+    if (scene()) {
         QRectF sceneBounds = scene()->sceneRect();
         if (x() < sceneBounds.left() || x() + pixmap().width() > sceneBounds.right()) {
             scene()->removeItem(this);
@@ -41,4 +38,3 @@ void Projectile::move() {
         }
     }
 }
-

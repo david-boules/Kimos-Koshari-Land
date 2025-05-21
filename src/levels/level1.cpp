@@ -103,7 +103,6 @@ void Level1::setEnvironment() {
     // Timer for game updates (platforms, HUD)
     gameUpdateTimer = new QTimer(this);
     connect(gameUpdateTimer, &QTimer::timeout, this, [=]() {
-        qDebug() << "Timer tick";
         if (!moving1 || !moving2 || !kimo->isEnabled()) return;
         // Update moving platforms
         moving1->update();

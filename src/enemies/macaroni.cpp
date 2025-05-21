@@ -16,6 +16,10 @@ macaroni::macaroni(QPixmap pixmap, QPointF start, QGraphicsItem* parent)
     health=1;
     max_health=1;
     update_health_bar();
+
+    QTimer* movementTimer = new QTimer(this);
+    connect(movementTimer, &QTimer::timeout, this, &macaroni::move);
+    movementTimer->start(16);
 }
 
 
@@ -115,32 +119,29 @@ void macaroni::move(){
     }
 
 
-    case macaroni_move::level4_1: //second macaroni in level 4
+    case macaroni_move::level5:
     {
-        setPos(x() - speed, y());
+        if (!kimoo) return;
 
+        qreal dx = kimoo->x() - x();
+        qreal dy = kimoo->y() - y();
 
-        if (x() <= 635|| x() >=  730- pixmap().width()) {
-            speed = -speed; // Change direction
+        if (qAbs(dx) < 300 && qAbs(dy) < 50) {
+            if (dx < 0)
+                setPos(x() - qAbs(speed), y());
+            else
+                setPos(x() + qAbs(speed), y());
+        } else {
+            setPos(x() - speed, y());
+            if (x() <= 600 || x() >= 1200 - pixmap().width()) {
+                speed = -speed;
+            }
         }
 
         break;
-
-    }
-
-    case macaroni_move::level5: //second macaroni in level 4
-    {
-        setPos(x() - speed, y());
-
-
-        if (x() <= 635|| x() >=  730- pixmap().width()) {
-            speed = -speed; // Change direction
-        }
-
-        break;
-
     }
 
 
     }
+
 }

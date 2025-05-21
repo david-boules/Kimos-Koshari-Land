@@ -99,7 +99,7 @@ private:
     int health = 3;                          // Kimo starts with 3 health strokes
     QGraphicsTextItem* healthText = nullptr; // Pointer to display health on screen
     QGraphicsPixmapItem* goal = nullptr;       // Pointer to the goal ('Clear Condition')
-    int coins = 20;                          // Player's coin balance
+    int coins = 3;                          // Player's coin balance
     int score = 0;                           // Player's current score
     QGraphicsTextItem *coinText = nullptr;   // Pointer to display coins on screen
 

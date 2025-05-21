@@ -39,22 +39,19 @@ void Level3::setEnemies() {
     addItem(macaroni3);
     macaroni3->setTargetKimo(kimo);
 
-
-    onion* OnionEnemy = new onion(":/images/enemies/onion.png",QPointF(630,70));
-    addItem(OnionEnemy);
-    OnionEnemy->setMoveStyle(onion_move::level2);
-    OnionEnemy->setTargetKimo(kimo);
-
-    onion* OnionEnemy1 = new onion(":/images/enemies/onion.png",QPointF(1260,400));
+    onion* OnionEnemy1 = new onion(":/images/enemies/onion.png",QPointF(850,495));
     addItem(OnionEnemy1);
-    OnionEnemy1->setMoveStyle(onion_move::level2_1);
     OnionEnemy1->setTargetKimo(kimo);
+
+    onion* OnionEnemy2 = new onion(":/images/enemies/onion.png",QPointF(1260,400));
+    addItem(OnionEnemy2);
+    OnionEnemy2->setTargetKimo(kimo);
 }
 
 void Level3::setEnvironment() {
 
     // Background
-    QPixmap bg(":/images/levels/L2background.png");
+    QPixmap bg(":/images/levels/L3background.png");
     QGraphicsPixmapItem* background = new QGraphicsPixmapItem(bg.scaled(2000,600));
     background->setZValue(-100);
     addItem(background);

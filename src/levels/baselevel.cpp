@@ -1,5 +1,6 @@
 #include "baselevel.h"
 #include "kosharitrophy.h"
+#include "levelorchestrator.h"
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QGraphicsProxyWidget>
@@ -140,27 +141,19 @@ void BaseLevel::stopMusic() {
 }
 
 void BaseLevel::toggleStore() {
+    static bool isStoreOpen = false;
 
-    static bool isStoreOpen = false; // Track store state
-
-    if (isStoreOpen)
-    {
-        // Close store
+    if (isStoreOpen) {
         store->hide();
-        if (store->scene() == this)
-        {
+        if (store->scene() == this) {
             removeItem(store);
         }
         kimo->setEnabled(true);
         kimo->setFocus();
-        kimo->resume();
+        orchestrator->resume(); // Resume everything
         isStoreOpen = false;
-    }
-    else
-    {
-        // Open store
-        if (store->scene() != this)
-        {
+    } else {
+        if (store->scene() != this) {
             addItem(store);
         }
         store->setPos(view->mapToScene(0, 0));
@@ -168,10 +161,11 @@ void BaseLevel::toggleStore() {
         store->show();
         store->setFocus();
         kimo->setEnabled(false);
-        kimo->pause();
+        orchestrator->pause(); // Pause everything
         isStoreOpen = true;
     }
 }
+
 
 void BaseLevel::updateAbilityCountdown(const QString &abilityName, int remainingTime)
 {
