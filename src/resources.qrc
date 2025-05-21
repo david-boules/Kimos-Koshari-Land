@@ -7,7 +7,6 @@
         <file>../images/kimo/Kimo_left.png</file>
         <file>../images/enemies/chiliLeft.png</file>
         <file>../images/enemies/chiliRight.png</file>
-        <file>../images/enemies/example_enemy.png</file>
         <file>../images/enemies/macaroni.png</file>
         <file>../images/enemies/onion.png</file>
         <file>../images/projectiles/fireball.png</file>
@@ -33,8 +32,6 @@
         <file>../audio/lvlmusic.mp3</file>
         <file>../audio/damage.mp3</file>
         <file>../images/misc/koshari_trophy.png</file>
-        <file>../images/enemies/Boss.png</file>
-        <file>../images/projectiles/chiliLeft.png</file>
         <file>../images/misc/coin.png</file>
         <file>../images/levels/L2background.png</file>
         <file>../images/levels/L3background.png</file>
