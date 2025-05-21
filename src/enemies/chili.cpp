@@ -51,7 +51,7 @@ void chili::shootFire(){
 
 
     qreal direction = (kimoo->x() < x()) ? -1 : 1; // Left or right
-    Fireball* fb = new Fireball(direction);
+    Fireball* fb = new Fireball(direction,this);
     fb->setPos(x(), y() + 20); // Starting position slightly below the enemy
     scene()->addItem(fb);
 

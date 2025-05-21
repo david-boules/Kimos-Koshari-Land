@@ -11,11 +11,12 @@ class Fireball : public Projectile {
     Q_OBJECT
 
 public:
-    Fireball(qreal direction, QGraphicsItem* parent = nullptr);
+    Fireball(qreal direction,QGraphicsItem* shooter, QGraphicsItem* parent = nullptr);
     void hit(QGraphicsItem* target) override; // Overrides pure virtual function 'hit' in 'Projectile'
 
 private:
     qreal damage;
+    QGraphicsItem* shooter;
 };
 
 #endif // FIREBALL_H

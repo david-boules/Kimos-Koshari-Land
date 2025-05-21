@@ -30,13 +30,14 @@ void Level5::setEnemies() {
     OnionEnemy1->setTargetKimo(kimo);
 
 
-    chili* ChiliEnemy = new chili(":/images/enemies/chiliLeft.png",":/images/enemies/chiliRight.png",QPointF(580,40));
-    addItem(ChiliEnemy);
-    ChiliEnemy->setMoveStyle(chili_move::level5);
-    ChiliEnemy->setTargetKimo(kimo);
+
+    onion* OnionEnemy2 = new onion(":/images/enemies/onion.png",QPointF(580,40));
+    addItem(OnionEnemy2);
+    OnionEnemy2->setMoveStyle(onion_move::level3);
+    OnionEnemy2->setTargetKimo(kimo);
 
 
-    macaroni* macaroni1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(1030,480));
+    macaroni* macaroni1 = new macaroni(QPixmap(":/images/enemies/macaroni.png"),QPointF(1250,480));
     macaroni1->setMoveStyle(macaroni_move::level2);
     addItem(macaroni1);
     macaroni1->setTargetKimo(kimo);

@@ -2,6 +2,7 @@
 #include "enemy.h"
 #include "macaronimissile.h"
 #include "fireball.h"
+#include "fire_chili.h"
 #include "coin.h"
 #include <QKeyEvent>
 #include <QString>
@@ -503,6 +504,7 @@ void Kimo::takeDamage(int amount) {
         }
 
         if (isDead()) {
+
             respawn();
             return;
         }
@@ -617,9 +619,12 @@ void Kimo::shootFireball()
         return;
 
     // Create and shoot fireball
-    Fireball *fireball = new Fireball(lastDirection == Right ? 1 : -1);
+    //Fireball *fireball = new Fireball(lastDirection == Right ? 1 : -1);
+    Fireball *fireball = new Fireball(lastDirection == Right ? 1 : -1, this);
+
     qreal fireballX = lastDirection == Right ? x() + pixmap().width() : x() - fireball->pixmap().width();
-    fireball->setPos(fireballX -30, y() + pixmap().height() / 2);
+    int direction = lastDirection == Right ? 1 : -1;
+    fireball->setPos(fireballX + (direction > 0 ? 10 : -10), y() + pixmap().height() / 2);
     scene()->addItem(fireball);
 }
 

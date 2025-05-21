@@ -25,7 +25,7 @@ Boss::Boss(QString pixmap, QPointF start, QGraphicsItem* parent)
 void Boss::shoot_chili(){
     if (!kimoo || !scene()) return;
 
-    if (qAbs(kimoo->y() - y()) <= 200 && qAbs(kimoo->x() - x()) <= 300){
+    if (qAbs(kimoo->y() - y()) <= 170 && qAbs(kimoo->x() - x()) <= 300){
 
 
         qreal direction = (kimoo->x() < x()) ? -1 : 1; // Left or right
