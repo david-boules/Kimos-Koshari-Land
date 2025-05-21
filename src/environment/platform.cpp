@@ -54,13 +54,26 @@ VerticallyMovingPlatform::VerticallyMovingPlatform(int width, int height, int x,
 
 // VerticallyMovingPlatform update: moves the platform up and down
 void VerticallyMovingPlatform::update() {
+    // Store the previous Y position
+    qreal oldY = y();
+    
     // Move the platform using QGraphicsItem coordinates
     setPos(x(), y() + direction * moveSpeed);
+    
+    // If Kimo is on the platform, move them with it
+    if (currentKimo) {
+        qreal deltaY = y() - oldY;
+        currentKimo->setPos(currentKimo->x(), currentKimo->y() + deltaY);
+    }
     
     // Check if platform has reached movement boundaries
     if (y() >= startY + moveRange || y() <= startY) {
         direction *= -1;
     }
+}
+
+void VerticallyMovingPlatform::moveKimoWithPlatform(Kimo* kimo) {
+    currentKimo = kimo;
 }
 
 // SpikyPlatform constructor overlays a spike PNG on the platform

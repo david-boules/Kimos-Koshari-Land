@@ -3,6 +3,9 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsPixmapItem>
 
+// Forward declaration for Kimo
+class Kimo;
+
 // Abstract base class for all platform types
 // Inherits from QGraphicsRectItem for rendering in the scene
 class Platform : public QGraphicsPixmapItem
@@ -45,8 +48,11 @@ public:
     VerticallyMovingPlatform(int width, int height, int x, int y, int range, int speed = 2);
     // Called every frame or tick to update the platform's position
     void update() override;
+    // Handle Kimo's movement with the platform
+    void moveKimoWithPlatform(Kimo* kimo);
 private:
     int startY, moveRange, moveSpeed, direction;
+    Kimo* currentKimo = nullptr;
 };
 
 // SpikyPlatform: A static platform with a spike PNG overlay

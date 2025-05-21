@@ -217,6 +217,10 @@ void Kimo::updatePhysics() {
             if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
                 spikyPlatform->handleCollision(this);
             }
+            // Check if it's a vertically moving platform
+            else if (VerticallyMovingPlatform* movingPlatform = dynamic_cast<VerticallyMovingPlatform*>(platform)) {
+                movingPlatform->moveKimoWithPlatform(this);
+            }
             break;
         } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
             // If it's a rect, check if its parent is a Platform
@@ -225,6 +229,10 @@ void Kimo::updatePhysics() {
                 // Check if it's a spiky platform
                 if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
                     spikyPlatform->handleCollision(this);
+                }
+                // Check if it's a vertically moving platform
+                else if (VerticallyMovingPlatform* movingPlatform = dynamic_cast<VerticallyMovingPlatform*>(platform)) {
+                    movingPlatform->moveKimoWithPlatform(this);
                 }
                 break;
             }
@@ -242,6 +250,10 @@ void Kimo::updatePhysics() {
             if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
                 spikyPlatform->handleCollision(this);
             }
+            // Check if it's a vertically moving platform
+            else if (VerticallyMovingPlatform* movingPlatform = dynamic_cast<VerticallyMovingPlatform*>(platform)) {
+                movingPlatform->moveKimoWithPlatform(this);
+            }
             break;
         } else if (QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem*>(item)) {
             // If it's a rect, check if its parent is a Platform
@@ -250,6 +262,10 @@ void Kimo::updatePhysics() {
                 // Check if it's a spiky platform
                 if (SpikyPlatform* spikyPlatform = dynamic_cast<SpikyPlatform*>(platform)) {
                     spikyPlatform->handleCollision(this);
+                }
+                // Check if it's a vertically moving platform
+                else if (VerticallyMovingPlatform* movingPlatform = dynamic_cast<VerticallyMovingPlatform*>(platform)) {
+                    movingPlatform->moveKimoWithPlatform(this);
                 }
                 break;
             }
