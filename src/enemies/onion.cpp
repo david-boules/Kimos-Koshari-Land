@@ -15,7 +15,15 @@ onion::onion(QString imagePath, QPointF startingPos, QGraphicsItem* parent)
     update_health_bar();
     original_y=pos().y();
 
-    poisonCooldown.start();
+poisonCooldownTimer = new QTimer(this);
+poisonCooldownTimer->setSingleShot(true);
+connect(poisonCooldownTimer, &QTimer::timeout, this, [this]() {
+    canShootPoison = true;});
+
+//    poisonCooldown.start();
+    shootTimer = new QTimer(this);
+    connect(shootTimer, &QTimer::timeout, this, &onion::shoot_poison);
+    shootTimer->start(400); // shoot every 900 ms (0.9 seconds)
 
 
     // shootTimer = new QTimer(this);
@@ -39,6 +47,11 @@ onion::onion(QString left_image, QString right_image, QPointF startingPos, QGrap
     update_health_bar();
     original_y = pos().y();
     poisonCooldown.start();
+
+poisonCooldownTimer = new QTimer(this);
+poisonCooldownTimer->setSingleShot(true);
+connect(poisonCooldownTimer, &QTimer::timeout, this, [this]() {
+    canShootPoison = true;});
 }
 
 
@@ -55,12 +68,11 @@ onion_move onion::getMoveStyle() const {
 
 
 void onion::shoot_poison(){
+
+
     if (!kimoo || !scene()) return;
 
-    if (qAbs(kimoo->x() - x()) > 250) {
-        kimo_in_range = false; // Reset if Kimo moved away horizontally
-        return;
-    }
+    if (qAbs(kimoo->x() - x()) > 250) return;
 
     bool in_y_range = qAbs(kimoo->y() - y()) <= 35;
     if (!in_y_range) {
@@ -68,28 +80,54 @@ void onion::shoot_poison(){
         return;
     }
 
-
     if (in_y_range && kimo_in_range) return;
 
-    // if (poisonCooldown.elapsed() < 830) return;
+    canShootPoison = false;
+    poisonCooldownTimer->start(800);  // 800 ms cooldown, adjust as needed
+
+    kimo_in_range = true;
+
+    // Shoot poison without cooldown check, since timer controls firing rate
+    qreal direction = (kimoo->x() < x()) ? -1 : 1;
+    Poison* p = new Poison(direction);
+    p->setPos(x(), y() + 20);
+    scene()->addItem(p);
+
+    // if (!kimoo || !scene()) return;
+
+    // if (qAbs(kimoo->x() - x()) > 250) {
+    //     kimo_in_range = false; // Reset if Kimo moved away horizontally
+    //     return;
+    // }
+
+    // bool in_y_range = qAbs(kimoo->y() - y()) <= 35;
+    // if (!in_y_range) {
+    //     kimo_in_range = false;
+    //     return;
+    // }
+
+
+    // if (in_y_range && kimo_in_range) return;
+
+    // /*if (poisonCooldown.elapsed() < 830) return;
 
     // //  Reset cooldown timer
-    // poisonCooldown.restart();
+    // poisonCooldown.restart();*/
 
-    //if (qAbs(kimoo->y() - y()) <= 60  && qAbs(kimoo->x() - x()) <= 250){
-    if (in_y_range && poisonCooldown.elapsed() >= 800) {
-        poisonCooldown.restart();
-        kimo_in_range = true;
+    // //if (qAbs(kimoo->y() - y()) <= 60  && qAbs(kimoo->x() - x()) <= 250){
+    // if (in_y_range && poisonCooldown.elapsed() >= 800) {
+    //     poisonCooldown.restart();
+    //     kimo_in_range = true;
 
 
-        qreal direction = (kimoo->x() < x()) ? -1 : 1; // Left or right
-        Poison* p = new Poison(direction);
-        p->setPos(x(), y() + 20); // Starting position slightly below the enemy
-        scene()->addItem(p);
+    //     qreal direction = (kimoo->x() < x()) ? -1 : 1; // Left or right
+    //     Poison* p = new Poison(direction);
+    //     p->setPos(x(), y() + 20); // Starting position slightly below the enemy
+    //     scene()->addItem(p);
 
 
     }
-}
+
 
 
 
@@ -199,8 +237,7 @@ is_jumping = false;
             qreal jumpY = original_y + qSin(jump) * -50;  // -50 = jump height
             setY(jumpY);
 
-            shoot_poison();
-
+            //shoot_poison();
 
 
             break;
