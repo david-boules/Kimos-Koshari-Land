@@ -5,6 +5,7 @@
 #include <QtMath>
 #include <QElapsedTimer>
 
+
 enum class onion_move { level1, level2, level2_1, level3, level3_1, level3_2, level4 };
 
 class onion : public Enemy {
@@ -38,6 +39,9 @@ private:
     qreal maxX = 800;
     onion_move moveStyle = onion_move::level1;
     QElapsedTimer poisonCooldown;
+    bool canShootPoison = true;
+    QTimer* poisonCooldownTimer;
+
 
 
     QPixmap leftPixmap;

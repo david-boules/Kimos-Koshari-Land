@@ -18,7 +18,7 @@ void Projectile::move() {
     for(int i = 0; i < items.size(); i++) {
         if (Kimo* kimo = dynamic_cast<Kimo*>(items[i])) {
             if (!kimo->isEnabled()) return; // Making all projectiles stop moving if the game is paused (store)
-            break;
+           // break;
         }
         // Avoid hitting self or other projectiles immediately after firing
         if (items[i] == this || dynamic_cast<Projectile*>(items[i])) {
