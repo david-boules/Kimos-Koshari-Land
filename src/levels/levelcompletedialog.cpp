@@ -12,12 +12,14 @@ LevelCompleteDialog::LevelCompleteDialog(const QString& levelName, QWidget *pare
     QPushButton* replayButton = new QPushButton("Replay Level", this);
     QPushButton* nextLevelButton = new QPushButton("Next Level", this);
     QPushButton* levelSelectButton = new QPushButton("Level Select", this);
+    QPushButton* exitGameButton = new QPushButton("Exit Game", this);
 
     QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(congratsLabel);
     layout->addWidget(replayButton);
     layout->addWidget(nextLevelButton);
     layout->addWidget(levelSelectButton);
+    layout->addWidget(exitGameButton);
     setLayout(layout);
 
     // General Qt Syntax for 'connect:' connect(sender, signal, receiver, slot/signal);
@@ -33,6 +35,11 @@ LevelCompleteDialog::LevelCompleteDialog(const QString& levelName, QWidget *pare
 
     connect(levelSelectButton, &QPushButton::clicked, this, [this]() {
         emit levelSelectPushed();
+        this->accept();
+    });
+
+    connect(exitGameButton, &QPushButton::clicked, this, [this]() {
+        emit exitGamePushed();
         this->accept();
     });
 

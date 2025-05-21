@@ -9,6 +9,7 @@
 #include "kimo.h"
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QApplication>
 
 LevelOrchestrator::LevelOrchestrator(QGraphicsView* view, QWidget* parent)
     : QObject(parent), view(view)
@@ -99,6 +100,7 @@ void LevelOrchestrator::onLevelComplete() {
         QTimer::singleShot(0, this, &LevelOrchestrator::switchLevel);   // Ensures 'switchLevel' which triggers 'loadLevel' runs after the current dialog fully closes, preventing 'delete currentLevel' from accessing invalid memory
     });
     connect(&LevelComplete, &LevelCompleteDialog::levelSelectPushed, this, &LevelOrchestrator::showLevelSelect);
+    connect(&LevelComplete, &LevelCompleteDialog::exitGamePushed, this, &LevelOrchestrator::exitGame);
 
     LevelComplete.exec();
 }
@@ -131,4 +133,8 @@ void LevelOrchestrator::pause() {
 
 void LevelOrchestrator::resume() {
     emit resumeGame();
+}
+
+void LevelOrchestrator::exitGame() {
+    QApplication::quit();
 }

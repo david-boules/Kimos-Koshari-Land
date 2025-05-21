@@ -21,6 +21,7 @@ signals:
     void replayPushed();
     void nextLevelPushed();
     void levelSelectPushed();
+    void exitGamePushed();
 
 };
 

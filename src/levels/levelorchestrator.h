@@ -24,6 +24,7 @@ public slots:
     void reloadCurrentLevel();
     void switchLevel();
     void showLevelSelect();
+    void exitGame();
 
 signals:
     void pauseGame();
